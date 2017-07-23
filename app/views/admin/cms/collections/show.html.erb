@@ -7,7 +7,7 @@
     </div>
     <div class="col-3 new-item-panel">
       <%= link_to "Create a new item",
-          new_admin_cms_transcript_path(collection_uid: @collection.uid),
+          new_admin_cms_transcript_path(collection_id: @collection),
           method: "get",
           data: { disable_with: "Loading..." },
           class: "button pull-right"

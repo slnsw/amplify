@@ -2,7 +2,7 @@ class Admin::Cms::TranscriptsController < Admin::ApplicationController
   before_action :set_transcript, only: [:edit, :update]
 
   def new
-    @transcript = Transcript.new(collection_id: collection_id)
+    @transcript = Transcript.new(collection_id: get_collection.id)
   end
 
   def create
@@ -57,5 +57,9 @@ class Admin::Cms::TranscriptsController < Admin::ApplicationController
 
   def collection_id
     Collection.find_by(uid: params[:collection_uid]).id
+  end
+
+  def get_collection
+    Collection.find_by(uid: params[:collection_id])
   end
 end

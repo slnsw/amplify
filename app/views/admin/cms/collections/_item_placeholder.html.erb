@@ -5,7 +5,7 @@
 
   <div class="col-2">
     <%= link_to "Add Item",
-        new_admin_cms_transcript_path(collection_uid: @collection.uid),
+        new_admin_cms_transcript_path(collection_id: @collection),
         method: "get",
         data: { disable_with: "Loading..." },
         class: "button"
