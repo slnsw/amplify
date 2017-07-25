@@ -2,7 +2,9 @@ class Admin::Cms::TranscriptsController < Admin::ApplicationController
   before_action :set_transcript, only: [:edit, :update]
 
   def new
-    @transcript = Transcript.new(collection_id: collection_id)
+    @transcript = Transcript.new(
+      collection_id: Collection.find_by(uid: params[:collection_id]).id
+    )
   end
 
   def create
@@ -62,9 +64,5 @@ class Admin::Cms::TranscriptsController < Admin::ApplicationController
     ).merge(
       project_uid: ENV['PROJECT_ID']
     )
-  end
-
-  def collection_id
-    Collection.find_by(uid: params[:collection_uid]).id
   end
 end

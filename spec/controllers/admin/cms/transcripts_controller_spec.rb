@@ -26,7 +26,7 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
   end
 
   describe "GET #new" do
-    let(:action) { get :new, collection_uid: collection.uid }
+    let(:action) { get :new, collection_id: collection }
 
     it "is successful" do
       action
