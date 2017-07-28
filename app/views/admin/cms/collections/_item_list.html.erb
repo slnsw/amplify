@@ -1,0 +1,23 @@
+<% @collection.transcripts.find_each do |item| %>
+  <div class="row">
+    <div class="col-2"><%= item.uid %></div>
+    <div class="col-4"><%= item.title %></div>
+    <div class="col-2">
+      <%= image_tag(item.image.thumb) if item.image.url.present? %>
+    </div>
+
+    <div class="col-1">
+      <%= check_box_tag :transcript_url, 'uploaded', true %>
+    </div>
+    <div class="col-1">
+      <%= check_box_tag :is_published, item.is_published? %>
+    </div>
+    <div class="col-2">
+      <%= button_to "Edit Item",
+          edit_admin_cms_transcript_path(item),
+          method: "get",
+          data: { disable_with: "Loading..." }
+      %>
+    </div>
+  </div>
+<% end %>

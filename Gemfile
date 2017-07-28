@@ -41,6 +41,12 @@ gem 'execjs'
 gem 'popuparchive'
 gem 'webvtt-ruby'
 
+# For uploading of transcipts and image files
+# load fog-aws first to reduce the number of imported classes
+gem 'fog'
+gem 'carrierwave', '~> 1.1'
+gem 'mini_magick', '~> 4.8'
+
 # Error logging
 gem 'newrelic_rpm'
 gem 'rails_12factor'
@@ -51,6 +57,7 @@ platforms :ruby do # linux
 end
 
 group :development, :test do
+  gem 'byebug'
   gem 'rspec-rails', '~> 3.4'
 end
 
@@ -60,4 +67,8 @@ group :development do
   gem 'capistrano-rails', require: false
   gem 'capistrano-bundler', require: false
   gem 'capistrano-rvm'
+end
+
+group :test do
+  gem 'shoulda-matchers', '~> 3.1', require: false
 end

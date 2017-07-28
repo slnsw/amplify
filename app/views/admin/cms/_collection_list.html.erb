@@ -1,0 +1,25 @@
+<% Collection.find_each do |collection| %>
+  <div class="row">
+    <div class="col-3"><%= collection.uid %></div>
+    <div class="col-3"><%= collection.title %></div>
+    <div class="col-1"><%= collection.transcripts.size %></div>
+    <div class="col-1">
+      <%= check_box_tag :published, collection.published? %>
+    </div>
+    <div class="col-2">
+      <%= button_to "Edit Collection",
+          edit_admin_cms_collection_path(collection),
+          method: "get",
+          data: { disable_with: "Loading..." }
+      %>
+    </div>
+    <div class="col-2">
+      <%= button_to "View Items",
+          admin_cms_collection_path(collection),
+          method: "get",
+          data: { disable_with: "Loading..." }
+      %>
+    </div>
+  </div>
+  <br/>
+<% end %>

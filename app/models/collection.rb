@@ -1,12 +1,18 @@
 class Collection < ActiveRecord::Base
+  include ImageSizeValidation
+  include UidValidationOnUpdate
+
+  mount_uploader :image, ImageUploader
 
   has_many :transcripts
   belongs_to :vendor
 
-  def to_param
-    uid
-  end
+  validates :vendor, :description, presence: true
+  validates :uid, :title, :url, presence: true, uniqueness: true
+  validate :image_size_restriction
+  validate :uid_not_changed
 
+  # Class Methods
   def self.getForHomepage
     Rails.cache.fetch("#{ENV['PROJECT_ID']}/collections", expires_in: 10.minutes) do
       Collection.where(project_uid: ENV['PROJECT_ID']).order("title")
@@ -25,4 +31,12 @@ class Collection < ActiveRecord::Base
       {vendor_id: vendor[:id], empty: "", project_uid: project_uid})
   end
 
+  # Instance Methods
+  def to_param
+    uid
+  end
+
+  def published?
+    !!published_at
+  end
 end

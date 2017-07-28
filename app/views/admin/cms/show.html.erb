@@ -1,0 +1,37 @@
+<% content_for :cms_heading do %>
+  <div class="row">
+    <div class="col-10">
+      <h1 class="text-center">Collection Management</h1>
+    </div>
+    <div class="col-2 new-collection-panel">
+      <%= button_to "Create a new collection",
+          new_admin_cms_collection_path,
+          method: "get",
+          data: { disable_with: "Loading..." },
+          class: "button pull-right"
+      %>
+    </div>
+  </div>
+<% end %>
+
+<br/>
+
+<header class="container">
+  <div class="row collection-list">
+    <div class="col-3">Collection ID</div>
+    <div class="col-3">Title</div>
+    <div class="col-1">Items</div>
+    <div class="col-1">Published</div>
+    <div class="col-4 text-center">Actions</div>
+  </div>
+  <hr/>
+</header>
+
+<section class="container" id="collection_list">
+  <% if @collection.any? %>
+    <%= render "collection_list" %>
+  <% else %>
+    <%= render "collection_placeholder" %>
+  <% end %>
+  <br/>
+</section>

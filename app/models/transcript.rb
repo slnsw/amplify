@@ -1,11 +1,19 @@
 class Transcript < ActiveRecord::Base
+  include ImageSizeValidation
+  include UidValidationOnUpdate
+
+  mount_uploader :image, ImageUploader
+  mount_uploader :audio, AudioUploader
 
   include PgSearch
   multisearchable :against => [:title, :description]
   pg_search_scope :search_default, :against => [:title, :description]
   pg_search_scope :search_by_title, :against => :title
 
-  validates_uniqueness_of :uid
+  validates :uid, presence: true, uniqueness: true
+  validates :vendor, presence: true
+  validate :image_size_restriction
+  validate :uid_not_changed
 
   belongs_to :collection
   belongs_to :vendor
@@ -13,6 +21,31 @@ class Transcript < ActiveRecord::Base
   has_many :transcript_lines
   has_many :transcript_edits
   has_many :transcript_speakers
+
+  # speakers getters and setters used to manage the transcript_speakers
+  # when creating or editing a transcript
+  def speakers
+    return "" if transcript_speakers.blank?
+    transcript_speakers.includes(:speaker).pluck(:name).join("; ") + "; "
+  end
+
+  def speakers=(params)
+    return unless valid?
+
+    ActiveRecord::Base.transaction do
+      # remove the exist transcript speakers
+      transcript_speakers.destroy_all
+
+      # replace the transcript speakers with the new or revised selection
+      params.split(';').reject(&:blank?).each do |name|
+        transcript_speakers.build(
+          speaker_id: Speaker.find_or_create_by(name: name.strip).id,
+          collection_id: collection.id,
+          project_uid: project_uid
+        )
+      end
+    end
+  end
 
   def to_param
     uid
@@ -407,5 +440,4 @@ class Transcript < ActiveRecord::Base
       end
     end
   end
-
 end

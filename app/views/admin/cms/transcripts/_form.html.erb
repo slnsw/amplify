@@ -1,0 +1,95 @@
+<div class="row">
+  <div class="col-12">
+    <%= form_for [:admin, :cms, @transcript], html: { multipart: true } do |f| %>
+      <%= render partial: "admin/cms/shared/errors",
+                 locals: { resource: @transcript }
+       %>
+
+      <div class="form-group">
+        <%= f.label :uid %>
+        <%= f.text_field :uid, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :title %>
+        <%= f.text_field :title, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :url, "Audio collection catalogue url" %>
+        <%= f.text_field :url, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :audio %>
+
+        <div class="form-control">
+          <% if @transcript.audio.present? %>
+            <span class="font-italic text-success">
+              <%= @transcript.audio.file.filename %>
+            <span/>
+          <% end %>
+          <span class="text-muted"><%= f.file_field :audio %><span/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :script, "Transcript" %><br/>
+
+        <div class="form-control">
+          <% if @transcript.script.present? %>
+            <span class="font-italic text-success">
+              <%= @transcript.script.file.filename %>
+            <span/>
+          <% end %>
+          <span class="text-muted"><%= f.file_field :script %><span/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :description %>
+        <%= f.text_area :description, class: "form-control", rows: "6" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :speakers %>
+        <%= f.text_field :speakers, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :image %>
+
+        <div class="form-control">
+          <% if @transcript.image.present? %>
+            <%= image_tag(@transcript.image.thumb) %>
+          <% end %>
+          <%= f.file_field :image, class: "align-bottom" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :image_caption %>
+        <%= f.text_field :image_caption, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :image_catalogue_url %>
+        <%= f.text_field :image_catalogue_url, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :vendor_id %>
+        <%= f.select :vendor_id, Vendor.pluck(:name, :id), class: "form-control" %>
+      </div>
+
+      <div class="hidden-form-fields">
+        <%= f.hidden_field(:collection_id, value: @transcript.collection_id) %>
+      </div>
+
+      <div class="form-group text-center">
+        <%= f.submit %>
+        <%= link_to "Cancel", :back, class: "button" %>
+      </div>
+    <% end %>
+  </div>
+</div>

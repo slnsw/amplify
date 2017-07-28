@@ -9,7 +9,8 @@
   "allowTranscriptDownload": true,
   "gaCode": "",
   "adminEmails": [
-    "glen.crawford@reinteractive.net"
+    "glen.crawford@reinteractive.net",
+    "riana.ferreira@reinteractive.net"
   ],
   "authProviders": [
     {

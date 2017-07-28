@@ -24,6 +24,8 @@
 /.ruby-gemset
 /exports/*
 !/exports/.keep
+.byebug_history
+/spec/examples.txt
 
 # Ignore application configuration
 /config/application.yml

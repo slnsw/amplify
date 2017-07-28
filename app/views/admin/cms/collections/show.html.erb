@@ -1,0 +1,72 @@
+<% content_for :cms_heading do %>
+  <div class="row">
+    <div class="col-9">
+      <h1 class="text-center">Collection Item Management</h1>
+    </div>
+    <div class="col-3 new-item-panel">
+      <div class="row">
+        <div class="col-12">
+          <%= link_to "Create Item",
+              new_admin_cms_transcript_path(collection_uid: @collection.uid),
+              method: "get",
+              data: { disable_with: "Loading..." },
+              class: "button pull-right"
+          %>
+        </div>
+      </div>
+
+      <br/>
+
+      <div class="row">
+        <div class="col-12">
+          <%= link_to "All Collections",
+              admin_cms_path,
+              data: { disable_with: "Loading..." },
+              class: "button pull-right"
+          %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container collection-overview">
+  <h3><%= @collection.title %></h3>
+
+  <br/>
+
+  <div class="collection-description">
+    <%= @collection.description %>
+  </div>
+
+  <br/>
+
+  <div class="collection-total-items">
+    <strong>Total items:</strong> <%= @collection.transcripts.size %>
+  </div>
+
+  <br/>
+</div>
+
+<header class="container item-headings">
+  <h3 class="item-list-title">Items</h3>
+  <br/>
+  <div class="row item-list-headings">
+    <div class="col-2">UID</div>
+    <div class="col-4">Title</div>
+    <div class="col-2">Image</div>
+    <div class="col-1">Transcript</div>
+    <div class="col-1">Published</div>
+    <div class="col-2 text-center">Actions</div>
+  </div>
+  <hr/>
+</header>
+
+<section class="container item_list">
+  <% if @collection.transcripts.any? %>
+    <%= render "item_list" %>
+  <% else %>
+    <%= render "item_placeholder" %>
+  <% end %>
+  <br/>
+</section>
