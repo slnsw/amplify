@@ -35,44 +35,6 @@ RSpec.describe Collection, type: :model do
     end
   end
 
-  describe "#image_url" do
-    context "original manually uploaded image file path" do
-      before do
-        collection.update!(
-          image_url: "https://slnsw-amplify.s3-ap-southeast-2.amazonaws.com/collections/test/images/00001.jpg",
-          image: nil
-        )
-      end
-
-      it "returns correct s3 path for image retrieval" do
-        expect(collection.image_url).to eq("https://slnsw-amplify.s3-ap-southeast-2.amazonaws.com/collections/test/images/00001.jpg")
-      end
-    end
-
-    context "automated s3 direct upload image file path" do
-      before do
-        collection.update!(
-          image_url: nil,
-          image: File.open(Rails.root.join('spec', 'fixtures', 'image.jpg'))
-        )
-      end
-
-      it "returns correct s3 path for image retrieval" do
-        # Dev & test envs: images are stored in a local directory
-        # Prod: images are stored in S3 bucket
-        expect(collection.image_url).to include("/collections/collection-uid/images/image.jpg")
-      end
-    end
-
-    context "without an image" do
-      before { collection.update!(image_url: nil, image: nil) }
-
-      it "returns no s3 path" do
-        expect(collection.image_url).to be nil
-      end
-    end
-  end
-
   describe "#published?" do
     it "confirms that the collection has a published_at date" do
       collection.update!(published_at: DateTime.current)

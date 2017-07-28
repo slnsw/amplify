@@ -18,10 +18,18 @@
       <p><%= transcript.description %></p>
     <% } %>
 
+    <% if (transcript.image_caption) { %>
+      <p>Image:  <%= transcript.image_caption %></p>
+    <% } %>
+
     <p class="duration">Duration: <%= UTIL.formatTimeAlt(transcript.duration) %></p>
 
     <% if (transcript.url) { %>
-      <p class="original-link"><a href="<%= transcript.url %>" target="_blank">View in Library catalogue</a></p>
+      <p class="original-link"><a href="<%= transcript.url %>" target="_blank">View audio in Library catalogue</a></p>
+    <% } %>
+
+    <% if (transcript.image_catalogue_url) { %>
+      <p class="original-link"><a href="<%= transcript.image_catalogue_url %>" target="_blank">View image in Library catalogue</a></p>
     <% } %>
 
     <% if (transcript.speakers.length) { %>

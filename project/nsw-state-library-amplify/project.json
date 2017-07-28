@@ -36,7 +36,7 @@
     "header": [
       {"label": "Browse", "url": "/"},
       {"label": "Search", "url": "/search"},
-      {"label": "Collections", "url": "/page/collections"},
+      {"label": "Collections", "url": "/collections"},
       {"label": "About", "url": "/page/about"},
       {"label": "FAQ", "url": "/page/faq"},
       {"label": "Tutorial", "url": "#tutorial", "modal": "tutorial_edit", "validRoutes": ["transcripts/:id"]}

@@ -43,6 +43,7 @@ class Admin::Cms::CollectionsController < Admin::ApplicationController
     params.require(:collection).permit(
       :uid,
       :title,
+      :library_catalogue_title,
       :description,
       :url,
       :image,

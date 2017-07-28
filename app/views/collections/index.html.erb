@@ -20,30 +20,18 @@
 
     <%= csrf_meta_tags %>
   </head>
+
   <body>
     <div id="app" class="container-fluid">
       <div id="header" class="header">
         <nav id="primary-navigation" class="navigation primary inverse" role="navigation">
           <div>
-            <div id="header-title" class="title-container">
-              <style type="text/css">
-                .header .title-container {
-                  width: auto;
-                  float: left;
-                }
-              </style>
-              <div class="header-bar">
-                <a href="/" title="Amplify" class="title" aria-label="Click to return to homepage">
-                  <img src="/nsw-state-library-amplify/assets/img/logo_cropped.png" alt="Logo" class="logo">
-                  <p class="logo-text">Amplify</p>
-                </a>
-              </div>
-            </div>
+            <div id="header-title" class="title-container">  <style type="text/css">    .header .title-container {      width: auto;      float: left;    }  </style>  <div class="header-bar">    <a href="/" title="Amplify" class="title" aria-label="Click to return to homepage">      <img src="/nsw-state-library-amplify/assets/img/logo_cropped.png" alt="Logo" class="logo">      <p class="logo-text">Amplify</p>    </a>  </div></div>
             <div id="header-crumbs" class="crumbs-container"></div>
             <div id="account-container" class="account-container">
-              <div class="select">
+              <div class="select active">
                 <div class="select-active" title="">
-                  <span class="score">0</span> CMS</div>
+                  <span class="score">0</span> Signed In</div>
                   <div class="select-options account-menu menu" role="menu" aria-hidden="true" aria-label="User account menu">
                     <a href="/dashboard" class="select-option menu-item" role="menuitem">Dashboard</a>
                     <a href="/admin" class="select-option menu-item" role="menuitem">Admin</a>
@@ -69,8 +57,30 @@
       </div>
 
       <div id="main" class="body">
-        <%= yield :cms_heading %>
-        <%= yield %>
+        <div class="collections page">
+          <h1>About the collections</h1>
+          <p>
+            Selected collections from the State Library of NSW’s vast sound archive are
+            periodically added to Amplify for listening and transcription. Below is a
+            list of collections currently available.
+          </p>
+
+          <h2>Accessing the collections</h2>
+          <p>
+            If you are interested in getting access to our sound collections
+            for research, media or personal interest purposes, please submit a
+            request through our
+            <%= link_to "Ask A Librarian", "http://www.sl.nsw.gov.au/research-and-collections/ask-librarian" %>
+            service.
+          </p>
+
+          <% @collections.find_each do |collection| %>
+            <h2><%= collection.title %></h2>
+            <p><strong><%= collection.library_catalogue_title %></strong></p>
+            <p><%= sanitize(collection.description) %></p>
+            <p><%= link_to "View in Library Catalogue", collection.url %></p>
+          <% end %>
+        </div>
       </div>
     </div>
 
