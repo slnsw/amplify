@@ -1017,7 +1017,8 @@ app.routers.DefaultRouter = Backbone.Router.extend({
     "page/:id":                     "pageShow",
     "dashboard":                    "dashboard",
     "search":                       "search",
-    "search?*queryString":          "search"
+    "search?*queryString":          "search",
+    "collections":                  "collections",
   },
 
   before: function( route, params ) {
@@ -1057,6 +1058,13 @@ app.routers.DefaultRouter = Backbone.Router.extend({
     if (queryString) data.queryParams = deparam(queryString);
     var header = new app.views.Header(data);
     var main = new app.views.Search(data);
+    var footer = new app.views.Footer(data);
+  },
+
+  collections: function() {
+    var data = this._getData(data);
+    var header = new app.views.Header(data);
+    var main = new app.views.Collections(data);
     var footer = new app.views.Footer(data);
   },
 
@@ -1215,6 +1223,46 @@ app.collections.Transcripts = Backbone.Collection.extend({
 });
 
 app.views.Base = Backbone.View.extend({
+
+});
+
+app.views.Collections = app.views.Base.extend({
+
+  el: '#main',
+  template: _.template(TEMPLATES['collections_index.ejs']),
+
+  initialize: function(data){
+    var defaults = {
+      queryParams: {}
+    };
+
+    this.data = _.extend({}, defaults, data);
+
+    this.render();
+  },
+
+  onCollectionsLoaded: function(collection){
+    var data = collection.toJSON();
+    this.$el.html(this.template({collections: data}));
+    this.$el.removeClass('loading');
+  },
+
+  render: function() {
+    document.title = app.pageTitle('Collections');
+
+    this.collections = this.collections || new app.collections.Collections({
+      endpoint: '/collections.json'
+    });
+
+    this.collections.fetch({
+      success: this.onCollectionsLoaded.bind(this),
+      error: function(collection, response, options){
+        $(window).trigger('alert', ['Whoops! We seem to have trouble loading our transcripts. Please try again by refreshing your browser or come back later!']);
+      }
+    });
+
+    return this;
+  }
 
 });
 
@@ -2612,8 +2660,23 @@ app.views.TranscriptFacets = app.views.Base.extend({
   },
 
   render: function(){
-    this.$el.html(this.template(this.data));
+    this.$el.html(this.template(
+      this.sanitiseRenderData(this.data)
+    ));
     return this;
+  },
+
+  /**
+   * Remove HTML markup from collection descriptions before sending to facet template.
+   */
+  sanitiseRenderData: function(data) {
+    data.collections = data.collections.map(function(collection) {
+      if (collection.hasOwnProperty('description')) {
+        collection.description = collection.description.replace(/<[^>]+>/g, '');
+      }
+      return collection;
+    });
+    return data;
   },
 
   search: function(keyword){

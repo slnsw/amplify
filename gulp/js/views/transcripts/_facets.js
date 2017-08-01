@@ -93,8 +93,23 @@ app.views.TranscriptFacets = app.views.Base.extend({
   },
 
   render: function(){
-    this.$el.html(this.template(this.data));
+    this.$el.html(this.template(
+      this.sanitiseRenderData(this.data)
+    ));
     return this;
+  },
+
+  /**
+   * Remove HTML markup from collection descriptions before sending to facet template.
+   */
+  sanitiseRenderData: function(data) {
+    data.collections = data.collections.map(function(collection) {
+      if (collection.hasOwnProperty('description')) {
+        collection.description = collection.description.replace(/<[^>]+>/g, '');
+      }
+      return collection;
+    });
+    return data;
   },
 
   search: function(keyword){
