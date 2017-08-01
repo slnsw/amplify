@@ -24,16 +24,16 @@
 
     <p class="duration">Duration: <%= UTIL.formatTimeAlt(transcript.duration) %></p>
 
+    <% if (transcript.speakers.length) { %>
+      <p class="speakers">Participants: <%= _.pluck(transcript.speakers, 'name').join(', ') %> </p>
+    <% } %>
+
     <% if (transcript.url) { %>
       <p class="original-link"><a href="<%= transcript.url %>" target="_blank">View audio in Library catalogue</a></p>
     <% } %>
 
     <% if (transcript.image_catalogue_url) { %>
       <p class="original-link"><a href="<%= transcript.image_catalogue_url %>" target="_blank">View image in Library catalogue</a></p>
-    <% } %>
-
-    <% if (transcript.speakers.length) { %>
-      <p class="speakers">Participants: <%= _.pluck(transcript.speakers, 'name').join(', ') %> </p>
     <% } %>
 
     <% if (transcript.can_download) { %>
