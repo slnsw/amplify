@@ -8,7 +8,8 @@ app.routers.DefaultRouter = Backbone.Router.extend({
     "page/:id":                     "pageShow",
     "dashboard":                    "dashboard",
     "search":                       "search",
-    "search?*queryString":          "search"
+    "search?*queryString":          "search",
+    "collections":                  "collections",
   },
 
   before: function( route, params ) {
@@ -48,6 +49,13 @@ app.routers.DefaultRouter = Backbone.Router.extend({
     if (queryString) data.queryParams = deparam(queryString);
     var header = new app.views.Header(data);
     var main = new app.views.Search(data);
+    var footer = new app.views.Footer(data);
+  },
+
+  collections: function() {
+    var data = this._getData(data);
+    var header = new app.views.Header(data);
+    var main = new app.views.Collections(data);
     var footer = new app.views.Footer(data);
   },
 

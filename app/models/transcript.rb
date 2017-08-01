@@ -4,6 +4,7 @@ class Transcript < ActiveRecord::Base
 
   mount_uploader :image, ImageUploader
   mount_uploader :audio, AudioUploader
+  mount_uploader :script, TranscriptUploader
 
   include PgSearch
   multisearchable :against => [:title, :description]

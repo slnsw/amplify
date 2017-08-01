@@ -1,20 +1,20 @@
 # Amplify
 
-This is an open-source, web-based tool for the correction of 
-computer-generated transcripts that are delivered in pairing with 
-their original audio file. The tool is built to integrate with 
-speech-to-text software services such as [VoiceBase](http://voicebase.com), 
-or through the manual upload of transcript files. 
-Amplify is a customised version of the 
-[New York Public Library](http://nypl.org)'s 
-[Transcript Editor](https://github.com/NYPL/transcript-editor/) and 
-without NYPL's dedication to innovation and contribution to the 
-open-source community globally, this project would not have 
+This is an open-source, web-based tool for the correction of
+computer-generated transcripts that are delivered in pairing with
+their original audio file. The tool is built to integrate with
+speech-to-text software services such as [VoiceBase](http://voicebase.com),
+or through the manual upload of transcript files.
+Amplify is a customised version of the
+[New York Public Library](http://nypl.org)'s
+[Transcript Editor](https://github.com/NYPL/transcript-editor/) and
+without NYPL's dedication to innovation and contribution to the
+open-source community globally, this project would not have
 been possible.
 
-This platform is designed to allow digital volunteers, members 
-of the public and staff alike to assist in the correction of 
-transcripts associated with collections belonging to the 
+This platform is designed to allow digital volunteers, members
+of the public and staff alike to assist in the correction of
+transcripts associated with collections belonging to the
 State Library.
 
 ## TOC
@@ -90,13 +90,13 @@ Your project should load, but since there's no transcripts, all you'll see is a 
 
 ## Generating your transcripts
 
-For our installation, we did not automatically integrate Amplify and 
-[VoiceBase](http://voicebase.com), our transcript provider. 
-If this function is built in at a later date we will update the 
-documentation but otherwise please see the section on 
-[importing existing transcripts](#importing-existing-transcripts) 
-to follow our own process. 
-To see documentation on automatic generation, please refer to the 
+For our installation, we did not automatically integrate Amplify and
+[VoiceBase](http://voicebase.com), our transcript provider.
+If this function is built in at a later date we will update the
+documentation but otherwise please see the section on
+[importing existing transcripts](#importing-existing-transcripts)
+to follow our own process.
+To see documentation on automatic generation, please refer to the
 [NYPL documentation](https://github.com/NYPL/transcript-editor/).
 
 ## Creating a manifest file
@@ -128,12 +128,12 @@ Replace `my-project` with your project id and `transcripts_seeds.csv` if you are
 
 ## Making Collections/Groups
 
-Sometimes you may want to group your audio in different ways for the 
-user. You can create collections similar to how you create 
+Sometimes you may want to group your audio in different ways for the
+user. You can create collections similar to how you create
 transcripts--with a manifest file.
 
-In your project folder, you should find an empty .csv file: 
-`project/my-project/data/collections_seeds.csv`. 
+In your project folder, you should find an empty .csv file:
+`project/my-project/data/collections_seeds.csv`.
 It contains almost the same columns as the transcript manifest file.
 
 Once you fill out the manifest file, you can load them into the app with this command:
@@ -507,11 +507,11 @@ rake transcripts:recalculate
 
 ## Deploying your project to production
 
-The State Library of New South Wales hosts Amplify on [Amazon AWS](https://aws.amazon.com) 
-EC2  instances, but you can host Amplify on more or less any webserver that 
+The State Library of New South Wales hosts Amplify on [Amazon AWS](https://aws.amazon.com)
+EC2  instances, but you can host Amplify on more or less any webserver that
 runs Ruby on Rails and PostgreSQL.
 
-**Note:** the original [NYPL project](https://github.com/NYPL/transcript-editor) 
+**Note:** the original [NYPL project](https://github.com/NYPL/transcript-editor)
 was hosted on [Heroku](https://heroku.com), so if you would like to host
 there, please follow the NYPL's guide.
 
@@ -522,14 +522,15 @@ The EC2 servers run the following:
 * Puma
 * RVM
 * Ruby 2.3.0
+* ImageMagick
 
-Deployments are done via Capistrano. The configuration for this is 
+Deployments are done via Capistrano. The configuration for this is
 checked into this repository, under `config/deploy.rb` and the per-environment
 definitions in the `config/deploy` directory.
 
-The application sits in the home directory of the `deploy` user. 
-All credentials and tokens are stored in the 
-`/home/deploy/nsw-state-library-amplify/shared/config/application.yml` file. 
+The application sits in the home directory of the `deploy` user.
+All credentials and tokens are stored in the
+`/home/deploy/nsw-state-library-amplify/shared/config/application.yml` file.
 The `database.yml` file is in the same directory.
 
 Assuming you have already set up your `deploy` user and provisioned a database,
@@ -583,10 +584,16 @@ If you ever need to re-import updated transcripts, then you can choose between e
 #### Images and audio files
 
 These are all uploaded to the `slnsw-amplify` AWS S3 bucket. There is a rake task built specially for uploading files: `rake aws:upload_files`.
+Images and audio files are stored directly on the AWS S3 bucket when creating or updating a transcript from the CMS dashboard.
+> Only images are store for collections on the AWS S3 bucket.
+
+#### Updating collection data
+Individual collections can be created or updated for the `nsw-state-library-amplify` project  from the CMS dashboard.
 
 #### Updating transcript data
 
 Simply update the `transcripts_seeds.csv` file and run the `transcripts:load` rake task again (the task is idempotent).
+Individual transcripts can be created or updated for a collection from the CMS dashboard.
 
 #### Updating transcript lines
 
@@ -621,6 +628,7 @@ This tool has the concept of "user roles", though currently only supports three 
   - They can edit lines that have status "completed"
   - They can resolve flags. If a user thinks that a line that is completed/locked still contains errors, they can flag it with a type (misspelling, repeated word, missing word, etc) and comment.
   - They have access to the admin dashboard. This gives them basic statistics about overall edits, user registrations, top users, and flags.
+  - They have access to the cms dashboard. This gives them access to manage collections and their associated transcripts.
 
 ### Configuring Admins
 

@@ -1,9 +1,15 @@
 class CollectionsController < ApplicationController
+  include ActionController::MimeResponds
+  include IndexTemplate
+  
   before_action :set_collection, only: [:show, :update, :destroy]
 
   # GET /collections.json
   def index
-    @collections = Collection.getForHomepage
+    respond_to do |format|
+      format.html { render file: environment_index_file }
+      format.json { @collections = Collection.getForHomepage }
+    end
   end
 
   # GET /collections/the-uid.json

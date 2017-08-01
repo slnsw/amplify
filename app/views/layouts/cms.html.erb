@@ -12,12 +12,6 @@
     <%= stylesheet_link_tag    'application', '/assets/css/app.css?a=1499756908' %>
     <%= stylesheet_link_tag    'search_auto_complete' %>
 
-    <%= javascript_include_tag 'application', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'%>
-    <%= javascript_include_tag 'application', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'%>
-
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'search_auto_complete' %>
-
     <%= csrf_meta_tags %>
   </head>
   <body>
@@ -33,33 +27,35 @@
                 }
               </style>
               <div class="header-bar">
-                <a href="/" title="Amplify" class="title" aria-label="Click to return to homepage">
+                <%= link_to root_path, class: "title", "aria-label": "Click to return to homepage" do %>
                   <img src="/nsw-state-library-amplify/assets/img/logo_cropped.png" alt="Logo" class="logo">
                   <p class="logo-text">Amplify</p>
-                </a>
+                <% end %>
               </div>
             </div>
             <div id="header-crumbs" class="crumbs-container"></div>
             <div id="account-container" class="account-container">
               <div class="select">
                 <div class="select-active" title="">
-                  <span class="score">0</span> CMS</div>
-                  <div class="select-options account-menu menu" role="menu" aria-hidden="true" aria-label="User account menu">
-                    <a href="/dashboard" class="select-option menu-item" role="menuitem">Dashboard</a>
-                    <a href="/admin" class="select-option menu-item" role="menuitem">Admin</a>
-                    <a href="/admin/cms" class="select-option menu-item" role="menuitem">CMS</a>
-                    <a href="#sign-out" class="sign-out-link select-option menu-item" role="menuitem">Sign out</a>
-                  </div>
+                  <span class="score"><%= current_user.user_role_id %></span>
+                  <%= current_user.name %>
+                </div>
+                <div class="select-options account-menu menu" role="menu" aria-hidden="true" aria-label="User account menu">
+                  <%= link_to "Dashboard", dashboard_path, class: "select-option menu-item", role: "menuitem" %>
+                  <%= link_to "Admin", admin_path, class: "select-option menu-item", role: "menuitem" %>
+                  <%= link_to "CMS", admin_cms_path, class: "select-option menu-item", role: "menuitem" %>
+                  <%= link_to "Sign out", "#sign-out", class: "sign-out-link select-option menu-item", role: "menuitem" %>
                 </div>
               </div>
+            </div>
 
             <div id="primary-menu-container" class="menu-container">
               <div class="header-menu menu" role="menu">
-                <a href="/" class="menu-item " role="menuitem">Browse</a>
-                <a href="/search" class="menu-item " role="menuitem">Search</a>
-                <a href="/collections" class="menu-item " role="menuitem">Collections</a>
-                <a href="/page/about" class="menu-item " role="menuitem">About</a>
-                <a href="/page/faq" class="menu-item " role="menuitem">FAQ</a>
+                <% link_to "Browse", root_path, class: "menu-item", role: "menuitem" %>
+                <% link_to "Search", search_path, class: "menu-item", role: "menuitem" %>
+                <% link_to "Collections", collections_path, class: "menu-item", role: "menuitem" %>
+                <% link_to "About", "/page/about", class: "menu-item", role: "menuitem" %>
+                <% link_to "FAQ", "/page/faq", class: "menu-item", role: "menuitem" %>
               </div>
             </div>
           </div>
@@ -78,10 +74,10 @@
       <nav id="footer-navigation" class="navigation inverse">
         <div id="footer-menu-container" class="menu-container">
           <div class="footer-menu menu" role="menu">
-            <a href="http://www.sl.nsw.gov.au/privacy" class="menu-item " target="_blank" role="menuitem">Privacy</a>
-            <a href="http://www.sl.nsw.gov.au/copyright" class="menu-item " target="_blank" role="menuitem">Copyright</a>
-            <a href="http://www.sl.nsw.gov.au/about-library-legislation-and-policies/client-code-conduct" class="menu-item " target="_blank" role="menuitem">Client Code of Conduct</a>
-            <a href="http://www.sl.nsw.gov.au/feedback" class="menu-item " target="_blank" role="menuitem">Feedback</a>
+            <%= link_to "Privacy", "http://www.sl.nsw.gov.au/privacy", class: "menu-item ", target: "_blank", role: "menuitem" %>
+            <%= link_to "Copyright", "http://www.sl.nsw.gov.au/copyright", class: "menu-item ", target: "_blank", role: "menuitem" %>
+            <%= link_to "Client Code of Conduct", "http://www.sl.nsw.gov.au/about-library-legislation-and-policies/client-code-conduct", class: "menu-item ", target: "_blank", role: "menuitem" %>
+            <%= link_to "Feedback", "http://www.sl.nsw.gov.au/feedback", class: "menu-item ", target: "_blank", role: "menuitem" %>
           </div>
         </div>
       </nav>
@@ -89,10 +85,10 @@
         <div class="footer.md page">
           <p>
             Powered by
-            <a href="https://github.com/NYPL/transcript-editor">Open Transcript Editor</a>
+            <%= link_to "Open Transcript Editor", "https://github.com/NYPL/transcript-editor" %>
             which was developed by the
-            <a href="http://www.nypl.org">New York Public Library</a>.
-            <a href="/page/about">Find out more</a>.
+            <%= link_to "New York Public Library", "http://www.nypl.org" %>
+            <%= link_to "Find out more", "/page/about" %>
           </p>
         </div>
       </div>
@@ -101,6 +97,9 @@
     <script src="/nsw-state-library-amplify/project.js"></script>
     <script src="/assets/js/templates.js"></script>
     <script src="/assets/js/admin.js"></script>
-    <script src="/nsw-state-library-amplify/assets/js/custom.js"></script>
+
+    <%= javascript_include_tag 'application', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'%>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'search_auto_complete' %>
   </body>
 </html>

@@ -4,8 +4,7 @@ class ApplicationController < ActionController::API
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  include ActionController::RequestForgeryProtection
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
 
   # Allow us to use JBuilder
   include ActionController::ImplicitRender

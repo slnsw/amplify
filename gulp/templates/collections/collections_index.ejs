@@ -1,0 +1,38 @@
+<div class="collections page">
+  <div class="collections-about">
+    <h1>About the collections</h1>
+    <p>
+      Selected collections from the State Library of NSW’s vast sound archive are
+      periodically added to Amplify for listening and transcription. Below is a
+      list of collections currently available.
+    </p>
+  </div>
+
+  <div class="collections-access">
+    <h2>Accessing the collections</h2>
+    <p>
+      If you are interested in getting access to our sound collections
+      for research, media or personal interest purposes, please submit a
+      request through our
+      <a href="http://www.sl.nsw.gov.au/research-and-collections/ask-librarian">
+        Ask A Librarian
+      </a>
+      service.
+    </p>
+  </div>
+
+  <div class="collect-list">
+    <% if (collections.length >= 0) { %>
+      <% _.each(collections, function(collection) { %>
+        <div class="collection-item">
+          <h2><%= collection.title %></h2>
+          <p><strong><%= collection.library_catalogue_title %></strong></p>
+          <p><%= collection.description %></p>
+          <p><a href="<%= collection.url %>">View in Library Catalogue</a></p>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No collections have been added yet!</p>
+    <% } %>
+  </div>
+</div>
