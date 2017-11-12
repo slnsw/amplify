@@ -22,11 +22,6 @@
       "name": "facebook",
       "label": "Facebook",
       "path": "/auth/facebook"
-    },
-    {
-      "name": "staff_saml",
-      "label": "SLNSW Staff",
-      "path": "/auth/saml"
     }
   ],
   "consensus": {
