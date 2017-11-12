@@ -40,9 +40,18 @@
           <% if @transcript.script.present? %>
             <span class="font-italic text-success">
               <%= @transcript.script.file.filename %>
-            <span/>
+            </span>
           <% end %>
-          <span class="text-muted"><%= f.file_field :script %><span/>
+          <span class="text-muted"><%= f.file_field :script %></span>
+
+          <span id="transcript-line-count">
+            <%= pluralize(@transcript.lines, 'line') %> in database
+          </span>
+          <% if @transcript.script.present? and @transcript.lines == 0 %>
+            <button type="button" class="btn btn-default" id="update-transcript" data-id="<%= @transcript.id %>">
+              Process
+            </button>
+          <% end %>
         </div>
       </div>
 

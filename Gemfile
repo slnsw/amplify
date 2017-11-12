@@ -29,8 +29,10 @@ gem 'figaro'
 
 # User management / auth
 gem 'devise_token_auth'
+gem 'omniauth', '~> 1.4.2'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-facebook'
+gem 'omniauth-saml'
 
 # Parsers for project asset precompilation
 gem 'redcarpet'
@@ -67,8 +69,10 @@ group :development do
   gem 'capistrano-rails', require: false
   gem 'capistrano-bundler', require: false
   gem 'capistrano-rvm'
+  gem 'rubocop'
 end
 
 group :test do
   gem 'shoulda-matchers', '~> 3.1', require: false
+  gem 'simplecov'
 end

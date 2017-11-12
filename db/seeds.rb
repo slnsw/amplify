@@ -6,6 +6,7 @@ users_roles = [
   { name: 'guest',             hiearchy: 0,    description: 'Unregistered user' },
   { name: 'user',              hiearchy: 10,   description: 'Registered user' },
   { name: 'moderator',         hiearchy: 50,   description: 'Moderator can review edits' },
+  { name: 'content_editor',    hiearchy: 80,   description: 'Content editor can edit content' },
   { name: 'admin',             hiearchy: 100,  description: 'Administrator has all privileges' }
 ]
 users_roles.each do |attributes|

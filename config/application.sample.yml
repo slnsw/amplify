@@ -7,6 +7,11 @@ PROJECT_ID: sample-project
 NEW_RELIC_LICENSE_KEY: xxx
 AWS_S3_ACCESS_KEY_ID: xxx
 AWS_S3_SECRET_ACCESS_KEY: xxx
+SAML_CONSUMER_SERVICE_URL: xxx
+SAML_ISSUER: xxx
+SAML_SSO_TARGET_URL: xxx
+SAML_IDP_CERT_PATH: xxx
+SAML_NAME_ID_FORMAT: urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
 
 development:
   GOOGLE_CLIENT_ID: xxx

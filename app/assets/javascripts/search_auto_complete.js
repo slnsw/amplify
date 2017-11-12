@@ -6,7 +6,8 @@ function extractLast( term ) {
   return split( term ).pop();
 }
 
-$( "#transcript_speakers" )
+// Process transcript speakers.
+$("#transcript_speakers")
   // don't navigate away from the field on tab when selecting an item
   .on( "keydown", function( event ) {
     if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -43,4 +44,13 @@ $( "#transcript_speakers" )
       return false;
     }
   });
-} );
+});
+
+// Process transcript submission.
+$('#update-transcript').on('click', function(e) {
+  e.preventDefault();
+  var id = $(this).attr('data-id');
+  $.post('/admin/cms/transcripts/' + id + '/process_transcript', {}, function(data, textStatus, jqXHR) {
+    $('#transcript-line-count').text(data.lines + ' lines in database');
+  }, 'json');
+});

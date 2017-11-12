@@ -10,7 +10,6 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       vendor: Vendor.create(uid: 'voice_base', name: 'VoiceBase')
     )
   end
-
   let(:transcript) do
     Transcript.create!(
       uid: "transcript-uid",
@@ -23,6 +22,9 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       collection: collection,
       vendor: collection.vendor,
     )
+  end
+  let(:speaker) do
+    Speaker.create!(name: 'Jane Bloggs')
   end
   let(:user) do
     User.create!(
@@ -155,6 +157,28 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
         expect do
           action
         end.to_not change { transcript.reload.uid }
+      end
+    end
+  end
+
+  describe "GET speaker_search" do
+    context "valid request" do
+      let (:action) { post :speaker_search, q: 'jane' }
+
+      it "responds with an ok status" do
+        action
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+
+  describe "POST process_transcript" do
+    context "valid request" do
+      let (:action) { post :process_transcript, id: transcript.id }
+
+      it "responds with an ok status" do
+        action
+        expect(response).to have_http_status(:ok)
       end
     end
   end

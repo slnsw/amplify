@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module VoiceBase
+  # SRT Transcript importer.
   class ImportSrtTranscripts
     def self.call(project_id:)
       new(project_id: project_id).send(:call)
@@ -8,140 +11,85 @@ module VoiceBase
       @project_id = project_id
     end
 
+    # Process a single transcript.
+    # @param int transcript_id
+    def process_single(transcript_id)
+      transcript = Transcript.find(transcript_id)
+      load_from_file(transcript) if transcript
+    end
+
     private
 
     def call
       # Retrieve empty transcripts that have VoiceBase as their vendor.
       transcripts = Transcript.getForDownloadByVendor('voice_base', @project_id)
-      puts "Retrieved #{transcripts.count} empty transcripts from collections with VoiceBase as their vendor."
+      puts "Retrieved #{transcripts.count} empty transcripts from collections \
+      with VoiceBase as their vendor."
 
-      transcripts.find_each do |transcript|
-        transcript_file = Rails.root.join('project', @project_id, 'transcripts', 'voice_base', "#{transcript.vendor_identifier}.srt")
-
-        unless File.exist?(transcript_file)
-          puts "Couldn't find transcript in project folder for Transcript ##{transcript.id} at #{transcript_file}."
-          next
-        end
-
-        load_from_file(transcript, transcript_file)
-      end
+      transcripts.find_each { |transcript| load_from_file(transcript) }
     end
 
-    def load_from_file(transcript, transcript_file)
-      contents = File.read(transcript_file).lines
-      transcript_lines = get_transcript_lines_from_file(transcript, contents)
+    def transcript_file_path(transcript)
+      Rails.root.join('project', @project_id, 'transcripts', 'voice_base',
+                      "#{transcript.vendor_identifier}.srt")
+    end
 
-      unless transcript_lines.nil?
-        transcript_duration = transcript_lines.last[:end_time] / 1000 # From milliseconds to seconds.
-        vendor_audio_urls = []
-
-        transcript_status = TranscriptStatus.find_by(name: :transcript_downloaded)
-
-        TranscriptLine.where(transcript_id: transcript.id).destroy_all
-
-        TranscriptLine.create!(transcript_lines)
-
-        transcript.update!(lines: transcript_lines.count, transcript_status: transcript_status, duration: transcript_duration, vendor_audio_urls: vendor_audio_urls, transcript_retrieved_at: DateTime.now)
-
-        puts "Created #{transcript_lines.length} lines from transcript #{transcript.uid}."
+    # Read lines from a single transcript.
+    # @param Transcript transcript
+    def read_lines_from_file(transcript)
+      if transcript.script.file.nil?
+        fp = transcript_file_path(transcript)
+        unless File.exist?(fp)
+          puts "Couldn't find transcript in project folder for Transcript \
+          ##{transcript.id} at #{fp}."
+          return []
+        end
+        File.read(fp).lines
       else
-        puts "No lines read from transcript #{transcript.uid}."
+        transcript.script.file.read.lines
       end
     end
 
+    # Load a transcript from a file.
+    def load_from_file(transcript)
+      contents = read_lines_from_file(transcript)
+      transcript_lines = get_transcript_lines_from_file(transcript, contents)
+      ok = ingest_transcript_lines(transcript, transcript_lines)
+
+      debug = "No lines read from transcript #{transcript.uid}."
+      if ok
+        debug = "Created #{transcript_lines.length} lines from \
+        transcript #{transcript.uid}."
+      end
+      puts debug
+    end
+
+    # Ingest processed lines into the transcript.
+    def ingest_transcript_lines(transcript, transcript_lines)
+      return nil if transcript_lines.nil? or transcript_lines.empty?
+
+      TranscriptLine.where(transcript_id: transcript.id).destroy_all
+      TranscriptLine.create!(transcript_lines)
+      transcript.update!(
+        lines: transcript_lines.count,
+        transcript_status: downloaded_state,
+        duration: transcript_lines.last[:end_time] / 1000,
+        vendor_audio_urls: [],
+        transcript_retrieved_at: DateTime.now
+      )
+    end
+
+    # Default downloaded state for transcript.
+    def downloaded_state
+      TranscriptStatus.find_by(name: :transcript_downloaded)
+    end
+
+    # Parse transcript lines.
     def get_transcript_lines_from_file(transcript, contents)
-      to_from_match = /(\d+:\d+:\d+,\d+) --> (\d+:\d+:\d+,\d+)/
-      whitespace_only = /^\s*$/
-
-      # A previous implementation used [].tap to fill an empty array,
-      # but given the state machine-like nature of the new parser,
-      # it was more concise to just fill an array.
-      transcript_lines = []
-
-      # Use line_number and line_temp to store the current state.
-      line_number = 1
-      line_temp = {
-        reading: false,
-        from: nil,
-        to: nil,
-        lines: []
-      }
-
-      # Use this lambda to insert into the transcript.
-      insert_into_transcript = lambda {
-        transcript_lines << {
-          transcript_id: transcript.id,
-          start_time: line_temp[:from],
-          end_time: line_temp[:to],
-          original_text: line_temp[:lines].join(' '),
-          sequence: (line_number - 1)
-        }
-        line_number += 1
-      }
-
-      reset_reading = lambda {
-        line_temp = {
-          reading: false,
-          from: nil,
-          to: nil,
-          lines: []
-        }
-      }
-
-      start_reading = lambda { |from_text, to_text|
-        line_temp = {
-          reading: true,
-          from: convert_time_to_milliseconds(from_text),
-          to: convert_time_to_milliseconds(to_text),
-          lines: []
-        }
-      }
-
-      # Move to the next line when there's a to & from timestamp.
-      while contents.any?
-        newline = contents.shift
-
-        # First, we test if the new line contains from/to timestamps,
-        # and if so, start reading.
-        try_match_to_from = to_from_match.match(newline)
-        unless try_match_to_from.nil?
-          # If a valid match for the timestamp, we need to save all
-          # existing line data, and start a new line.
-          if line_temp[:reading]
-            # If we're still reading, add the existing data
-            # to the transcript right away.
-            insert_into_transcript.call
-          end
-
-          start_reading.call(try_match_to_from[1], try_match_to_from[2])
-        else
-          # Otherwise, we add more content to the existing line,
-          # but only if we are actively reading.
-          if line_temp[:reading]
-            if newline.length > 0 && !(whitespace_only =~ newline)
-              # Add the new line to the list of ingested lines.
-              line_temp[:lines] << newline
-            else
-              # The current line is whitespace or empty.
-              # Add the ingested line to the transcript,
-              # and carry on.
-              insert_into_transcript.call
-              reset_reading.call
-            end
-          end
-        end
-      end
-
-      # When we've finished parsing the document,
-      # if we were still reading content,
-      # read that line into the transcript.
-      if line_temp[:reading]
-        insert_into_transcript.call
-      end
-
-      transcript_lines
+      VoiceBase::SrtParser.new(transcript.id, contents).lines
     end
 
+    # Convert a timestamp to milliseconds.
     def convert_time_to_milliseconds(time)
       ((Time.strptime(time, '%H:%M:%S,%L') - Time.now.at_midnight) * 1000).to_i
     end

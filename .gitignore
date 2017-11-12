@@ -13,6 +13,11 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
+# Ignore database snapshots.
+*.pgdump
+*.sql
+*.psql
+
 # Ignore all logfiles and tempfiles.
 /log/*
 !/log/.keep
@@ -45,3 +50,14 @@
 
 /project/nsw-state-library-amplify/assets/img/Landing page/
 /public/nsw-state-library-amplify/assets/img/Landing page/
+
+# Ignore all certificates.
+/config/certificates/*
+!/config/certificates/.keep
+
+# Ignore coverage.
+coverage/*
+
+# Ignore uploaded files.
+app/files/uploads/*
+!app/files/uploads/.keep

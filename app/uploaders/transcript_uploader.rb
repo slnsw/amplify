@@ -7,6 +7,6 @@ class TranscriptUploader < CarrierWave::Uploader::Base
   # these files are stored within the project directory. There are existing
   # rake tasks that reference these files and support the content review process.
   def store_dir
-    "#{Rails.root}/project/#{ENV['PROJECT_ID']}/transcripts/voice_base/"
+    "#{Rails.root}/app/files/uploads/#{ENV['PROJECT_ID']}/"
   end
 end

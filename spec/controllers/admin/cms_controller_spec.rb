@@ -2,11 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Admin::CmsController, type: :controller do
   let(:user) do
-    User.create!(
-      email: "user@email.com",
-      password: "password",
-      user_role: UserRole.create!(name: "admin", hiearchy: 100)
-    )
+    role = UserRole.create!(name: "admin", hiearchy: 100)
+    User.create!(email: "user@email.com", password: "password", user_role: role)
   end
 
   before do
