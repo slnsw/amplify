@@ -25,7 +25,22 @@ gulp.task('sass', function () {
 
 var uglify = require('gulp-uglify');
 
-gulp.task('js', function() {
+gulp.task('js-deps.jquery', function() {
+  gulp.src('./node_modules/jquery/dist/jquery.js')
+  .pipe(gulp.dest('./gulp/js/vendor'))
+});
+
+gulp.task('js-deps.js-cookie', function() {
+  gulp.src('./node_modules/js-cookie/src/js.cookie.js')
+  .pipe(gulp.dest('./gulp/js/vendor'))
+});
+
+gulp.task('js-deps.j-toker', function() {
+  gulp.src('./node_modules/j-toker/dist/jquery.j-toker.js')
+  .pipe(gulp.dest('./gulp/js/vendor'))
+});
+
+gulp.task('js', ['js-deps.jquery', 'js-deps.js-cookie', 'js-deps.j-toker'], function() {
   gulp.src(config.include.src)
     // include non-minified version
     .pipe(include(config.include.opt).on('error', console.error.bind(console)))

@@ -5,8 +5,8 @@
     <div class="select-options account-menu menu" role="menu" aria-hidden="true" aria-label="User account menu">
       <a href="/dashboard" class="select-option menu-item" role="menuitem">Dashboard</a>
       <% if (user.user_role_id > 1) { %>
-        <a href="/admin" class="select-option menu-item" role="menuitem">Admin</a>
-        <a href="/admin/cms" class="select-option menu-item" role="menuitem">CMS</a>
+        <a href="/admin" class="check-auth-link select-option menu-item" role="menuitem">Admin</a>
+        <a href="/admin/cms" class="check-auth-link select-option menu-item" role="menuitem">CMS</a>
       <% } %>
       <a href="#sign-out" class="sign-out-link select-option menu-item" role="menuitem">Sign out</a>
     </div>

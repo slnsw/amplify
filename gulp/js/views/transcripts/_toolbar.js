@@ -2,7 +2,7 @@ app.views.TranscriptToolbar = app.views.Base.extend({
 
   template: _.template(TEMPLATES['transcript_toolbar.ejs']),
 
-  initialize: function(data){
+  initialize: function(data) {
     this.data = _.extend({}, data);
 
     this.loadControls();
@@ -12,7 +12,7 @@ app.views.TranscriptToolbar = app.views.Base.extend({
     this.render();
   },
 
-  loadControls: function(){
+  loadControls: function() {
     var controls = this.data.controls || this.data.project.controls;
     this.data.controls = _.map(controls, _.clone);
 
@@ -30,7 +30,7 @@ app.views.TranscriptToolbar = app.views.Base.extend({
     this.data.control_width_percent = 1.0 / this.data.controls.length * 100;
   },
 
-  loadListeners: function(){
+  loadListeners: function() {
     var _this = this;
 
     // listen for player state change
@@ -39,7 +39,7 @@ app.views.TranscriptToolbar = app.views.Base.extend({
     });
   },
 
-  loadMenu: function(){
+  loadMenu: function() {
     var menu = this.data.menu,
         menus = this.data.project.menus;
 
@@ -52,7 +52,7 @@ app.views.TranscriptToolbar = app.views.Base.extend({
     }
   },
 
-  render: function(){
+  render: function() {
     this.$el.html(this.template(this.data));
   }
 

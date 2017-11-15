@@ -6,20 +6,18 @@ app.views.Account = app.views.Base.extend({
 
   events: {
     "click .auth-link": "doAuthFromLink",
+    "click .check-auth-link": "checkAuthForLink",
     "click .sign-out-link": "signOut"
   },
 
   initialize: function(data){
     this.data = data;
-
     this.data.score = 0;
-
     this.loadListeners();
-
     this.render();
   },
 
-  doAuth: function(provider){
+  doAuth: function(provider) {
     $.auth
       .oAuthSignIn({provider: provider})
       .fail(function(resp) {
@@ -31,6 +29,24 @@ app.views.Account = app.views.Base.extend({
     e.preventDefault();
     var provider = $(e.currentTarget).attr('data-provider');
     this.doAuth(provider);
+  },
+
+  checkAuthForLink: function(e) {
+    e.preventDefault();
+    $.auth.validateToken()
+    .then(function(user) {
+      // Valid, redirect to destination path.
+      console.log('checkAuthForLink success');
+      window.location.href = e.target.href;
+    })
+    .fail(function() {
+      // Failed, report error.
+      console.log('checkAuthForLink failure');
+      $(window).trigger('alert', [
+        'You must log in as admin to access this section.',
+        true,
+      ]);
+    });
   },
 
   listenForAuth: function(){
