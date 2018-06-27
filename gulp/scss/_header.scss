@@ -57,8 +57,6 @@ body {
       .logo {
         position: absolute;
         padding: 15px;
-        -webkit-filter: invert(1);
-        filter: invert(1);
         max-width: 23%;
         max-height: 43%;
       }
@@ -120,8 +118,6 @@ body {
       }
 
       .logo {
-        -webkit-filter: invert(1);
-        filter: invert(1);
         position: static;
         display: inline;
         margin-top: 4px;
