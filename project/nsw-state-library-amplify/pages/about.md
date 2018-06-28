@@ -43,6 +43,6 @@ Media enquiries: [(02) 9273 1566](tel:+61292731566) or [media.library@sl.nsw.gov
 Technical/development enquiries: [web.development@sl.nsw.gov.au](mailto:web.development@sl.nsw.gov.au)
 
 <div class="logo-strip">
-  <a href="http://www.justice.nsw.gov.au/"><img class="lock-size" src="/nsw-state-library-amplify/assets/img/nsw-justice.png" alt="NSW Department of Justice logo" title="NSW Department of Justice"></a> 
+  <a href="https://www.nsw.gov.au/"><img class="lock-size" src="/nsw-state-library-amplify/assets/img/nsw_black.svg" alt="NSW Government logo" title="NSW Government" width="100"></a> 
   <a href="http://www.sl.nsw.gov.au"><img class="lock-size" src="/nsw-state-library-amplify/assets/img/slnsw-175.png" alt="State Library of NSW logo" title="State Library of NSW"></a> 
 </div>

@@ -45,7 +45,7 @@ body {
 
     .logo {
       display: block;
-      max-height: $header-nav-height - 10px;
+      height: $header-nav-height - 10px;
       width: auto;
       position: absolute;
     }
@@ -55,10 +55,8 @@ body {
       background: linear-gradient(180deg, #333333 50%, #000000 50%);
 
       .logo {
-        position: absolute;
-        padding: 15px;
-        max-width: 23%;
-        max-height: 43%;
+        margin-top: 4px;
+        margin-left: 5px;
       }
 
       .banner-main {
@@ -68,6 +66,15 @@ body {
         background-repeat: no-repeat;
         background-position: center center;
         text-align: center;
+
+        .logo {
+          position: static;
+          display: block;
+          margin: 0 auto;
+          width: 100%;
+          max-width: 400px;
+          height: auto;
+        }
 
         .banner-text {
           position: relative;
@@ -96,19 +103,6 @@ body {
             letter-spacing: 2px;
           }
         }
-
-        // Opacity over the homa page banner.
-        /*&:after {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          background: #333333;
-          width: 100%;
-          height: 100%;
-          opacity: 0.2;
-          z-index: 1000;
-        }*/
       }
     }
 
@@ -121,6 +115,7 @@ body {
         position: static;
         display: inline;
         margin-top: 4px;
+        margin-left: 5px;
       }
 
       .logo-text {
