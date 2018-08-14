@@ -61,7 +61,9 @@ We will be adding new collections from our sound archive periodically to Amplify
 
 If you would like to know more about Amplify or find information about other digital volunteering projects, you can visit the [State Library website](http://www.sl.nsw.gov.au) or send us an email at [digital.volunteering@sl.nsw.gov.au](mailto:digital.volunteering@sl.nsw.gov.au).
     HEREDOC
-    Page.create!(content: str, page_type: 'faq')
+    page = Page.new(content: str, page_type: 'faq')
+    page.ignore_callbacks = true
+    page.save
   end
 
   def self.down

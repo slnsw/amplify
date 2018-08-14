@@ -48,7 +48,9 @@ Technical/development enquiries: [web.development@sl.nsw.gov.au](mailto:web.deve
   <a href="http://www.sl.nsw.gov.au"><img class="lock-size" src="/nsw-state-library-amplify/assets/img/slnsw-175.png" alt="State Library of NSW logo" title="State Library of NSW"></a>
 </div>
    HEREDOC
-    Page.create!(content: str, page_type: 'about')
+    page = Page.new(content: str, page_type: 'about')
+    page.ignore_callbacks = true
+    page.save
   end
 
   def self.down

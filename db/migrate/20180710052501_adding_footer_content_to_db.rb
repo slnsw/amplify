@@ -12,6 +12,8 @@ class AddingFooterContentToDb < ActiveRecord::Migration[5.2]
     # this will create a footer from the existing string
     # fot the very first time
     # saving as published will create a public_page record too
-    Page.create(content: str, page_type: 'footer', published: true)
+    page = Page.new(content: str, page_type: 'footer', published: true)
+    page.ignore_callbacks = true
+    page.save
   end
 end

@@ -30,4 +30,25 @@ RSpec.describe Page, type: :model do
       end
     end
   end
+
+  context "callbacks" do
+    let(:page) { FactoryBot.build(:page, published: true) }
+
+    context "when skiping callbacks" do
+      it "doesn't create a PublicPage" do
+        expect do
+          page.ignore_callbacks = true
+          page.save
+        end.to change { PublicPage.count }.by(0)
+      end
+    end
+
+    context "when not skiping callbacks" do
+      it "creates a PublicPage" do
+        expect do
+          page.save
+        end.to change { PublicPage.count }.by(1)
+      end
+    end
+  end
 end
