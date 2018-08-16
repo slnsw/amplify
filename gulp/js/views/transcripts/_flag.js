@@ -83,6 +83,12 @@ app.views.TranscriptLineFlag = app.views.Base.extend({
       transcript_id: this.data.transcript_id
     };
 
+    // user haven't seleted a flag type
+    if (data['flag_type_id'] == 0){
+      _this.$('.message').addClass('active').html('<p>Please select one of the above options to submit your flag.</p>');
+       return;
+    }
+
     $.post(API_URL + "/flags.json", {flag: data}, function(resp) {
       _this.$('.message').addClass('active').html('<p>Thank you for flagging this line. We will be periodically reviewing and correcting flagged errors.</p>');
       setTimeout(function(){
