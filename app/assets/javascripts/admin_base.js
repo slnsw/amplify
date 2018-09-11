@@ -7,3 +7,4 @@
 //= require components
 //= require users
 //= require editor
+//= require transcripts

@@ -1,7 +1,8 @@
 server 'ec2-52-63-16-71.ap-southeast-2.compute.amazonaws.com', user: 'deploy', roles: %w{web app db}
 
 set :rails_env, 'staging'
-set :branch, 'develop'
+# set :branch, 'develop'
+set :branch, 'feature/voicebase'
 
 
 # server-based syntax

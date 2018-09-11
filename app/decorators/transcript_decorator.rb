@@ -62,4 +62,8 @@ class TranscriptDecorator < Draper::Decorator
       h.content_tag(:div, text, class: "item-status-text #{klass}") if percentage > 0
     end
   end
+
+  def check_status(column)
+    object.transcript_type.to_s == column
+  end
 end

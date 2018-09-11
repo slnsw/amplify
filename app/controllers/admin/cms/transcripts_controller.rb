@@ -81,7 +81,8 @@ class Admin::Cms::TranscriptsController < AdminController
       :image_catalogue_url,
       :notes, :vendor_id, :collection_id, :speakers,
       :publish, :audio_item_url_title,
-      :image_item_url_title
+      :image_item_url_title,
+      :transcript_type
     ).merge(
       project_uid: ENV["PROJECT_ID"],
     )

@@ -29,6 +29,10 @@ class Transcript < ApplicationRecord
   attribute :audio_item_url_title, :string, default: "View audio in Library catalogue"
   attribute :image_item_url_title, :string, default: "View image in Library catalogue"
 
+  # 0 - voice base upload (default)
+  # 1 - manual upload
+  enum transcript_type: { voicebase: 0, manual: 1  }
+
   def self.seconds_per_line
     5
   end

@@ -1,3 +1,4 @@
+<% @transcript = @transcript.decorate %>
 <div class="row">
   <div class="col-12">
     <%= form_for [:admin, :cms, @transcript], html: { multipart: true } do |f| %>
@@ -23,7 +24,11 @@
         <%= f.label :transcript_url, 'Audio item URL',  for: 'transcript_url' %>
         <%= f.text_field :url, class: "form-control" %>
       </div>
-
+      <div class="form-group">
+        <%= f.radio_button :transcript_type, 'voicebase', checked: @transcript.check_status("voicebase") %> Upload with VoiceBase
+        <br />
+        <%= f.radio_button :transcript_type, 'manual', checked: @transcript.check_status("manual") %> Manual Upload
+      </div>
       <div class="form-group">
         <%= f.label 'Audio file', for: 'transcript_audio' %>
 
@@ -36,8 +41,7 @@
           <span class="text-muted"><%= f.file_field :audio %><span/>
         </div>
       </div>
-
-      <div class="form-group">
+      <div class="form-group" id="transcript_upload">
         <%= f.label "Transcript file", for: 'transcript_script' %><br/>
 
         <div class="form-control">
