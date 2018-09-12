@@ -1,7 +1,8 @@
 <% @collection.transcripts.find_each do |item| %>
   <div class="row">
+    <div class="col-1"><%= item.voicebase_status %></div>
     <div class="col-1"><%= publish_icon(item.published?) %></div>
-    <div class="col-6"><%= item.title %></div>
+    <div class="col-4"><%= item.title %></div>
     <div class="col-2">
       <%= image_tag(item.image_url(:thumb)) if item.image.url.present? %>
     </div>
@@ -9,7 +10,14 @@
     <div class="col-1">
       <%= check_box_tag :transcript_url, 'uploaded', true %>
     </div>
-
+    <div class="col-1">
+      <%= button_to sync_admin_cms_transcript_path(item),
+        method: "get",
+        data: { disable_with: "Loading..." } do
+      %>
+      Sync
+      <% end %>
+    </div>
     <div class="col-1">
       <%= button_to edit_admin_cms_transcript_path(item),
         method: "get",

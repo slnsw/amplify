@@ -29,6 +29,8 @@ class Transcript < ApplicationRecord
   attribute :audio_item_url_title, :string, default: "View audio in Library catalogue"
   attribute :image_item_url_title, :string, default: "View image in Library catalogue"
 
+  after_save :voicebase_upload
+
   # 0 - voice base upload (default)
   # 1 - manual upload
   enum transcript_type: { voicebase: 0, manual: 1  }
@@ -522,6 +524,14 @@ class Transcript < ApplicationRecord
           line.update(speaker_id: speaker.id)
         end
       end
+    end
+  end
+
+  def voicebase_upload
+    if voicebase? && audio.identifier
+      # this means the file is either added or changed
+      # We upload the file to VoiceBase
+      VoiceBase::VoicebaseApiService.upload_media(self.id)
     end
   end
 end

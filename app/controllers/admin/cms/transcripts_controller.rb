@@ -1,5 +1,5 @@
 class Admin::Cms::TranscriptsController < AdminController
-  before_action :set_transcript, only: [:edit, :update, :destroy, :reset_transcript]
+  before_action :set_transcript, only: [:edit, :update, :destroy, :reset_transcript, :sync]
   before_action :set_transcript_by_id, only: [:process_transcript]
 
   def new
@@ -27,6 +27,14 @@ class Admin::Cms::TranscriptsController < AdminController
     else
       flash[:errors] = "The transcript updates could not be saved."
       render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def sync
+    VoiceBase::VoicebaseApiService.check_progress(@transcript.id)
+    @transcript.reload
+    if @transcript.voicebase_status == "completed"
+      @file = VoiceBase::VoicebaseApiService.get_transcript(@transcript.id)
     end
   end
 
