@@ -314,6 +314,7 @@ GEM
     font-awesome-rails (4.7.0.4)
       railties (>= 3.2, < 6.0)
     formatador (0.2.5)
+    formdata (0.1.2)
     friendly_id (5.2.4)
       activerecord (>= 4.0.0)
     globalid (0.4.1)
@@ -623,6 +624,7 @@ DEPENDENCIES
   figaro
   fog
   font-awesome-rails
+  formdata
   friendly_id (~> 5.2.0)
   httparty
   jbuilder (~> 2.5)
@@ -646,6 +648,7 @@ DEPENDENCIES
   rails_12factor
   redcarpet
   reinteractive-style
+  rest-client
   rspec-rails (~> 3.4)
   rubocop
   sanitize
