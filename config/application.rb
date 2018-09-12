@@ -13,6 +13,7 @@ module TranscriptEditor
 
     # Load extra libraries.
     config.autoload_paths << Rails.root.join('app', 'lib')
+    config.autoload_paths << Rails.root.join('lib', 'voicebase')
 
     # Disable assets
     config.assets.enabled = false
