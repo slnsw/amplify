@@ -16,7 +16,7 @@
         data: { disable_with: "Loading..." } do
       %>
       Sync
-      <% end %>
+      <% end if item.voicebase? %>
     </div>
     <div class="col-1">
       <%= button_to edit_admin_cms_transcript_path(item),

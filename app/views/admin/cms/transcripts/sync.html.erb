@@ -10,10 +10,9 @@
 
     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
       <div class="card-body">
-        <code>
-          <%= @file %>
-        </code>
+        <%= "Transcript processed at #{@transcript.voicebase_processing_completed_at.strftime("%B %d, %Y")}" if @transcript.voicebase_processing_completed_at %>
       </div>
     </div>
   </div>
 </div>
+<%= link_to "Back", admin_cms_collection_path(@transcript.collection.uid), class: "button" %>

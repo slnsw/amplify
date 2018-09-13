@@ -18,6 +18,11 @@ module VoiceBase
       load_from_file(transcript) if transcript
     end
 
+    def update_from_voicebase(transcript, contents)
+      update_records(transcript, contents.lines)
+    end
+
+
     private
 
     def call
@@ -53,6 +58,10 @@ module VoiceBase
     # Load a transcript from a file.
     def load_from_file(transcript)
       contents = read_lines_from_file(transcript)
+      update_records(transcript, contents)
+    end
+
+    def update_records(transcript, contents)
       transcript_lines = get_transcript_lines_from_file(transcript, contents)
       ok = ingest_transcript_lines(transcript, transcript_lines)
 

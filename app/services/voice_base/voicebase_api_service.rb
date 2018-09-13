@@ -30,6 +30,17 @@ module VoiceBase
       end
     end
 
+    def self.process_transcript(transcript_id)
+      transcript = Transcript.find(transcript_id)
+
+      if transcript.voicebase_status == "completed"
+        str = get_transcript(transcript_id)
+        imp = VoiceBase::ImportSrtTranscripts.new(project_id: ENV["PROJECT_ID"])
+        imp.update_from_voicebase(transcript, str)
+        transcript.update_column("voicebase_processing_completed_at", Time.zone.now)
+      end
+    end
+
     def self.get_transcript(transcript_id)
       transcript = Transcript.find(transcript_id)
       res = Voicebase::Client.new.get_transcript(transcript.voicebase_media_id)

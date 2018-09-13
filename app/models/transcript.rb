@@ -14,6 +14,8 @@ class Transcript < ApplicationRecord
   pg_search_scope :search_default, :against => [:title, :description]
   pg_search_scope :search_by_title, :against => :title
 
+  scope :voicebase_processing_pending, -> { voicebase.where(voicebase_processing_completed_at: nil) }
+
   validates :uid, presence: true, uniqueness: true
   validates :vendor, presence: true
   validate :image_size_restriction

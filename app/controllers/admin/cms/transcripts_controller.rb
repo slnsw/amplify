@@ -34,7 +34,7 @@ class Admin::Cms::TranscriptsController < AdminController
     VoiceBase::VoicebaseApiService.check_progress(@transcript.id)
     @transcript.reload
     if @transcript.voicebase_status == "completed"
-      @file = VoiceBase::VoicebaseApiService.get_transcript(@transcript.id)
+      @file = VoiceBase::VoicebaseApiService.process_transcript(@transcript.id)
     end
   end
 
