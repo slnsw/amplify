@@ -9,7 +9,7 @@ module VoiceBase
       if Rails.env.development?
         res = Voicebase::Client.new.upload_media("https://slnsw-amplify.s3.amazonaws.com/collections_v2/snowymountain_bushfires/audio/mloh307-0001-0004-s002-m.mp3")
       else
-        res = Voicebase::Client.new.upload_media(@transcript.audio_url)
+        res = Voicebase::Client.new.upload_media(transcript.audio_url)
       end
       status = JSON.parse res.body
       if status["errors"]
