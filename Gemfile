@@ -104,6 +104,10 @@ group :test do
   gem 'pundit-matchers', '~> 1.6.0'
 end
 
+group :staging, :production do
+  gem 'executable-hooks'
+end
+
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # tracking errors

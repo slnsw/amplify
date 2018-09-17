@@ -147,6 +147,7 @@ GEM
     erubi (1.7.1)
     excon (0.62.0)
     execjs (2.7.0)
+    executable-hooks (1.5.0)
     factory_bot (4.10.0)
       activesupport (>= 3.0.0)
     factory_bot_rails (4.10.0)
@@ -634,6 +635,7 @@ DEPENDENCIES
   draper
   ejs
   execjs
+  executable-hooks
   factory_bot_rails
   faker
   figaro
