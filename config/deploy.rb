@@ -31,7 +31,7 @@ set :sidekiq_processes, 5
 set :sidekiq_user, 'deploy'
 set :init_system, :systemd
 append :rvm1_map_bins, 'rake', 'gem', 'bundle', 'ruby', 'puma', 'pumactl'
-set :bundler_path, '/home/deploy/.rvm/gems/ruby-2.5.0@rails5/bin/bundle'
+set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-2.5.0@rails5/bundle'
 SSHKit.config.command_map[:sidekiq] = "bundle exec sidekiq"
 SSHKit.config.command_map[:sidekiqctl] = "bundle exec sidekiqctl"
 
