@@ -30,6 +30,7 @@ set :sidekiq_processes, 5
 
 set :sidekiq_user, 'deploy'
 set :init_system, :systemd
+append :rvm1_map_bins, 'rake', 'gem', 'bundle', 'ruby', 'puma', 'pumactl'
 SSHKit.config.command_map[:sidekiq] = "bundle exec sidekiq"
 SSHKit.config.command_map[:sidekiqctl] = "bundle exec sidekiqctl"
 
