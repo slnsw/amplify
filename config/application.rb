@@ -18,6 +18,9 @@ module TranscriptEditor
     # Disable assets
     config.assets.enabled = false
 
+    # using sidekiq as the default queue
+    config.active_job.queue_adapter = :sidekiq
+
     # API
     config.api_only = false
 

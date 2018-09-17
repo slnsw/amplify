@@ -119,3 +119,5 @@ gem 'acts_as_singleton'
 gem 'httparty'
 gem 'rest-client'
 gem 'formdata'
+gem 'sidekiq'
+gem 'whenever', require: false

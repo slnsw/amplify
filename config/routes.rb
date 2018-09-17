@@ -1,3 +1,4 @@
+require 'sidekiq/web'
 Rails.application.routes.draw do
 
   namespace :admin do
@@ -35,6 +36,10 @@ Rails.application.routes.draw do
     registrations: "users/registrations",
     passwords: "users/passwords"
   }
+
+  authenticate :user, lambda { |u| u.admin?  } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   match 'page/faq' => 'page#faq', :via => [:get]
   match 'page/about' => 'page#about', :via => [:get]

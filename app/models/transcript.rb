@@ -15,6 +15,7 @@ class Transcript < ApplicationRecord
   pg_search_scope :search_by_title, :against => :title
 
   scope :voicebase_processing_pending, -> { voicebase.where(voicebase_processing_completed_at: nil) }
+  scope :not_picked_up_for_voicebase_processing, -> { voicebase.where.not(pickedup_for_voicebase_processing_at: nil) }
 
   validates :uid, presence: true, uniqueness: true
   validates :vendor, presence: true
@@ -533,7 +534,8 @@ class Transcript < ApplicationRecord
     if voicebase? && audio.identifier
       # this means the file is either added or changed
       # We upload the file to VoiceBase
-      VoiceBase::VoicebaseApiService.upload_media(self.id)
+      VoiceBaseUploadJob.perform_later(self.id)
+      # VoiceBase::VoicebaseApiService.upload_media(self.id)
     end
   end
 end

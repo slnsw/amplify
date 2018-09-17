@@ -21,6 +21,9 @@ module VoiceBase
 
     def self.check_progress(transcript_id)
       transcript = Transcript.find(transcript_id)
+      # mark the record as processing, so that other processors will not
+      # pick it up
+      transcript.update_column("pickedup_for_voicebase_processing_at", Time.zone.now)
       res = Voicebase::Client.new.check_progress(transcript.voicebase_media_id)
       status = JSON.parse res.body
       if status["errors"]
@@ -38,6 +41,9 @@ module VoiceBase
         imp = VoiceBase::ImportSrtTranscripts.new(project_id: ENV["PROJECT_ID"])
         imp.update_from_voicebase(transcript, str)
         transcript.update_column("voicebase_processing_completed_at", Time.zone.now)
+      else
+        # reset back for next time
+        transcript.update_column("pickedup_for_voicebase_processing_at", nil)
       end
     end
 
