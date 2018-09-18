@@ -1,1 +1,1 @@
-rvm --create use ruby-2.5.0@nsl-rails5
+rvm --create use ruby-2.5.0@rails5
