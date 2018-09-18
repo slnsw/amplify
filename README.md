@@ -620,6 +620,40 @@ bundle exec rake transcripts:load['nsw-state-library-amplify','transcripts_seeds
 bundle exec rake voice_base:import_transcripts['nsw-state-library-amplify']
 ```
 
+### Background tasks
+
+This application uses Sidekiq to manage background tasks. We recommend you use
+systemd to run Sidekiq in your staging and production environments.
+The commands provided by capistrano-sidekiq will generate a systemd service
+file for you, but if you're using RVM to manage your rubies, change the
+`ExecStart` command to wrap it in `/bin/bash -lc`.
+
+Example with RVM:
+
+```
+[Unit]
+Description=sidekiq for nsw-state-library-amplify (environmentname)
+After=syslog.target network.target
+
+[Service]
+Type=simple
+Environment=RAILS_ENV=environmentname
+WorkingDirectory=/path/to/nsw-state-library-amplify/current
+ExecStart=/bin/bash -lc '/home/username/.rvm/gems/ruby-2.5.0/bin/bundle exec sidekiq -e environmentname'
+ExecReload=/bin/kill -TSTP $MAINPID
+ExecStop=/bin/kill -TERM $MAINPID
+
+RestartSec=5
+Restart=on-failure
+
+SyslogIdentifier=sidekiq
+
+[Install]
+WantedBy=default.target
+```
+
+For more info, take a look at [sidekiq's sample systemd unit file](https://github.com/mperham/sidekiq/blob/master/examples/systemd/sidekiq.service).
+
 ## Managing your project
 
 This tool has the concept of "user roles", though currently only supports three types of users:
