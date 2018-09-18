@@ -37,7 +37,6 @@ SSHKit.config.command_map[:sidekiq] = "bundle exec sidekiq"
 SSHKit.config.command_map[:sidekiqctl] = "bundle exec sidekiqctl"
 
 # Necessary for Whenever support.
-set :path, '/home/deploy/.rvm/gems/ruby-2.5.0@rails5/bin:/home/deploy/.rvm/gems/ruby-2.5.0@global/bin:/home/deploy/.rvm/rubies/ruby-2.5.0/bin:/home/deploy/.rvm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/snap/bin'
 
 namespace :deploy do
   after :restart, :clear_cache do
