@@ -27,6 +27,7 @@ set :puma_worker_timeout, nil
 set :puma_init_active_record, true
 set :puma_preload_app, false
 
+# Necessary for Sidekiq support.
 set :sidekiq_processes, 5
 set :sidekiq_user, 'deploy'
 set :init_system, :systemd
@@ -34,6 +35,9 @@ append :rvm1_map_bins, 'rake', 'gem', 'bundle', 'ruby', 'puma', 'pumactl', 'side
 set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-2.5.0@rails5/bundle'
 SSHKit.config.command_map[:sidekiq] = "bundle exec sidekiq"
 SSHKit.config.command_map[:sidekiqctl] = "bundle exec sidekiqctl"
+
+# Necessary for Whenever support.
+set :path, '/home/deploy/.rvm/gems/ruby-2.5.0@rails5/bin:/home/deploy/.rvm/gems/ruby-2.5.0@global/bin:/home/deploy/.rvm/rubies/ruby-2.5.0/bin:/home/deploy/.rvm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/snap/bin'
 
 namespace :deploy do
   after :restart, :clear_cache do
