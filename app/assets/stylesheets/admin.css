@@ -19,3 +19,10 @@
   height: 40px;
   width: 40px;
 }
+
+.heading {
+  color: #fff !important;
+  background-color: #212529 !important;
+  border-color: #32383e !important;
+}
+

@@ -120,9 +120,10 @@ gem 'friendly_id', '~> 5.2.0'
 gem 'acts-as-taggable-on', '~> 6.0'
 gem 'seed_migration'
 gem 'acts_as_singleton'
-
 gem 'httparty'
 gem 'rest-client'
 gem 'formdata'
 gem 'sidekiq'
 gem 'whenever', require: false
+gem "chartkick"
+

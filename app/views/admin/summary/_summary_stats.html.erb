@@ -1,0 +1,13 @@
+<h3>Total number of items: <%= total[:total] %></h3>
+<table class="table table table-striped">
+  <tbody>
+    <% stats.each do |key, val| %>
+      <tr>
+        <th scope="row"><%= display_name key %></th>
+        <td><%= '%.2f' % val  %> %</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= pie_chart stats %>
+

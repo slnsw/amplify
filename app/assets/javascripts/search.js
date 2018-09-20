@@ -1,40 +1,79 @@
+// Place all the behaviors and hooks related to the matching controller here.
+// All this logic will automatically be available in application.js.
 $(document).ready(function(){
-
-  var collectionId = "";
+  var collectionId = 0;
+  var institutionId = 0;
+  var sortId = '';
   var searchText = '';
+  var firstTimeLoad = true;
+  var theme = '';
 
 
   $('.select.collection').click(function(){
     $(this).toggleClass( "active" )
   });
 
-  $('.select-option').click(function(){
+  $('#reset').on('click', function(){
+    collectionId = 0;
+    institutionId = 0;
+    sortId = '';
+    searchText = '';
+    firstTimeLoad = true;
+    theme = '';
+    preventDefault();
+    loadTranscripts();
+
+  });
+
+  $('#collection_search').on('click', '.select-option', function(){
+    collectionId = $(this).attr('data-id')
+    if (collectionId == 0) {
+      institutionId = 0;
+    }
+    loadTranscripts();
+  });
+
+  $('#institution_search').on('click', '.select-option', function(){
+    institutionId = $(this).attr('data-id')
+    if (institutionId == 0) {
+      collectionId = 0;
+    }
+    loadTranscripts();
+  });
+
+  $('.select-option').on('click', function(){
     if (this.classList.contains('menu-item')) {
       return true
     }
-
-    if ($(this).attr('data-filter') == 'collection'){
+    if ($(this).attr('data-filter') === 'collection'){
       collectionId = $(this).attr('data-id');
     }
+    if ($(this).attr('data-filter') === 'institution'){
+      institutionId = $(this).attr('data-id');
+      // when institution changes, reset the collection id
+      collectionId = 0;
+    }
+    if ($(this).attr('data-filter') === 'theme'){
+      theme = $(this).attr('data-id');
+    }
+
     loadTranscripts();
-    scrollUp()
   })
 
   $("#keyword").on('keyup',function(e){
     if (($(this).val() == "") && (e.keyCode == 8)){
       searchText = "";
       loadTranscripts()
-      scrollUp()
     }
   })
 
 
-  $('.input').keypress(function (e) {
-    if (e.which == 13) {
-      $('#search-form').submit();
-      return false;
-    }
-  });
+  function scrollUp(){
+    var target  = $('#search-form').offset().top;
+    $('html, body').animate({
+      scrollTop: target
+    }, 1000);
+  }
 
   $("#search-form").submit(function(event){
     searchText = $('#keyword').val()
@@ -43,37 +82,27 @@ $(document).ready(function(){
     scrollUp()
   })
 
-  function scrollUp(){
-    $(window).trigger('scroll-to', [$('#search-form'), 10]);
-  }
-
-  function progressHtml() {
-    str = '<div class="progress"> \
-        <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" \
-    style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div> \
-      </div>'
-    return str
-  }
 
   function loadTranscripts(){
-    searchText = $('#keyword').val()
-    $(".transcript-list-search").html('<div class="loading"></div>')
     data = {
+      institution_id: institutionId,
       collection_id: collectionId,
       q: searchText,
-      deep: 1
+      theme: theme
     };
+    $(".transcript-list-search").html('<div class="loading"></div>')
     $.ajax({
         url: "/search/query",
-        data: data,
+        data: {data: data},
       success: function(data, textStatus, jqXHR){
+        if (!firstTimeLoad) {
+          scrollUp()
+        }
+        firstTimeLoad = false;
         var instance = new Mark("a.item-line");
         if (instance) {
           instance.mark(searchText)
         }
-      },
-      error: function(jqXHR, textStatus, errorThrown){
-
       }
     })
   }

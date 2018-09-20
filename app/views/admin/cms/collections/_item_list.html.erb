@@ -1,4 +1,5 @@
-<% @collection.transcripts.find_each do |item| %>
+<!-- find_each was removed to support odering in collection.transcripts -->
+<% order_transcripts_asc(@collection.transcripts).each do |item| %>
   <div class="row">
     <div class="col-1"><%= item.voicebase_status %></div>
     <div class="col-1"><%= publish_icon(item.published?) %></div>

@@ -1,13 +1,22 @@
 class SearchController < ApplicationController
+  before_action :load_collection, except: [:index]
+  before_action :load_institutions
+
   layout "public"
+
+  include Searchable
 
   def index
     new_collection = Collection.new(id: 0, title: "All Collections")
     @collection = Collection.published.to_a.unshift(new_collection)
+    @institutions = Institution.all
+    @themes = Theme.all
     @page_title = "Search"
   end
 
   def query
+    @selected_collection_id = sort_params[:collection_id].to_i
+    @selected_institution_id = select_institution_id
     @transcripts = Transcript.search(build_params)
     @query = build_params[:q]
   end
@@ -19,6 +28,7 @@ class SearchController < ApplicationController
   end
 
   def search_params
-    params.permit(:sort_by, :order, :collection_id, :q, :page, :deep)
+    params.require(:data).permit(:collection_id, :q,
+                                 :institution_id, :theme)
   end
 end

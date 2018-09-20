@@ -6,6 +6,7 @@ FactoryBot.define do
     audio_url "http://google.com"
     collection
     vendor
+    project_uid 'nsw-state-library-amplify'
 
     trait :published do
       publish 1

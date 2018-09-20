@@ -16,6 +16,9 @@ class Transcript < ApplicationRecord
 
   scope :voicebase_processing_pending, -> { voicebase.where(voicebase_processing_completed_at: nil) }
   scope :not_picked_up_for_voicebase_processing, -> { voicebase.where.not(pickedup_for_voicebase_processing_at: nil) }
+  scope :completed, -> { where(percent_completed: 100) }
+  scope :reviewing, -> { where("percent_reviewing > 0 and percent_completed < 100") }
+  scope :pending, -> { where("percent_reviewing = 0 and percent_completed < 100") }
 
   validates :uid, presence: true, uniqueness: true
   validates :vendor, presence: true
@@ -398,12 +401,13 @@ class Transcript < ApplicationRecord
     transcripts = nil
 
     # Do a deep search
-    if options[:deep].present? && options[:q].present? && !options[:q].blank?
+    if options[:q].present?
       # Build initial query w/ pagination
       transcripts = TranscriptLine
         .select('transcripts.*, COALESCE(collections.title, \'\') AS collection_title, transcript_lines.guess_text, transcript_lines.original_text, transcript_lines.start_time, transcript_lines.transcript_id')
         .joins('INNER JOIN transcripts ON transcripts.id = transcript_lines.transcript_id')
         .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
+        .joins('INNER JOIN institutions ON institutions.id = collections.institution_id')
 
       # Do the query
       transcripts = transcripts.search_by_all_text(options[:q])
@@ -414,6 +418,7 @@ class Transcript < ApplicationRecord
       transcripts = Transcript
         .select('transcripts.*, COALESCE(collections.title, \'\') as collection_title, \'\' AS guess_text, \'\' AS original_text, 0 AS start_time')
         .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
+        .joins('INNER JOIN institutions ON institutions.id = collections.institution_id')
 
       # Check for query
       transcripts = transcripts.search_default(options[:q]) if options[:q].present? && !options[:q].blank?
@@ -427,6 +432,15 @@ class Transcript < ApplicationRecord
 
     # Check for collection filter
     transcripts = transcripts.where("transcripts.collection_id = :collection_id", {collection_id: options[:collection_id].to_i}) if options[:collection_id].present?
+
+    # check for institution
+    transcripts = transcripts.where("institutions.id = :id", {id: options[:institution_id].to_i}) if options[:institution_id].present?
+
+    if options[:theme].present?
+      transcripts = transcripts.joins('inner join taggings on taggings.taggable_id = collections.id inner join tags on tags.id =  taggings.tag_id')
+      transcripts = transcripts.where("tags.name = ?", options[:theme])
+    end
+
 
     # Check for sort
     transcripts = transcripts.order("transcripts.#{sort_by} #{sort_order}")

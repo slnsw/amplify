@@ -1,6 +1,9 @@
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'stats' %>
+<% end %>
 <%= render partial: 'layouts/admin_side_pane' %>
 <%= render partial: 'flags_table', locals: { flags: @flags } %>
-<br />
+<%= render partial: 'edit_stats', locals: { institutions: @institutions} %>
 <%= render partial: 'stats', locals: { stats: @stats } %>
 </div>
 

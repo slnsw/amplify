@@ -1,0 +1,7 @@
+<% value.each do |_key, _value| %>
+  <div class="sum">
+    <div class="sum-label"><%= display_name _key %></div>
+    <div class="sum-value"><%= value[_key].to_i %> </div>
+  </div>
+<% end %>
+

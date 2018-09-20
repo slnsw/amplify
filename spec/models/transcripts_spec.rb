@@ -21,15 +21,32 @@ RSpec.describe Transcript, type: :model do
     it { is_expected.not_to allow_value("abc def").for(:uid) }
     it { is_expected.not_to allow_value("").for(:uid) }
     it { is_expected.not_to allow_value("ab&ef").for(:uid) }
+  end
 
+  describe "scopes" do
+    let!(:completed_trasncript) { create :transcript, percent_completed: 100 }
+    let!(:reviewing_trasncript) { create :transcript, percent_reviewing: 37 }
+    let!(:not_completed_trasncript) { create :transcript, percent_edited: 37 }
+
+    it "gets completed" do
+      expect(described_class.completed.to_a).to eq([completed_trasncript])
+    end
+
+    it "gets reviewing" do
+      expect(described_class.reviewing.to_a).to eq([reviewing_trasncript])
+    end
+
+    it "gets pending" do
+      expect(described_class.pending.to_a).to eq([not_completed_trasncript])
+    end
   end
 
   describe "validate uid does not change after create" do
-    let(:vendor) { Vendor.create!(uid: 'voice_base', name: 'VoiceBase') }
+    let(:vendor) { Vendor.create!(uid: "voice_base", name: "VoiceBase") }
     let(:transcript) do
       Transcript.new(
         uid: "transcript_test",
-        vendor_id: vendor.id
+        vendor_id: vendor.id,
       )
     end
 
@@ -48,7 +65,7 @@ RSpec.describe Transcript, type: :model do
   end
 
   describe "#speakers" do
-    let(:vendor) { Vendor.create(uid: 'voice_base', name: 'VoiceBase') }
+    let(:vendor) { Vendor.create(uid: "voice_base", name: "VoiceBase") }
     let(:institution) { FactoryBot.create :institution }
     let(:collection) do
       Collection.create!(
@@ -57,14 +74,14 @@ RSpec.describe Transcript, type: :model do
         uid: "collection-uid",
         title: "The collection's title",
         vendor: vendor,
-        institution_id: institution.id
+        institution_id: institution.id,
       )
     end
     let(:transcript) do
       Transcript.create!(
         uid: "test_transcript",
         vendor: vendor,
-        collection: collection
+        collection: collection,
       )
     end
 
@@ -130,7 +147,8 @@ RSpec.describe Transcript, type: :model do
 
   describe "#get_for_home_page" do
     let(:params) do
-      { collection_id: 0, sort_id: sort_id, text: "", institution_id: 0, theme: "" }
+      { collection_id: 0, sort_id: sort_id,
+      text: "", institution_id: 0, theme: "" }
     end
 
     before do
@@ -139,7 +157,7 @@ RSpec.describe Transcript, type: :model do
         create :transcript, :published,
           title: title,
           collection: collection,
-          project_uid: 'nsw-state-library-amplify',
+          project_uid: "nsw-state-library-amplify",
           lines: 1
       end
     end
@@ -148,7 +166,8 @@ RSpec.describe Transcript, type: :model do
       let!(:sort_id) { "title_asc" }
 
       it "sorts the records" do
-        expect(described_class.get_for_home_page(params).map(&:title)).to eq(["A", "B"])
+        expect(described_class.get_for_home_page(params).map(&:title)).
+          to eq(["A", "B"])
       end
     end
 
@@ -158,6 +177,48 @@ RSpec.describe Transcript, type: :model do
       it "return random records" do
         expect(Transcript).to receive(:randomize_list)
         described_class.get_for_home_page(params)
+      end
+    end
+  end
+
+  describe "#search" do
+    let!(:institution1) { create :institution }
+    let!(:institution2) { create :institution }
+    let!(:collection1) { create :collection, institution: institution1 }
+    let!(:collection2) { create :collection, institution: institution2 }
+    let!(:transcript1) { create :transcript, :published, collection: collection1 }
+    let!(:transcript2) { create :transcript, :published, collection: collection2 }
+
+    before do
+      create :transcript_line, transcript: transcript1
+      create :transcript_line, transcript: transcript2
+    end
+
+    context "with options" do
+      it "shows only the filtered trasncripts" do
+        expect(described_class.search(
+          collection_id: collection1.id,
+          institution_id: institution1.id,
+        ).count).to eq(1)
+      end
+    end
+
+    context "without options" do
+      it "shows all the trasncripts" do
+        expect(described_class.search({}).count).to eq(2)
+      end
+    end
+
+    context "with themes" do
+      before do
+        collection2.theme_list.add("theme1")
+        collection2.save
+      end
+
+      it "shows theme1 records" do
+        expect(described_class.search({
+          theme: "theme1",
+        })).to eq([transcript2])
       end
     end
   end

@@ -1,0 +1,6 @@
+<p>Collection:
+  <%= select_tag "collection_select", options_from_collection_for_select(collection, "id", "title", selected_collection_id),
+  include_blank: "All collections"
+  %>
+</p>
+

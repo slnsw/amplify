@@ -6,7 +6,7 @@ class Admin::CmsController < AdminController
     @collection = policy_scope(Collection).
       includes(:institution).
       joins("INNER JOIN institutions ON collections.institution_id = institutions.id ").
-      order("LOWER(institutions.name)")
+      order("LOWER(institutions.name), LOWER(collections.title)")
 
     # rubocop:enable Metrics/LineLength
     @collection = @collection.group_by(&:institution_id)

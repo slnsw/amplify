@@ -1,0 +1,17 @@
+<h3>Institution edits</h3>
+<div class="card mb-2">
+  <div class="card-header heading">
+  </div>
+  <div class="card-body">
+    <p>Institution:
+    <%= collection_select(:institution, :id, institutions,
+                          :id, :name,
+                          include_blank: 'Select an institution') %>
+    </p>
+
+    <div class="sums" id="edits_for_institution">
+    </div>
+  </div>
+</div>
+
+

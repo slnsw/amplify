@@ -105,6 +105,7 @@ GEM
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)
+    chartkick (3.0.1)
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
     chromedriver-helper (1.2.0)
@@ -627,6 +628,7 @@ DEPENDENCIES
   capistrano3-puma
   capybara (>= 2.15, < 4.0)
   carrierwave (~> 1.1)
+  chartkick
   chromedriver-helper
   coffee-rails (~> 4.2)
   dalli
