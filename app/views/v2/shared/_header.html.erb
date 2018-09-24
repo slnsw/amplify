@@ -17,16 +17,17 @@
     <% end %>
     <div class="main_header__nav_list">
       <%= link_to "BROWSE",
-            v2_home_path,
+            "/",
             class: current_page?(v2_home_path) ? "active" : ""
       %>
       <%= link_to "SEARCH",
-            v2_search_path,
+            "/search",
             class: current_page?(v2_search_path) ? "active" : ""
       %>
-      <%= link_to "COLLECTIONS", v2_home_path %>
-      <%= link_to "ABOUT", v2_home_path %>
-      <%= link_to "FAQS", v2_home_path %>
+      <%= link_to "COLLECTIONS", "/collections" %>
+      <%= link_to "ABOUT", "/page/about" %>
+      <%= link_to "FAQS", "/page/faq" %>
+      <%= link_to "TUTORIAL", "/page/tutorial" %>
       <%= link_to "TRACK MY PROGRESS", v2_home_path, class: "desktop-only" %>
     </div>
   </nav>
