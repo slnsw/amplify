@@ -59,7 +59,7 @@ class TranscriptDecorator < Draper::Decorator
 
   def display_status(text, klass, percentage)
     if klass != 'completed' && object.percent_completed < 100
-      h.content_tag(:div, text, class: "item-status-text #{klass}") if percentage > 0
+      h.content_tag(:div, text, class: "transcript_item__status-text") if percentage > 0
     end
   end
 

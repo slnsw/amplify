@@ -93,7 +93,7 @@ $(document).ready(function(){
       text: searchText,
       theme: theme
     };
-    $(".transcript-list").html('<div class="loading"></div>')
+    $("#transcript-results").html('<div class="loading"></div>')
     $.ajax({
         type: "POST",
         url: "/home/transcripts",

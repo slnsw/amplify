@@ -2,7 +2,7 @@ class SearchController < ApplicationController
   before_action :load_collection, except: [:index]
   before_action :load_institutions
 
-  layout "public"
+  layout "application_v2"
 
   include Searchable
 

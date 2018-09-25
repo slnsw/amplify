@@ -1,35 +1,43 @@
-<% transcripts.each do |transcript| %>
-  <% transcript = transcript.decorate %>
-  <a class="transcript-item" title="<%= transcript.title %>" role="listitem" href="<%= transcript.path %>">
-    <div class="item-image" style="background-image: url('<%= transcript.image_url %>')"></div>
-    <div class="item-subtitle"><%= transcript.collection_title  %></div>
-    <div class="item-title"><%= transcript.title %></div>
-    <div class="item-description">
-      <p>
-      <%= transcript.homepage_description %>
-      </p>
-    </div>
-    <div class="item-info">
-      <%= transcript.humanize_duration %>
-      <div class="item-contributors">
-        <%= transcript.humanize_contributors %>
-      </div>
-    </div>
-    <% if transcript.has_started? %>
-      <div class="item-status">
-        <%= transcript.display_edited_percentage %>
-        <%= transcript.display_completed_percentage %>
-        <%= transcript.display_reviewing_percentage %>
-      </div>
-      <div class="item-status-key">
-        <%= transcript.display_status_consensus %>
-        <%= transcript.display_status_reviewing %>
-        <%= transcript.display_status_edited %>
-      </div>
+<section class="transcript_results">
+  <div class="transcript_results__list" role="list">
+    <% transcripts.each do |transcript| %>
+      <% transcript = transcript.decorate %>
+      <%= link_to transcript.path, class: "transcript_item",
+            title: transcript.title,
+            role: "listitem" do
+      %>
+        <div
+          class="transcript_item__image"
+          style="background-image: url('<%= transcript.image_url %>')">
+        </div>
+        <div class="transcript_item__subtitle">
+          <%= transcript.collection_title  %>
+        </div>
+        <div class="transcript_item__title">
+          <%= transcript.title  %>
+        </div>
+        <div class="transcript_item__description">
+          <%= transcript.homepage_description  %>
+        </div>
+        <div class="transcript_item__info">
+          <%= transcript.humanize_duration %>
+          <div class="transcript_item__contributors">
+            <%= transcript.humanize_contributors %>
+          </div>
+        </div>
+        <% if transcript.has_started? %>
+        <div class="transcript_item__status">
+          <div class="transcript_item__status-bar edited" style="width: <%= transcript.percent_edited %>%"></div>
+          <div class="transcript_item__status-bar reviewing" style="width: <%= transcript.percent_reviewing %>%"></div>
+          <div class="transcript_item__status-bar completed" style="width: <%= transcript.percent_completed %>%"></div>
+        </div>
+        <div class="transcript_item__status-key">
+          <%= transcript.display_status_edited %>
+          <%= transcript.display_status_reviewing  %>
+          <%= transcript.display_status_consensus  %>
+        </div>
+        <% end %>
+      <% end %>
     <% end %>
-  </a>
-<% end %>
-<% if transcripts.empty? %>
-  <p>No transcripts found!</p>
-<% end %>
-
+  </div>
+</section>

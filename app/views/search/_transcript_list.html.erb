@@ -1,20 +1,22 @@
+<div class="search_results__list" role="list">
 <% transcripts.each do |transcript|
    transcript = transcript.decorate
 %>
-<div class="search-item">
-  <div class="item-image" style="background-image: url('<%= transcript.image_url %>')"></div>
-  <div class="item-details">
-    <div class="item-title">
-      <%= transcript.search_title  %>
-      <% if transcript.start_time.to_i > 0 %>
-        (<%= time_display(transcript.start_time) %>)
-      <% end %>
+  <div class="search_item">
+    <div
+      class="search_item__image"
+      style="background-image: url('<%= transcript.image_url %>')"
+    ></div>
+    <div class="search_item__details">
+      <div class="search_item__title">
+        <%= transcript.title %>
+        <% if transcript.start_time.to_i > 0 %>
+          (<%= time_display(transcript.start_time) %>)
+        <% end %>
+      </div>
+      <%= raw search_text(transcript, query) %>
+      <%= raw item_tag(transcript, query) %>
     </div>
-    <%= raw search_text(transcript, query) %>
-    <%= raw item_tag(transcript, query) %>
   </div>
+<% end %>
 </div>
-<% end %>
-<% if transcripts.empty? %>
-  <p>No transcripts found!</p>
-<% end %>
