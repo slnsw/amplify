@@ -38,72 +38,72 @@
     </p>
   </article>
 </section>
-<%# <div id="filters"> %>
-<%#   <%= render "shared/filter_bar" %1> %>
-<%# </div> %>
-<%# <div class="transcripts-wrapper" role="main"> %>
-<%#   <div data-sticky="#transcript-facets" class="sticky-on-scroll" id="fixedHeader"> %>
-<%#     <div id="transcript-facets" class="transcript-facets"> %>
-<%#       <div> %>
-<%#         <!-- sort themes --> %>
-<%#         <% if show_theme? %1> %>
-<%#         <div class="facet"> %>
-<%#           <label for="filter-by-collection">Theme: </label> %>
-<%#           <div name="filter-by-collection" class="select collection"> %>
-<%#             <div class="select-active collection-filter">All Themes</div> %>
-<%#             <div class="select-options collection-filter" role="menu" aria-hidden="true"> %>
-<%#               <%= raw theme_list(@themes) %1> %>
-<%#             </div> %>
-<%#           </div> %>
-<%#         </div> %>
-<%#         <% end %1> %>
-<%#         <!-- end themes --> %>
+<div id="filters">
+  <%= render "shared/filter_bar" %>
+</div>
+<div class="transcripts-wrapper" role="main">
+  <div data-sticky="#transcript-facets" class="sticky-on-scroll" id="fixedHeader">
+    <div id="transcript-facets" class="transcript-facets">
+      <div>
+        <!-- sort themes -->
+        <% if show_theme? %>
+        <div class="facet">
+          <label for="filter-by-collection">Theme: </label>
+          <div name="filter-by-collection" class="select collection">
+            <div class="select-active collection-filter">All Themes</div>
+            <div class="select-options collection-filter" role="menu" aria-hidden="true">
+              <%= raw theme_list(@themes) %>
+            </div>
+          </div>
+        </div>
+        <% end %>
+        <!-- end themes -->
 
-<%#         <!-- sort institution --> %>
-<%#         <% if show_institutions? %1> %>
-<%#         <div class="facet" id="institution_search"> %>
-<%#           <%= render partial: 'institutions', locals: { institutions: @institutions, selected_id: 0, hide_label: false } %1> %>
-<%#         </div> %>
-<%#         <% end %1> %>
-<%#         <!-- end institution --> %>
-<%#         <div class="facet" id="collection_search"> %>
-<%#         </div> %>
-<%#         <!-- Sort  collection --> %>
-<%#         <div class="facet"> %>
-<%#           <label for="sort-by">Sort by: </label> %>
-<%#           <div name="sort-by" class="select collection"> %>
-<%#             <div class="select-active">Random</div> %>
-<%#             <div class="select-options sort-by-filter" role="menu" aria-hidden="true"> %>
-<%#               <%= raw sorting_list(@sort_list) %1> %>
-<%#             </div> %>
-<%#           </div> %>
-<%#         </div> %>
-<%#         <!--  end of sort  collection --> %>
-<%#         <!-- search text box --> %>
-<%#         <div class="facet"> %>
-<%#           <form id="search-form" class="search-form" role="search"> %>
-<%#             <input name="keyword" id="searchText" value="" placeholder="Search Title/Description"> %>
-<%#             <button type="submit" class="submit" title="Submit" aria-label="Submit"></button> %>
-<%#           </form> %>
-<%#         </div> %>
-<%#         <!-- end of search textbox --> %>
-<%#         <!-- reset  --> %>
-<%#         <div class="facet"> %>
-<%#           <%= link_to '', id: 'reset'  do %1> %>
-<%#             <%= fa_icon "refresh" %1> %>
-<%#             Reset %>
-<%#           <% end %1> %>
-<%#         </div> %>
-<%#         <!-- end reset --> %>
+        <!-- sort institution -->
+        <% if show_institutions? %>
+        <div class="facet" id="institution_search">
+          <%= render partial: 'institutions', locals: { institutions: @institutions, selected_id: 0, hide_label: false } %>
+        </div>
+        <% end %>
+        <!-- end institution -->
+        <div class="facet" id="collection_search">
+        </div>
+        <!-- Sort  collection -->
+        <div class="facet">
+          <label for="sort-by">Sort by: </label>
+          <div name="sort-by" class="select collection">
+            <div class="select-active">Random</div>
+            <div class="select-options sort-by-filter" role="menu" aria-hidden="true">
+              <%= raw sorting_list(@sort_list) %>
+            </div>
+          </div>
+        </div>
+        <!--  end of sort  collection -->
+        <!-- search text box -->
+        <div class="facet">
+          <form id="search-form" class="search-form" role="search">
+            <input name="keyword" id="searchText" value="" placeholder="Search Title/Description">
+            <button type="submit" class="submit" title="Submit" aria-label="Submit"></button>
+          </form>
+        </div>
+        <!-- end of search textbox -->
+        <!-- reset  -->
+        <div class="facet">
+          <%= link_to '', id: 'reset'  do %>
+            <%= fa_icon "refresh" %>
+            Reset
+          <% end %>
+        </div>
+        <!-- end reset -->
 
-<%#       </div> %>
-<%#     </div> %>
-<%#   </div> %>
-<%#   <1%# <div id="transcript-results" class="transcript-results"> %1> %>
-<%#   <1%#   <div class="transcript-list" role="list"> %1> %>
-<%#   <1%#   </div> %1> %>
-<%#   <1%# </div> %1> %>
-<%# </div> %>
+      </div>
+    </div>
+  </div>
+  <%# <div id="transcript-results" class="transcript-results"> %>
+  <%#   <div class="transcript-list" role="list"> %>
+  <%#   </div> %>
+  <%# </div> %>
+</div>
 <%# <section class="transcript_results"> %>
 <%#   <div class="transcript_results__list" role="list"> %>
 <%#     <% (0..10).each do |i| %1> %>

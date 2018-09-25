@@ -35,4 +35,21 @@
   white-space: nowrap;
   box-sizing: border-box;
 }
+.transcript-facets .select-options {
+  left: 0;
+  right: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.select .select-options {
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 100%;
+  left: 0;
+  border-top: none;
+  background: #1f789a;
+  box-sizing: border-box;
+}
 
