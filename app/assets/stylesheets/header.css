@@ -17,3 +17,11 @@ body { padding: 0; }
     right: 210px;    
 }    
 .sticky {  top: 0;  }  
+
+.top_header__profile {
+  position: relative;
+  display: inline-flex;
+  &:hover .top_header__toggle_list {
+    display: block;
+  }
+}

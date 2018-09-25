@@ -1,19 +1,12 @@
-<div id="footer" class="footer">
-  <nav id="footer-navigation" class="navigation inverse">
-    <div id="footer-menu-container" class="menu-container">
-      <div class="footer-menu menu" role="menu">
-        <% @global_content[:footer_links].each do |key, value|
-           display_string = key.to_s.humanize
-           url = value[:url]
-        %>
-      <%= link_to "#{display_string}", url, class: "menu-item ", target: "_blank", role: "menuitem" %>
-        <% end %>
-      </div>
-    </div>
+<footer class="sub_footer">
+  <nav class="sub_footer__content">
+    <%= link_to "DISCLAIMER", "#" %> /
+    <%= link_to "PRIVACY", "#" %> /
+    <%= link_to "COPYRIGHT", "#" %> /
+    <%= link_to "RIGHT TO INFORMATION", "#" %> /
+    <%= link_to "WEBSITE ACCESSIBILITY", "#" %> /
+    <%= link_to "CONTACT US", "#" %> /
+    <%= link_to "FEEDBACK", "#" %> /
+    <%= link_to "SITEMAP", "#" %>
   </nav>
-  <div>
-    <div class="footer.md page">
-      <%= raw @global_content[:footer_content] %>
-    </div>
-  </div>
-<div>
+</footer>

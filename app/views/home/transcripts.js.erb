@@ -1,5 +1,2 @@
-$("#institution_search").html("<%= escape_javascript(render partial: 'home/institutions', locals: { institutions: @institutions,
-selected_id: @selected_institution_id, hide_label: false} ) %>");
-$("#collection_search").html("<%= escape_javascript(render partial: 'home/collection', locals: { collection: @collection,
-selected_id: @selected_collection_id} ) %>");
+$("#filters").html("<%= escape_javascript(render partial: 'shared/filter_bar') %>")
 $(".transcript-list").html("<%= escape_javascript(render partial: 'home/transcript_list', locals: { transcripts: @transcripts } ) %>");

@@ -1,6 +1,6 @@
 <section class="filter_bar">
   <article class="filter_bar__content">
-    <form class="filter_bar__form">
+    <form class="filter_bar__form" id="search-form">
       <%= check_box_tag "filter_bar_toggle", "filter_bar_toggle", false,
             class: "filter_bar__mobile_toggle mobile-only"
       %>
@@ -12,16 +12,20 @@
         <legend class="desktop-only">
           Filter by:
         </legend>
+        <% if show_theme? %>
+        <%= select_tag "themes",
+              options_from_collection_for_select(@themes, :id, :name),
+              prompt: "Theme"
+        %>
+        <% end %>
+        <% if show_institutions? %>
         <%= select_tag "institutions",
               options_from_collection_for_select(@institutions, :id, :name),
               prompt: "Institution"
         %>
-        <%= select_tag "themes",
-              options_for_select([ "Indigenous studies", "Womens studies", "People studies" ]),
-              prompt: "Theme"
-        %>
+        <% end %>
         <%= select_tag "collections",
-              options_for_select([ "Bridging our stories", "Your village your story", "Visible lives" ]),
+              options_from_collection_for_select(@collection, :id, :title),
               prompt: "Collection"
         %>
       </div>
@@ -30,12 +34,18 @@
           Sort by:
         </legend>
         <%= select_tag "sorting",
-              options_for_select([ "Random", "Title (A to Z)", "Title (Z to A)" ]),
+              options_from_collection_for_select(@sort_list, :id, :title),
               prompt: "Sort"
         %>
         <div class="search_field">
           <%= search_field_tag "search", nil, placeholder: "Search title/description" %>
           <%= button_tag "Start", class: "button icon search" %>
+        </div>
+        <div>
+          <%= link_to '', id: 'reset'  do %>
+            <%= fa_icon "refresh" %>
+            Reset
+          <% end %>
         </div>
       </div>
     </form>

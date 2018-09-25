@@ -1,40 +1,46 @@
 <% content_for :javascripts do %>
   <%= javascript_include_tag 'home' %>
 <% end %>
-
-<% content_for :home_banner do %>
-  <div class="home-banner">
-    <img src="/nsw-state-library-amplify/assets/img/slnsw_logo_horizontal_white.svg" alt="State Library of NSW logo" class="logo">
-    <div class="banner-main">
-      <div class="banner-text">
-        <h1>
-          <span class="sr-only">Amplify</span>
-          <%= image_tag 'Amplify_logo_WHITE_COLOUR.svg', alt: 'Amplify logo', class: 'logo' %>
-        </h1>
-
-        <h2>Listen to our sound archive, help us transcribe and enrich our stories.</h2>
-      </div>
-    </div>
-
-  </div>
-<% end %>
-
-
-<div>
-  <div class="home.md page">
-    <div class="container" role="contentinfo">
-      <p>Help the <a href="http://www.sl.nsw.gov.au/">State Library of New South Wales</a> enhance its collections by correcting computer-generated transcripts from our vast sound archive.</p>
-
-      <video src="https://s3.amazonaws.com/togetherwelisten.nypl.org/video/twl_sample.mp4" preload="auto" class="toggle-sound sample-video" autoplay="" loop="" muted="" poster="https://s3.amazonaws.com/togetherwelisten.nypl.org/img/twl_sample.png"></video>
-
-      <p class="caption">An example of how the transcript editor works (click for sound).</p>
-
-      <p>Select an interview to get started.</p>
-
-      <p class="disclaimer">All images used on this platform are drawn from the Library's collections but are not intended to represent individual speakers unless explicitly stated. If you can provide us with further detail about any of our collections please <a href="mailto:digital.volunteering@sl.nsw.gov.au">contact us</a>.</p>
-    </div>
-  </div>
-</div>
+<section class="main_hero home">
+  <article class="main_hero__content">
+    <header class="main_hero__header">
+      <%= image_tag "Amplify_logo_WHITE_COLOUR",
+            alt: "Amplify logo",
+            width: 400
+      %>
+      <h1 class="main_hero__title">
+        Bringing the stories of New South Wales<br>
+        together for you to listen, transcribe and enrich.
+      </h1>
+      <%= link_to "Powered by the State Library of NSW",
+            "https://www.sl.nsw.gov.au/",
+            target: "_blank",
+            class: "main_hero__subtitle"
+      %>
+    </header>
+  </article>
+</section>
+<section class="sub_hero">
+  <article class="sub_hero__content">
+    <header>
+      <h2 class="sub_hero__title">
+        Audio collections paired with computer-generated transcripts
+      </h2>
+    </header>
+    <p>
+      Amplify delivers digitised audio files from the collections of cultural,
+      educational and research institutions within Australia.
+      Listen to these oral histories accompanied with a computer-generated transcript,
+      which you can help to improve by correcting any errors you find as you listen along.
+    </p>
+    <p>
+      Select and interview below to get started
+    </p>
+  </article>
+</section>
+<%# <div id="filters"> %>
+<%#   <%= render "shared/filter_bar" %1> %>
+<%# </div> %>
 <div class="transcripts-wrapper" role="main">
   <div data-sticky="#transcript-facets" class="sticky-on-scroll" id="fixedHeader">
     <div id="transcript-facets" class="transcript-facets">
@@ -93,9 +99,16 @@
       </div>
     </div>
   </div>
-  <div id="transcript-results" class="transcript-results">
-    <div class="transcript-list" role="list">
-    </div>
-  </div>
+  <%# <div id="transcript-results" class="transcript-results"> %>
+  <%#   <div class="transcript-list" role="list"> %>
+  <%#   </div> %>
+  <%# </div> %>
 </div>
-
+<%# <section class="transcript_results"> %>
+<%#   <div class="transcript_results__list" role="list"> %>
+<%#     <% (0..10).each do |i| %1> %>
+<%#       <% completed = i * 10 %1> %>
+<%#       <%= render "v2/shared/transcript_preview", completed: completed %1> %>
+<%#     <% end %1> %>
+<%#   </div> %>
+<%# </section> %>
