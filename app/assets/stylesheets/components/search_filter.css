@@ -1,55 +1,120 @@
-.transcripts-wrapper {
-  min-height: 400px;
-  margin: 50px -10px 0;
-  padding: 0 10px 30px;
-  background: #f1f1f1;
-  border-top: 1px solid #e1e0df;
-  border-bottom: 1px solid #e1e0df;
-}
 .transcript-facets {
   position: relative;
   z-index: 50;
   text-align: center;
   padding: 10px 10px 0;
   margin: 0 -10px 20px;
-  background: #ddd;
+}
+
+.transcript-facets.sticky {
+  position: fixed;
+  /* @include box-shadow(0px 2px 2px rgba($black, 0.3)); */
 
 }
-.transcript-facets .facet:first-child {
-  margin-left: 0;
 
-}
-.transcript-facets .facet {
+.facet {
   display: inline-block;
   margin-bottom: 10px;
   margin-left: 20px;
 
 }
-.select {
-  display: inline-block;
-  position: relative;
-  background: #2799C5;
-  color: #FFFFFF;
-  cursor: pointer;
-  padding: 0.2em 0.8em;
-  white-space: nowrap;
-  box-sizing: border-box;
+
+.facet:first-child {
+  margin-left: 0;
+
 }
-.transcript-facets .select-options {
-  left: 0;
+
+.select-options {
+  left: auto;
   right: 0;
+
+}
+
+.select-option {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
 }
-.select .select-options {
+
+.select.collection .select-options {
+  min-width: 300px;
+
+}
+
+.select.sort .select-options {
+  min-width: 240px;
+
+}
+
+/* Select Box */
+.select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(/assets/icons/icon-dropdown-black.svg), #F5C653;
+  background-position: 96% 50%, center center;
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+  color: #272727;
+  border-radius: 0;
+  border: 0;
+  height: 30px;
+  padding: 0 20px 0 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.select:hover {
+  /* background: $link-hover-color; */
+
+}
+
+.select-active:after {
+  margin-left: 5px;
+  /* @include icon("\f0d7"); // http://fortawesome.github.io/Font-Awesome/icon/caret-down/ */
+
+}
+
+.select-options {
   display: none;
   position: absolute;
   width: 100%;
   top: 100%;
   left: 0;
   border-top: none;
-  background: #1f789a;
-  box-sizing: border-box;
+  background: #F5C653;
+  /* @include box-sizing(); */
+
 }
 
+.select-option {
+  display: block;
+  padding: 0.4em;
+  line-height: 1;
+  color: white;
+
+}
+
+.select-option:hover {
+  color: white;
+  background: #D1AB4D;
+
+}
+
+.select-option.selected:after {
+  margin-left: 5px;
+  /* @include icon("\f00c"); // http://fortawesome.github.io/Font-Awesome/icon/check/ */
+
+}
+
+.select-option.active .select-options {
+  display: block;
+
+}
+
+.select.active .select-options {
+  display: block;
+
+}

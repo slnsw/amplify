@@ -1,108 +1,84 @@
 <% content_for :javascripts do %>
   <%= javascript_include_tag 'home' %>
 <% end %>
-<section class="main_hero home">
-  <article class="main_hero__content">
-    <header class="main_hero__header">
-      <%= image_tag "Amplify_logo_WHITE_COLOUR",
-            alt: "Amplify logo",
-            width: 400
-      %>
-      <h1 class="main_hero__title">
-        Bringing the stories of New South Wales<br>
-        together for you to listen, transcribe and enrich.
-      </h1>
-      <%= link_to "Powered by the State Library of NSW",
-            "https://www.sl.nsw.gov.au/",
-            target: "_blank",
-            class: "main_hero__subtitle"
-      %>
-    </header>
-  </article>
-</section>
-<section class="sub_hero">
-  <article class="sub_hero__content">
-    <header>
-      <h2 class="sub_hero__title">
-        Audio collections paired with computer-generated transcripts
-      </h2>
-    </header>
-    <p>
-      Amplify delivers digitised audio files from the collections of cultural,
-      educational and research institutions within Australia.
-      Listen to these oral histories accompanied with a computer-generated transcript,
-      which you can help to improve by correcting any errors you find as you listen along.
-    </p>
-    <p>
-      Select and interview below to get started
-    </p>
-  </article>
-</section>
+<%= render 'hero_content'  %>
+<%= render 'sub_hero_content'  %>
 <div id="filters">
   <%= render "shared/filter_bar" %>
 </div>
-<div class="transcripts-wrapper" role="main">
-  <div data-sticky="#transcript-facets" class="sticky-on-scroll" id="fixedHeader">
-    <div id="transcript-facets" class="transcript-facets">
-      <div>
-        <!-- sort themes -->
-        <% if show_theme? %>
-        <div class="facet">
-          <label for="filter-by-collection">Theme: </label>
-          <div name="filter-by-collection" class="select collection">
-            <div class="select-active collection-filter">All Themes</div>
-            <div class="select-options collection-filter" role="menu" aria-hidden="true">
-              <%= raw theme_list(@themes) %>
+<div id="filters">
+  <section class="filter_bar">
+    <article class="filter_bar__content">
+      <div class="transcripts-wrapper" role="main">
+        <div data-sticky="#transcript-facets" class="sticky-on-scroll" id="fixedHeader">
+          <div id="transcript-facets" class="transcript-facets filter_bar">
+            <div>
+              <div class="filter_bar__fieldset">
+                <legend class="desktop-only">
+                  Filter by:
+                </legend>
+                <!-- sort themes -->
+                <% if show_theme? %>
+                  <div class="facet">
+                    <div name="filter-by-collection" class="select collection">
+                      <div class="select-active collection-filter">All Themes</div>
+                      <div class="select-options collection-filter" role="menu" aria-hidden="true">
+                        <%= raw theme_list(@themes) %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+                <!-- end themes -->
+
+                <!-- sort institution -->
+                <% if show_institutions? %>
+                  <div class="facet" id="institution_search">
+                    <%= render partial: 'institutions', locals: { institutions: @institutions, selected_id: 0, hide_label: false } %>
+                  </div>
+                <% end %>
+                <!-- end institution -->
+                <div class="facet" id="collection_search">
+                </div>
+                <!-- Sort  collection -->
+              </div>
+              <div class="filter_bar__fieldset">
+                <legend class="desktop-only">
+                  Sort by:
+                </legend>
+                <div class="facet">
+                  <div name="sort-by" class="select collection">
+                    <div class="select-active">Random</div>
+                    <div class="select-options sort-by-filter" role="menu" aria-hidden="true">
+                      <%= raw sorting_list(@sort_list) %>
+                    </div>
+                  </div>
+                </div>
+                <!--  end of sort  collection -->
+                <!-- search text box -->
+                <div class="facet">
+                  <div class="search_field">
+                    <input type="search" name="searchText" id="searchText" placeholder="Search title/description">
+                    <button name="button" type="submit" class="button icon search">Start</button>
+                  </div>
+                  <div>
+                    <%= link_to '', id: 'reset'  do %>
+                      <%= fa_icon "refresh" %>
+                      Reset
+                    <% end %>
+                  </div>
+                </div>
+                <!-- end of search textbox -->
+              </div>
             </div>
           </div>
         </div>
-        <% end %>
-        <!-- end themes -->
-
-        <!-- sort institution -->
-        <% if show_institutions? %>
-        <div class="facet" id="institution_search">
-          <%= render partial: 'institutions', locals: { institutions: @institutions, selected_id: 0, hide_label: false } %>
-        </div>
-        <% end %>
-        <!-- end institution -->
-        <div class="facet" id="collection_search">
-        </div>
-        <!-- Sort  collection -->
-        <div class="facet">
-          <label for="sort-by">Sort by: </label>
-          <div name="sort-by" class="select collection">
-            <div class="select-active">Random</div>
-            <div class="select-options sort-by-filter" role="menu" aria-hidden="true">
-              <%= raw sorting_list(@sort_list) %>
-            </div>
-          </div>
-        </div>
-        <!--  end of sort  collection -->
-        <!-- search text box -->
-        <div class="facet">
-          <form id="search-form" class="search-form" role="search">
-            <input name="keyword" id="searchText" value="" placeholder="Search Title/Description">
-            <button type="submit" class="submit" title="Submit" aria-label="Submit"></button>
-          </form>
-        </div>
-        <!-- end of search textbox -->
-        <!-- reset  -->
-        <div class="facet">
-          <%= link_to '', id: 'reset'  do %>
-            <%= fa_icon "refresh" %>
-            Reset
-          <% end %>
-        </div>
-        <!-- end reset -->
-
+        <%# <div id="transcript-results" class="transcript-results"> %>
+          <%#   <div class="transcript-list" role="list"> %>
+            <%#   </div> %>
+          <%# </div> %>
       </div>
-    </div>
-  </div>
-  <%# <div id="transcript-results" class="transcript-results"> %>
-  <%#   <div class="transcript-list" role="list"> %>
-  <%#   </div> %>
-  <%# </div> %>
+    </article>
+  </section>
 </div>
 <%# <section class="transcript_results"> %>
 <%#   <div class="transcript_results__list" role="list"> %>

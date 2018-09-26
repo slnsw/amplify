@@ -8,7 +8,6 @@
 %>
 <% if collection.any? %>
   <% rest_of_the_collection = collection %>
-  <label for="filter-by-collection">Collection: </label>
   <div name="filter-by-collection" class="select collection">
     <div class="select-active collection-filter selected"><%= first_collection.title %></div>
     <div class="select-options collection-filter" role="menu" aria-hidden="true">
