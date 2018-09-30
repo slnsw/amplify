@@ -39,6 +39,7 @@ $transcript-content-width: 800px;
   .metadata {
     position: relative;
     margin: 0 auto;
+    margin-top: 58px;
     max-width: $transcript-content-width;
     z-index: 5;
     h1 {
@@ -53,9 +54,15 @@ $transcript-content-width: 800px;
     }
     h1, h2 {
       text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      font-family: "Merriweather", serif;
+      line-height: 1.5;
     }
     p {
       margin-top: 0;
+      font-family: "Merriweather", serif;
+      line-height: 1.2;
+      color: inherit;
+      font-size: 1rem;
     }
     .duration, .speakers, .original-link, .download-link {
       font-style: italic;
@@ -64,8 +71,12 @@ $transcript-content-width: 800px;
     .speakers, .original-link, .download-link {
       margin-top: -12px;
       max-width: 500px;
-      color: $charcoal;
+      color: $black;
       font-size: 0.9em;
+    }
+    .download-link a {
+      color: $cyan;
+      font-size: 1.2rem;
     }
     .original-link a:after {
       @include icon("\f08e");
@@ -73,6 +84,9 @@ $transcript-content-width: 800px;
     }
     .download-link a:after {
       @include icon("\f019");
+      font-style: italic;
+      font-size: inherit;
+      line-height: 1.2;
       margin-left: 6px;
     }
 

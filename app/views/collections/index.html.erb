@@ -3,9 +3,9 @@
 <% end %>
 
 <%= render partial: 'shared/header_logo' %>
-<div class="collections page">
+<div class="page_container">
   <%= raw @page&.display_content %>
-  <div class="transcript-facets-collections transcript-facets">
+  <div class="filter_bar transcript-facets-collections transcript-facets">
     <!-- sort institution -->
     <% if show_institutions? %>
       <div class="facet" id="institution_search">
@@ -14,7 +14,7 @@
     <% end %>
     <!-- end institution -->
   </div>
-
   <div class="collect-list">
   </div>
 </div>
+

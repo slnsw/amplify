@@ -1,5 +1,5 @@
 class PageController < ApplicationController
-  layout "public"
+  layout "application_v2"
 
   def show
     load_page(params[:id])

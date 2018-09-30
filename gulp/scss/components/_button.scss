@@ -4,18 +4,33 @@
 /* Button */
 .button {
   display: inline-block;
-  padding: 0.2em 0.8em;
+  padding: 0px 30px;
   background: $link-color;
   color: $white;
   cursor: pointer;
+  font-family: "Muli", sans-serif;
+  font-weight: bold;
+  border-radius: 0;
+  text-align: center;
+  border: 0;
+  outline: 0;
+  -webkit-appearance: none;
 
   &:hover {
-    background: $link-hover-color;
+    background: $very-dark-cyan;
     color: $white;
   }
-
+  &.cyan {
+    background-color: $cyan;
+  }
+  &.cyan:hover {
+    background-color: $very-dark-cyan;
+  }
   &.large {
     font-size: 1.4em;
+    height: 50px;
+    line-height: 51px;
+    font-size: 1.25rem;
   }
 
   &.list-next {

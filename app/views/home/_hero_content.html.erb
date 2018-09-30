@@ -1,13 +1,25 @@
-<section class="main_hero home">
+<%
+    background_image_url = image_path("home_hero_background.jpg")
+    title_text = "Bringing the stories of New South Wales<br> together for you to listen, transcribe and enrich."
+    logo = "Amplify_logo_WHITE_COLOUR"
+    logo_alt = "Amplify logo"
+
+    if defined?(institution) && institution.present?
+      background_image_url = institution.hero_image_url.to_s
+      title_text = institution.introductory_text
+      logo = institution.image_url(:logo).to_s
+      logo_alt = "#{institution.name} logo"
+    end
+%>
+<section class="main_hero home" style="background: url('<%= background_image_url %>')">
   <article class="main_hero__content">
     <header class="main_hero__header">
-      <%= image_tag "Amplify_logo_WHITE_COLOUR",
-            alt: "Amplify logo",
+      <%= image_tag logo,
+            alt: logo_alt,
             width: 400
       %>
       <h1 class="main_hero__title">
-        Bringing the stories of New South Wales<br>
-        together for you to listen, transcribe and enrich.
+        <%= raw title_text  %>
       </h1>
       <%= link_to "Powered by the State Library of NSW",
             "https://www.sl.nsw.gov.au/",

@@ -2,12 +2,22 @@
 class InstitutionsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!, except: [:index, :transcripts]
-  layout 'public'
+  before_action :load_collection, except: [:index]
+  before_action :load_institutions
+
+  layout "application_v2"
+
+
+  include Searchable
 
   def index
-    @institution = Institution.friendly.find(params[:path])
-    @collection = CollectionsService.list
     @sort_list = SortList.list
+    @themes = Theme.all
+    @collection = Collection.none
+
+    @institution = Institution.friendly.find(params[:path])
+    # @collection = CollectionsService.list
+    # @sort_list = SortList.list
   rescue ActiveRecord::RecordNotFound
     render_404
   end

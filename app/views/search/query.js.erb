@@ -2,5 +2,7 @@
 <%# selected_id: @selected_institution_id, hide_label: false} ) %1>"); %>
 <%# $("#collection_search").html("<%= escape_javascript(render partial: 'home/collection', locals: { collection: @collection, %>
 <%# selected_id: @selected_collection_id} ) %1>"); %>
+$("#collection_search").html("<%= escape_javascript(render partial: 'home/collection', locals: { collection: @collection,
+                                                                                                 selected_id: @selected_collection_id} ) %>");
 $(".search_results").html("<%= escape_javascript(render partial: 'search/transcript_list', locals: { transcripts: @transcripts, query: @query } ) %>");
 

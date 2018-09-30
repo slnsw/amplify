@@ -5,15 +5,15 @@
 .select {
   display: inline-block;
   position: relative;
-  background: $link-color;
-  color: $white;
+  background: $background-color;
+  color: $link-inverse-color;
   cursor: pointer;
   padding: 0.2em 0.8em;
   white-space: nowrap;
   @include box-sizing();
 
   &:hover {
-    background: $link-hover-color;
+    background: $background-color;
   }
 
   .select-active {
@@ -31,7 +31,7 @@
     top: 100%;
     left: 0;
     border-top: none;
-    background: darken($link-color, 10%);
+    background: $background-color;
     @include box-sizing();
   }
 
@@ -39,7 +39,7 @@
     display: block;
     padding: 0.4em;
     line-height: 1;
-    color: $white;
+    color: $link-inverse-color;
 
     &:hover {
       color: $white;

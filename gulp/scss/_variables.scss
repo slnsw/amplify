@@ -13,6 +13,15 @@ $coolgray-color: #A3A19E;
 $black: #000000;
 $white: #FFFFFF;
 
+// New layout colors
+// ---------------------
+$very-dark-cyan:    #0A2C33;
+$soft-orange:       #F5C653;
+$dark-red-black:    #231F20;
+$black:             #272727;
+$cyan:              #358B90;
+$bright-orange:     #E2B33B;
+
 $primary-color: $red-color;
 $secondary-color: $blue-color;
 $highlight-dark-color: $yellow-dark-color;
@@ -26,17 +35,17 @@ $pink: #E91E63;
 $purple: #9C27B0;
 $indigo: #3F51B5;
 $blue: #2196F3;
-$cyan: #00BCD4;
 $green: #4CAF50;
 $orange: #FF9800;
 
 // Component colors
 // -------------------------
+$background-color: $very-dark-cyan;
 
-$inverse-background-color: $charcoal;
+$inverse-background-color: $dark-red-black;
 $link-color: $secondary-color;
-$link-hover-color: lighten($secondary-color, 10%);
-$link-inverse-color: lighten($secondary-color, 20%);
+$link-hover-color: $bright-orange;
+$link-inverse-color: $soft-orange;
 $link-inverse-hover-color: lighten($secondary-color, 30%);
 
 // Component dimensions

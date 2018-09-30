@@ -1,72 +1,8 @@
-<% content_for :home_banner do %>
-  <div class="home-banner">
-    <%= image_tag(@institution.image_url(:logo).to_s, class: "logo", alt: @institution.name) %>
-    <div class="banner-main" style="background-image: url('<%= @institution.hero_image_url(:hero_image).to_s %>')">
-      <div class="banner-text">
-        <h1>Amplify</h1>
-        <h2>
-          <%= @institution.introductory_text %>
-        </h2>
-      </div>
-    </div>
-
-  </div>
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'home' %>
 <% end %>
-
-
-<div>
-  <div class="home.md page">
-    <div class="container" role="contentinfo">
-      <p>Help the <a href="<%= @institution.url %>"><%= @institution.name %></a> enhance its collections by correcting computer-generated transcripts from our vast sound archive.</p>
-
-      <video src="https://s3.amazonaws.com/togetherwelisten.nypl.org/video/twl_sample.mp4" preload="auto" class="toggle-sound sample-video" autoplay="" loop="" muted="" poster="https://s3.amazonaws.com/togetherwelisten.nypl.org/img/twl_sample.png"></video>
-
-      <p class="caption">An example of how the transcript editor works (click for sound).</p>
-
-      <p>Select an interview to get started.</p>
-
-      <p class="disclaimer">All images used on this platform are drawn from the Library's collections but are not intended to represent individual speakers unless explicitly stated. If you can provide us with further detail about any of our collections please <a href="mailto:digital.volunteering@sl.nsw.gov.au">contact us</a>.</p>
-    </div>
-  </div>
-</div>
-<div class="transcripts-wrapper" role="main">
-  <div data-sticky="#transcript-facets" class="sticky-on-scroll" id="fixedHeader">
-    <div id="transcript-facets" class="transcript-facets">
-      <div>
-        <div class="facet">
-          <label for="filter-by-collection">Filter by Collection: </label>
-          <div name="filter-by-collection" class="select collection">
-            <div class="select-active collection-filter">All Collections</div>
-            <div class="select-options collection-filter" role="menu" aria-hidden="true">
-              <%= raw collection_list(@collection) %>
-            </div>
-          </div>
-        </div>
-        <!-- Sort  collection -->
-        <div class="facet">
-          <label for="sort-by">Sort by: </label>
-          <div name="sort-by" class="select collection">
-            <div class="select-active">Random</div>
-            <div class="select-options sort-by-filter" role="menu" aria-hidden="true">
-              <%= raw sorting_list(@sort_list) %>
-            </div>
-          </div>
-        </div>
-        <!--  end of sort  collection -->
-        <!-- search text box -->
-        <div class="facet">
-          <form id="search-form" class="search-form" role="search">
-            <input name="keyword" id="searchText" value="" placeholder="Search Title/Description">
-            <button type="submit" class="submit" title="Submit" aria-label="Submit"></button>
-          </form>
-        </div>
-        <!-- end of search textbox -->
-      </div>
-    </div>
-  </div>
-  <div id="transcript-results" class="transcript-results">
-    <div class="transcript-list" role="list">
-    </div>
-  </div>
-</div>
-
+<%= render partial: 'home/hero_content', locals: { institution: @institution}  %>
+<!-- extended_controls -> sort and search boxes -->
+<%= render partial: 'home/filters', locals: { extended_controls: true }  %>
+<section id="transcript-results">
+</section>

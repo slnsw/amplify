@@ -70,6 +70,12 @@ $(document).ready(function(){
     loadTranscripts()
   })
 
+  $('.search_field .button').on('click', function(){
+    searchText = $('#searchText').val()
+    event.preventDefault();
+    loadTranscripts()
+  })
+
   $("#searchText").on('keyup',function(e){
     if (($(this).val() == "") && (e.keyCode == 8)){
       searchText = "";

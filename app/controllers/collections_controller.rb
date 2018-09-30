@@ -2,7 +2,7 @@ class CollectionsController < ApplicationController
   include ActionController::MimeResponds
   include IndexTemplate
 
-  layout "public", only: [:index]
+  layout "application_v2", only: [:index]
 
   before_action :set_collection, only: [:show, :update, :destroy]
 

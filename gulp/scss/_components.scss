@@ -12,12 +12,12 @@ p.text-center {
 
 /* Inverse */
 .inverse {
-  background: $inverse-background-color;
+  background: $background-color;
   color: $white;
   a {
     color: $link-inverse-color;
     &:hover {
-      color: $link-inverse-hover-color;
+      color: $white;
     }
   }
 }
