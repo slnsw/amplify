@@ -4,6 +4,7 @@
     <title>Admin | Amplify</title>
     <%= csrf_meta_tags %>
 
+    <%= stylesheet_link_tag    'application_v2', media: 'all', 'data-turbolinks-track': true %>
     <%= stylesheet_link_tag    'admin_base', media: 'all' %>
     <%= stylesheet_link_tag    'application', '/assets/css/app.css?a=1499756908' %>
     <%= javascript_include_tag 'admin_base' %>
@@ -14,7 +15,7 @@
 
   <body>
     <div id="app" class="container-fluid">
-      <div id="header" class="header">
+      <div id="header" class="header edit_page_header">
         <nav id="primary-navigation" class="navigation primary inverse" role="navigation">
           <div>
             <div id="header-title" class="title-container">
@@ -25,10 +26,10 @@
                 }
               </style>
               <div class="header-bar">
-                <%= link_to root_path, class: "title", "aria-label": "Click to return to homepage" do %>
-                  <img src="/nsw-state-library-amplify/assets/img/logo_cropped.png" alt="Logo" class="logo">
-                  <p class="logo-text">Amplify</p>
-                <% end %>
+                <%= image_tag "Amplify_logo_WHITE_COLOUR",
+                  alt: "Amplify logo",
+                  width: 150
+                %>
               </div>
             </div>
             <div id="header-crumbs" class="crumbs-container"></div>

@@ -50,7 +50,7 @@
   &__mobile_toggle {
     @include hidden-input;
     &:checked ~ .filter_bar__fieldset {
-      position: inherit;
+      position: relative;
       opacity: 1;
       visibility: visible;
       z-index: auto;

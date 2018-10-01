@@ -99,7 +99,7 @@ $(document).ready(function(){
       text: searchText,
       theme: theme
     };
-    $("#transcript-results").html('<div class="loading"></div>')
+    $("#transcript-results").html('<div class="lds-ripple"><div></div><div></div></div>')
     $.ajax({
         type: "POST",
         url: "/home/transcripts",

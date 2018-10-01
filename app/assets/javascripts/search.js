@@ -90,7 +90,8 @@ $(document).ready(function(){
       q: searchText,
       theme: theme
     };
-    $(".search_results").html('<div class="loading"></div>')
+
+    $(".search_results").html('<div class="lds-ripple"><div></div><div></div></div>')
     $.ajax({
         url: "/search/query",
         data: {data: data},
