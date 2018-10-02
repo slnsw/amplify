@@ -1,7 +1,6 @@
 .page_container {
   background-color: #FFFFFF;
   color: #272727;
-  padding: 30px;
   margin-left: 10%;
   margin-right: 10%;
 }
@@ -9,9 +8,10 @@
 .cms {
   margin-bottom: 20px;
   a {
-    color: $dark-cyan;
+    color: $cyan;
     font-size: 1rem;
     font-style: italic;
+    text-decoration: underline;
     &:hover {
       color: $dark-cyan;
     }
