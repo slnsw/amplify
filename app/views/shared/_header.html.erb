@@ -37,7 +37,7 @@
             <%= link_to 'Sign out', destroy_user_session_path, method: 'delete', class: "auth-link" %>
             <%= link_to "Dashboard", "/dashboard", class: "auth-link"%>
             <% if current_user.staff? %>
-              <%= link_to "Admin", "/admin", class: "auth-link"%>
+              <%= link_to "Admin CMS", "/admin", class: "auth-link"%>
             <% end %>
           <% else %>
             <%= link_to 'Sign in w/ Email', "/users/sign_in", class: "auth-link"  %>
