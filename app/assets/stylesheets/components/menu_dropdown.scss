@@ -1,0 +1,43 @@
+.menu_dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: $dark-red-black;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.menu_dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.menu_select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(/assets/icons/icon-dropdown-white.svg), $dark-red-black;
+  background-position: 96% 50%, center center;
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+  color: #272727;
+  border-radius: 0;
+  border: 0;
+  height: 23px;
+  padding: 0 20px 0 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.menu_select-active:after {
+  margin-left: 5px;
+  /* @include icon("\f0d7"); // http://fortawesome.github.io/Font-Awesome/icon/caret-down/ */
+
+}
+

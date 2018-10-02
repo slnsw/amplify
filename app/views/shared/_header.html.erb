@@ -16,19 +16,36 @@
       <span class="sr-only">Select top open navigation</span>
     <% end %>
     <div class="main_header__nav_list">
-      <%= link_to "BROWSE",
-            "/",
-            class: current_page?(v2_home_path) ? "active" : ""
-      %>
-      <%= link_to "SEARCH",
-            "/search",
-            class: current_page?(v2_search_path) ? "active" : ""
-      %>
-      <%= link_to "COLLECTIONS", "/collections" %>
-      <%= link_to "ABOUT", "/page/about" %>
-      <%= link_to "FAQS", "/page/faq" %>
-      <%= link_to "TUTORIAL", "/page/tutorial" %>
-      <%= link_to "TRACK MY PROGRESS", "/page/tutorial" %>
+      <div class="main_header__links">
+        <%= link_to "BROWSE",
+              "/",
+              class: current_page?(v2_home_path) ? "active" : ""
+        %>
+        <%= link_to "SEARCH",
+              "/search",
+              class: current_page?(v2_search_path) ? "active" : ""
+        %>
+        <%= link_to "COLLECTIONS", "/collections" %>
+        <%= link_to "ABOUT", "/page/about" %>
+        <%= link_to "FAQS", "/page/faq" %>
+        <%= link_to "TUTORIAL", "/page/tutorial" %>
+      </div>
+      <div class="menu_dropdown main_header__links menu_select">
+        <%= link_to "TRACK MY PROGRESS", "/page/tutorial" %>
+        <div class="dropdown-content">
+          <% if user_signed_in? %>
+            <%= link_to 'Sign out', destroy_user_session_path, method: 'delete', class: "auth-link" %>
+            <%= link_to "Dashboard", "/dashboard", class: "auth-link"%>
+            <% if current_user.staff? %>
+              <%= link_to "Admin", "/admin", class: "auth-link"%>
+            <% end %>
+          <% else %>
+            <%= link_to 'Sign in w/ Email', "/users/sign_in", class: "auth-link"  %>
+            <%= link_to "Sign in w/ Google", "/users/auth/google_oauth2", class: "auth-link"  %>
+            <%= link_to "Sign in w/ Facebook", "/users/auth/facebook", class: "auth-link"  %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </nav>
 </header>
