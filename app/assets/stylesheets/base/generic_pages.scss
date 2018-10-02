@@ -5,3 +5,14 @@
   margin-left: 10%;
   margin-right: 10%;
 }
+
+.cms {
+  a {
+    color: $dark-cyan;
+    font-size: 1.2rem;
+    font-style: italic;
+    &:hover {
+      color: $dark-cyan;
+    }
+  }
+}
