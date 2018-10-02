@@ -33,9 +33,9 @@
       <div class="menu_dropdown main_header__links menu_select">
         <% if user_signed_in? %>
           <%= raw current_user_edits  %>
-          <%= link_to current_user.name, "" %>
+          <%= link_to current_user.name, "", id: "select_title" %>
         <% else %>
-          <%= link_to "TRACK MY PROGRESS", "/page/tutorial" %>
+          <%= link_to "TRACK MY PROGRESS", "/page/tutorial", id: "select_title" %>
         <% end  %>
         <div class="dropdown-content">
           <% if user_signed_in? %>

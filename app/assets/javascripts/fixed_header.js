@@ -24,5 +24,10 @@ $(document).ready(function(){
       header.classList.remove("fixed-header");
     }
   }
+
+  $('#select_title').on('click', function(event){
+    event.preventDefault();
+    $('.dropdown-content').toggle();
+  })
 })
 
