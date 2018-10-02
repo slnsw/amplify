@@ -1,13 +1,11 @@
 <header class="main_header">
-  <%= image_tag "Amplify_logo_WHITE_COLOUR",
+  <%= link_to(
+    image_tag("Amplify_logo_WHITE_COLOUR",
         alt: "Amplify logo",
-        width: 150
+        width: 150),
+        root_url
+    )
   %>
-  <% if current_page?(v2_edit_path) %>
-    <p class="main_header__title">
-      > Transcript title - Interviewed by a person with a long name
-    </p>
-  <% end %>
   <nav class="main_header__nav">
     <%= check_box_tag "menu_toggle", "menu_toggle", false,
           class: "main_header__mobile_nav_toggle mobile-only"
@@ -30,13 +28,15 @@
         <%= link_to "FAQS", "/page/faq" %>
         <%= link_to "TUTORIAL", "/page/tutorial" %>
       </div>
-      <div class="menu_dropdown main_header__links menu_select">
+      <div class="menu_dropdown main_header__links ">
+        <div class="menu_select" id="select_title">
         <% if user_signed_in? %>
           <%= raw current_user_edits  %>
-          <%= link_to current_user.name, "", id: "select_title" %>
+          <%= link_to current_user.name, "" %>
         <% else %>
-          <%= link_to "TRACK MY PROGRESS", "/page/tutorial", id: "select_title" %>
+          <%= link_to "TRACK MY PROGRESS", "/page/tutorial" %>
         <% end  %>
+        </div>
         <div class="dropdown-content">
           <% if user_signed_in? %>
             <%= link_to "Dashboard", "/dashboard", class: "auth-link"%>

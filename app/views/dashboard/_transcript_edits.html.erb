@@ -30,3 +30,16 @@
   </div>
   <% end %>
 </div>
+<% list = group_edits_by_transcripts(edits) %>
+<% list.each do |key, value|
+  transcript = value[:transcript]
+  edits = value[:edits]
+%>
+
+<div class="search_item">
+  <div class="search_item__image"
+       style="background-image: url('<%= transcript.image_url.to_s %>')">
+  </div>
+  <%= transcript.title %>
+</div>
+<% end  %>
