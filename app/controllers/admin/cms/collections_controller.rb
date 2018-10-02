@@ -62,7 +62,7 @@ class Admin::Cms::CollectionsController < AdminController
   end
 
   def load_themes
-    @themes = Theme.all
+    @themes = Theme.all.order(name: :asc)
   end
 
   def resource_params
