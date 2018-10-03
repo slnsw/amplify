@@ -85,9 +85,9 @@ $(document).ready(function(){
 
 
   function scrollUp(){
-    var target  = $('#search-form').offset().top;
+    var target  = $('#transcript-results').offset().top;
     $('html, body').animate({
-      scrollTop: target
+      scrollTop: (target - 130)
     }, 1000);
   }
 
