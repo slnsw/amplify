@@ -25,7 +25,7 @@ module TranscriptEditor
     config.api_only = false
 
     config.to_prepare do
-      layout = "public"
+      layout = "application_v2"
       Devise::SessionsController.layout layout
       Devise::RegistrationsController.layout layout
       Devise::ConfirmationsController.layout layout
