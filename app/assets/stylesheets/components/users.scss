@@ -78,6 +78,9 @@ form{
     &:hover {
       background-color: $white;
     }
+    &:focus {
+      background-color: $white;
+    }
   }
   .form-action {
     text-align: center;
