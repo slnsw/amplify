@@ -2,7 +2,6 @@
   position: relative;
   z-index: 50;
   text-align: center;
-  margin: 0 -10px 20px;
 }
 
 .transcript-facets.sticky {
@@ -13,37 +12,37 @@
 
 .facet {
   display: flex;
-  margin-bottom: 10px;
-  margin-left: 20px;
-
+  margin-bottom: 0.1em;
+  margin-left: 0.6em;
+  position: relative;
 }
 
 .facet:first-child {
   margin-left: 0;
+}
 
+.facet #reset {
+  line-height: 30px;
+  margin-left: 0.6em;
 }
 
 .select-options {
   left: auto;
   right: 0;
-
 }
 
 .select-option {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 
 .select.collection .select-options {
-  min-width: 300px;
-
+  min-width: 400px;
 }
 
 .select.sort .select-options {
   min-width: 240px;
-
 }
 
 /* Select Box */
@@ -51,30 +50,25 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: url(/assets/icons/icon-dropdown-black.svg), #F5C653;
-  background-position: 96% 50%, center center;
+  background: $drop-down-black, $soft-orange;
+  background-position: right 0.8em bottom 45%;
   background-repeat: no-repeat;
   background-size: 12px 12px;
-  color: #272727;
+  color: $black;
   border-radius: 0;
   border: 0;
-  height: 30px;
-  padding: 0 20px 0 10px;
+  padding: 0.2em 2em 0.2em 0.8em;
   font-size: 1rem;
   cursor: pointer;
+  white-space: nowrap;
+  line-height: 24px;
   transition: background-color 0.3s;
 }
 
 .select:hover {
   /* background: $link-hover-color; */
-
 }
 
-.select-active:after {
-  margin-left: 5px;
-  /* @include icon("\f0d7"); // http://fortawesome.github.io/Font-Awesome/icon/caret-down/ */
-
-}
 
 .select-options {
   display: none;
@@ -83,23 +77,20 @@
   top: 100%;
   left: 0;
   border-top: none;
-  background: #F5C653;
-  /* @include box-sizing(); */
-
+  background: $soft-orange;
+  box-sizing: border-box;
 }
 
 .select-option {
   display: block;
   padding: 0.4em;
-  line-height: 1;
-  color: white;
-
+  color: $white;
+  margin: 0;
 }
 
 .select-option:hover {
-  color: white;
+  color: $white;
   background: #D1AB4D;
-
 }
 
 .select-option.selected:after {
@@ -110,10 +101,8 @@
 
 .select-option.active .select-options {
   display: block;
-
 }
 
 .select.active .select-options {
   display: block;
-
 }

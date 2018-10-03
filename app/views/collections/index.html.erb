@@ -4,20 +4,16 @@
 
 <section class="search_results">
   <div class="search_results__list">
-    <div class="cms">
-      <%= raw @page&.display_content %>
-      <div class="transcript-facets-collections transcript-facets">
-        <!-- sort institution -->
-        <% if show_institutions? %>
-          <div class="facet collection-select" id="institution_search">
-            <%= render partial: 'home/institutions', locals: { institutions: @institutions, selected_id: Institution.state_library_nsw.try(:id), hide_lable: true } %>
-          </div>
-        <% end %>
-        <!-- end institution -->
+    <%= raw @page&.display_content %>
+    <div id="transcript-facets" class="filter_bar__form transcript-facets">
+      <div class="filter_bar__fieldset collection-select-left-align">
+        <div class="facet">
+          <%= render partial: 'home/institutions', locals: { institutions: @institutions, selected_id: Institution.state_library_nsw.try(:id).to_i, hide_label: false } %>
+        </div>
       </div>
-
-      <div class="collect-list cms">
-      </div>
+    </div>
+    <br />
+    <div class="collect-list cms">
     </div>
   </div>
 </section>
