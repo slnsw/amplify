@@ -91,6 +91,11 @@ $(document).ready(function(){
     }, 1000);
   }
 
+  function loadFirstTime(){
+    institutionId = $('#instution_selected_id').val();
+    loadTranscripts()
+  }
+
   function loadTranscripts(){
     data = {
       institution_id: institutionId,
@@ -115,5 +120,6 @@ $(document).ready(function(){
       }
     })
   }
-  loadTranscripts()
+
+  loadFirstTime();
 })

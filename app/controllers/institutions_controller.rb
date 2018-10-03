@@ -16,6 +16,8 @@ class InstitutionsController < ApplicationController
     @collection = Collection.none
 
     @institution = Institution.friendly.find(params[:path])
+    @selected_institution_id = @institution.id
+
     # @collection = CollectionsService.list
     # @sort_list = SortList.list
   rescue ActiveRecord::RecordNotFound
