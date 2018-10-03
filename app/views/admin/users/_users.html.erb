@@ -22,12 +22,15 @@
             <%= user.lines_edited %>
           </td>
           <td>
-            <%= collection_select(:user, :role_id, user_roles, :id, :description, { selected: user.user_role_id }, { class: 'user_role', 'data-id' => user.id }) %>
+            <form >
+              <%= collection_select(:user, :role_id, user_roles, :id, :description, { selected: user.user_role_id }, { class: 'user_role', 'data-id' => user.id }) %>
+            </form>
           </td>
           <td>
-            <%= collection_select(:user, :institution_id, institutions, :id, :name, {include_blank: '', selected: user.institution_id }, { class: 'user_institution', 'data-id' => user.id }) %>
+            <form>
+              <%= collection_select(:user, :institution_id, institutions, :id, :name, {include_blank: '', selected: user.institution_id }, { class: 'user_institution', 'data-id' => user.id }) %>
+            </form>
           </td>
-
       </tr>
     <% end %>
   </tbody>

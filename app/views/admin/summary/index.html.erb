@@ -5,14 +5,16 @@
 <h3>Summary of Completion percentages</h3>
 <div class="card">
   <div class="card-header">
-    <p>Institution:
-    <%= collection_select(:institution, :id, @institutions,
-                          :id, :name,
-                          include_blank: "All Institutions") %>
-    </p>
-    <span id="collection">
-      <%= render "collection", collection: @collection, selected_collection_id: @selected_collection_id %>
-    </span>
+    <form>
+      <p>Institution:
+      <%= collection_select(:institution, :id, @institutions,
+                            :id, :name,
+                            include_blank: "All Institutions") %>
+      </p>
+      <span id="collection">
+        <%= render "collection", collection: @collection, selected_collection_id: @selected_collection_id %>
+      </span>
+    </form>
   </div>
   <div class="card-body" id="summary-stats">
     <%= render "summary_stats", stats: @stats, total: @total %>

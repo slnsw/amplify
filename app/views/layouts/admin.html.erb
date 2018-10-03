@@ -26,14 +26,11 @@
                 }
               </style>
               <div class="header-bar">
-                <%= image_tag "Amplify_logo_WHITE_COLOUR",
-                  alt: "Amplify logo",
-                  width: 150
-                %>
+                <%= link_to((image_tag("Amplify_logo_WHITE_COLOUR", alt: "Amplify logo", width: 150)), root_url) %>
               </div>
             </div>
             <div id="header-crumbs" class="crumbs-container"></div>
-            <div id="account-container" class="account-container">
+            <div id="account-container" class="account-container admin">
               <%= render partial: 'layouts/account' %>
             </div>
 

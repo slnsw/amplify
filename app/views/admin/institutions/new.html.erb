@@ -1,5 +1,7 @@
 <%= link_to 'Back to institutions list', admin_institutions_path %>
 
+<%= render partial: 'layouts/admin_side_pane' %>
+
 <h1>New Institution</h1>
 
 <%= render 'form', institution: @institution %>

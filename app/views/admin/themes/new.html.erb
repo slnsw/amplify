@@ -1,5 +1,8 @@
 <%= link_to 'Back to themes list', admin_themes_path %>
 
+
+<%= render partial: 'layouts/admin_side_pane' %>
+
 <h1>New Theme</h1>
 
 <%= render 'form', theme: @theme %>

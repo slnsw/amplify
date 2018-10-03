@@ -1,5 +1,7 @@
 <%= link_to 'Back to pages list', admin_pages_path %>
 
+<%= render partial: 'layouts/admin_side_pane' %>
+
 <h1>New Page</h1>
 
 <%= render 'form', page: @page %>
