@@ -1,5 +1,9 @@
 .flex-container {
   display: flex;
+  border:1px solid $very-dark-cyan;
+  margin-bottom: 20px;
+  box-shadow: 6px 5px #CCCCCC;
+
   &__img_div{
     background-color: #f1f1f1;
     width: 20%;
@@ -17,7 +21,6 @@
 
 .flex-container > div {
   background-color: $white;
-  border-bottom:1px solid $very-dark-cyan;
   padding: 10px;
 }
 
@@ -37,4 +40,14 @@
 
 }
 
+.transcript-edit {
+  font-size: 0.9em;
+  padding: 5px 0;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #d5d4d2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
 
