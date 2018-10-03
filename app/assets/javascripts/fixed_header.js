@@ -32,7 +32,7 @@ $(document).ready(function(){
 
   $('#collection_search').on('click', function(event){
     event.preventDefault();
-    $('#collection-options').toggle();
+    $('#collection_search .select-options').toggle()
   })
 })
 
