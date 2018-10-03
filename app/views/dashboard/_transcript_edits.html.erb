@@ -1,45 +1,49 @@
 <%= raw edited_info(edits) %>
-<div class="dashboard-transcript-list" role="list">
-  <% list = group_edits_by_transcripts(edits) %>
-  <% list.each do |key, value|
-     transcript = value[:transcript]
-     edits = value[:edits]
-  %>
-  <div class="dashboard-transcript" role="listitem">
-    <div class="transcript-info">
-      <a href="<%= transcript_url(transcript) %>">
-        <%= image_tag transcript.image_url.to_s, alt: "Image of #{transcript.title}" %>
-        <%= transcript.title %>
-      </a>
-    </div>
-    <div class="transcript-stats">
-      <div class="stat">
-        <div class="stat-label">Lines edited:</div>
-        <div class="stat-value"><%= edits.length %></div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Listened to:</div>
-        <div class="stat-value small">~<%= time_in_seconds(edits.length)  %> of audio</div>
-      </div>
-    </div>
-    <div class="transcript-edits">
-      <% edits.each do |e| %>
-        <div class="transcript-edit"><%= e.text %></div>
-      <% end %>
-    </div>
-  </div>
-  <% end %>
-</div>
 <% list = group_edits_by_transcripts(edits) %>
 <% list.each do |key, value|
   transcript = value[:transcript]
   edits = value[:edits]
 %>
-
-<div class="search_item">
-  <div class="search_item__image"
-       style="background-image: url('<%= transcript.image_url.to_s %>')">
+<div class="flex-container">
+  <div class="flex-container__img_div">
+    <div class="search_item__image"
+         style="background-image: url('<%= transcript.image_url.to_s %>')">
+    </div>
+    <div>
+      <%= link_to transcript.title, transcript_url(transcript) %>
+    </div>
   </div>
-  <%= transcript.title %>
+  <div class="flex-container__edits_div">
+    <div class="transcript-edits">
+       <ul>
+       <% edits.each do |e| %>
+         <li>
+           <%= e.text %>
+         </li>
+       <% end %>
+       </ul>
+     </div>
+  </div>
+  <div class="flex-container__stats_div">
+    <div class="stat-details">
+      Lines Edited:
+      <br />
+      <br />
+      <h4>
+        <%= edits.length %>
+      </h4>
+
+    </div>
+    <div class="stat-details">
+      Listened to:
+      <br />
+      <br />
+      <h4>
+        ~<%= time_in_seconds(edits.length)  %> of audio
+      </h4>
+    </div>
+  </div>
 </div>
 <% end  %>
+
+

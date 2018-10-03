@@ -1,81 +1,40 @@
-.dashboard .dashboard-transcript {
-  border: 1px solid #A3A19E;
-  margin-bottom: 20px;
+.flex-container {
+  display: flex;
+  &__img_div{
+    background-color: #f1f1f1;
+    width: 20%;
+  }
+  &__edits_div{
+    width: 60%;
+  }
+  &__stats_div{
+    width: 20%;
+    &__stats_details{
+      background-color: #f1f1f1;
+    }
+  }
+}
+
+.flex-container > div {
+  background-color: $white;
+  border-bottom:1px solid $very-dark-cyan;
   padding: 10px;
-  -webkit-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
 }
-.dashboard .dashboard-transcript:before, .dashboard .dashboard-transcript:after {
-  content: " ";
-  display: table;
+
+.transcript-edits > ul.li {
+  background-color: #f1f1f1;
+  margin: 1px;
+  padding: 20px;
+  font-size: 30px;
+  color: red;
 }
-.dashboard .dashboard-transcript:after {
-  clear: both;
-  visibility: hidden;
-  line-height: 0;
-  height: 0;
-  font-size: 0;
+
+.stat-details {
+  background-color: #f1f1f1;
+  padding: 6px;
+  margin-bottom: 20px;
+  border:1px solid $very-dark-cyan;
+
 }
-.dashboard .transcript-info {
-  width: 100px;
-  float: left;
-}
-.dashboard .transcript-info img {
-  width: 100%;
-  height: auto;
-  margin-bottom: 5px;
-  border: 1px solid #A3A19E;
-}
-.dashboard .transcript-edits {
-  margin: 0 150px 0 120px;
-  max-height: 300px;
-  overflow: hidden;
-  -moz-transition: max-height 0.5s;
-  -o-transition: max-height 0.5s;
-  -webkit-transition: max-height 0.5s;
-  -ms-transition: max-height 0.5s;
-  transition: max-height 0.5s;
-}
-.dashboard .transcript-edits:hover {
-  max-height: 2000px;
-}
-.dashboard .transcript-edit {
-  font-size: 0.9em;
-  padding: 5px 0;
-  margin-bottom: 5px;
-  border-bottom: 1px solid #d5d4d2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.dashboard .transcript-edit:last-child {
-  border-bottom: none;
-}
-.dashboard .transcript-stats {
-  float: right;
-  width: 130px;
-  text-align: center;
-}
-.dashboard .transcript-stats .stat {
-  background: #eee;
-  padding: 10px 5px;
-  margin-top: 10px;
-  border: 1px solid #ccc;
-}
-.dashboard .transcript-stats .stat:first-child {
-  margin: 0;
-}
-.dashboard .transcript-stats .stat-label {
-  font-size: 0.8em;
-  text-transform: uppercase;
-}
-.dashboard .transcript-stats .stat-value {
-  font-weight: bold;
-  font-size: 1.4em;
-  margin-top: 10px;
-}
-.dashboard .transcript-stats .stat-value.small {
-  font-size: 1em;
-}
+
 
