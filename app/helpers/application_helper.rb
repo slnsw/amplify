@@ -18,7 +18,7 @@ module ApplicationHelper
 
   def current_user_edits
     number = number_to_human(current_user.total_edits, :format => '%n%u', :units => { :thousand => 'K+'  })
-    content_tag :span, number, class: "score active"
+    content_tag :span, number, class: "select-active__admin-score"
   end
 
   def time_display(start_time)

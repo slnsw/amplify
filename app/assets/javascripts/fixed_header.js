@@ -29,5 +29,10 @@ $(document).ready(function(){
     event.preventDefault();
     $('.dropdown-content').toggle();
   })
+
+  $('#collection_search').on('click', function(event){
+    event.preventDefault();
+    $('#collection-options').toggle();
+  })
 })
 

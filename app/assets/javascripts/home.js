@@ -35,7 +35,6 @@ $(document).ready(function(){
 
   $('#institution_search').on('click', '.select-option', function(){
     institutionId = $(this).attr('data-id')
-    console.log(institutionId)
     if (institutionId == 0) {
       collectionId = 0;
     }
@@ -93,6 +92,7 @@ $(document).ready(function(){
 
   function loadFirstTime(){
     institutionId = $('#instution_selected_id').val();
+    collectionId = $('#collection_selected_id').val();
     loadTranscripts()
   }
 

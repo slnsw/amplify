@@ -1,0 +1,30 @@
+#error_explanation {
+  width: 400px;
+  padding: 7px;
+  background-color: $white;
+  color: $mid-red;
+}
+
+#error_explanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+
+}
+
+#error_explanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+
+}
+
+#error_explanation ul li {
+  font-size: 15px;
+}
+
+

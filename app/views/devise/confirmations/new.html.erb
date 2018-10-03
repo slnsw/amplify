@@ -1,36 +1,19 @@
-<% content_for :home_banner do %>
-  <div class="home-banner">
-    <img src="/nsw-state-library-amplify/assets/img/slnsw_logo_horizontal_white.svg" alt="State Library of NSW logo" class="logo">
-    <div class="banner-main">
-      <div class="banner-text">
-        <h1>
-          <span class="sr-only">Amplify</span>
-          <%= image_tag 'Amplify_logo_WHITE_COLOUR.svg', alt: 'Amplify logo', class: 'logo' %>
-        </h1>
-
-        <h2>Listen to our sound archive, help us transcribe and enrich our stories.</h2>
-      </div>
+<article class="registration__content cms">
+  <h2>Resend confirmation instructions</h2>
+  <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+    <%= devise_error_messages! %>
+    <div class="form-group">
+      <%= f.label :email %><br />
+      <%= f.email_field :email, autofocus: true,
+        autocomplete: "email",
+        value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email),
+        class: 'form-control'
+      %>
     </div>
+    <br />
+    <button type="submit" class="button cyan">Resend confirmation instructions</button>
+  <% end %>
+  <br />
+  <%= render "devise/shared/links" %>
+</article>
 
-  </div>
-<% end %>
-<div>
-  <div class="page">
-    <div class="container" role="contentinfo">
-      <h2>Resend confirmation instructions</h2>
-      <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-        <%= devise_error_messages! %>
-        <div class="form-group">
-          <%= f.label :email %><br />
-          <%= f.email_field :email, autofocus: true,
-            autocomplete: "email",
-            value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email),
-            class: 'form-control'
-          %>
-        </div>
-        <button type="submit" class="btn btn-primary">Resend confirmation instructions</button>
-      <% end %>
-      <%= render "devise/shared/links" %>
-    </div>
-  </div>
-</div>

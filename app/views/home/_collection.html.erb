@@ -10,7 +10,7 @@
   <% rest_of_the_collection = collection %>
   <div name="filter-by-collection" class="select collection">
     <div class="select-active collection-filter selected"><%= first_collection.title %></div>
-    <div class="select-options collection-filter" role="menu" aria-hidden="true">
+    <div class="select-options collection-filter" id="collection-options" role="menu" aria-hidden="true">
       <%= raw collection_list(rest_of_the_collection, index) %>
     </div>
   </div>

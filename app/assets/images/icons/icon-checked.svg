@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46px" height="46px" viewBox="0 0 46 46" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 13</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-+-Colour-Guide" transform="translate(-754.000000, -787.000000)">
+            <g id="Group-13" transform="translate(754.000000, 787.000000)">
+                <rect id="Rectangle-4" fill="#F5C653" fill-rule="nonzero" x="0" y="0" width="46" height="46" rx="5"></rect>
+                <path d="M36.9995029,18.1179031 C37.0057552,18.4610719 36.8495865,18.7913615 36.5676757,19.0311977 L25.3247454,28.8088223 L23.2427212,30.6354115 C22.6490359,31.1215295 21.7235376,31.1215295 21.1298523,30.6354115 L19.0324057,28.8088223 L13.4186518,23.92001 C12.8604494,23.4029912 12.8604494,22.5970088 13.4186518,22.07999 L15.5315207,20.2534008 C15.8069212,20.007895 16.1861881,19.8718934 16.580244,19.8773383 C16.9689641,19.8755707 17.3418603,20.0112836 17.6135448,20.2534008 L22.2402652,24.2826417 L32.3573602,15.3645885 C32.9510456,14.8784705 33.8765438,14.8784705 34.4702292,15.3645885 L36.5830981,17.2046085 C36.8593525,17.4467092 37.0098134,17.7767128 36.9995029,18.1179031 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+                <g id="icon-tick" transform="translate(15.000000, 17.000000)"></g>
+            </g>
+        </g>
+    </g>
+</svg>

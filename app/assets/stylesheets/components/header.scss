@@ -72,4 +72,20 @@
   }
 }
 
+.select-active{
+  margin-top: 10px;
+  text-transform: none;
+  &__admin-score {
+    border-radius: 10px;
+    background: $bright-orange;
+    color: $very-dark-cyan;
+    height: 20px;
+    line-height: 21px;
+    padding: 0 7px;
+    margin-right: 3px;
+    display: inline-block;
+    margin-top: auto;
+  }
+}
+
 

@@ -15,11 +15,11 @@ class InstitutionsController < ApplicationController
     @themes = Theme.all
     @collection = Collection.none
 
-    @institution = Institution.friendly.find(params[:path])
+    @institution = Institution.friendly.find(params_list[:institution_id])
     @selected_institution_id = @institution.id
 
-    # @collection = CollectionsService.list
-    # @sort_list = SortList.list
+    @selected_collection_id = @institution.collections.
+      where(uid: params_list[:collection_id]).first.try(:id) if @institution
   rescue ActiveRecord::RecordNotFound
     render_404
   end
@@ -32,5 +32,13 @@ class InstitutionsController < ApplicationController
       format.xml  { head :not_found  }
       format.any  { head :not_found  }
     end
+  end
+
+  def params_list
+    list = params[:path].to_s.split("/")
+    {
+      institution_id: list.shift,
+      collection_id: list.shift
+    }
   end
 end

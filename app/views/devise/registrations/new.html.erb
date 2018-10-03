@@ -1,49 +1,32 @@
-<% content_for :home_banner do %>
-  <div class="home-banner">
-    <img src="/nsw-state-library-amplify/assets/img/slnsw_logo_horizontal_white.svg" alt="State Library of NSW logo" class="logo">
-    <div class="banner-main">
-      <div class="banner-text">
-        <h1>
-          <span class="sr-only">Amplify</span>
-          <%= image_tag 'Amplify_logo_WHITE_COLOUR.svg', alt: 'Amplify logo', class: 'logo' %>
-        </h1>
-
-        <h2>Listen to our sound archive, help us transcribe and enrich our stories.</h2>
-      </div>
+<article class="registration__content cms">
+  <h2>Sign Up</h2>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= devise_error_messages! %>
+    <div class="form-group field">
+      <%= f.label :name %><br />
+      <%= f.text_field :name, autofocus: true, class: 'form-control' %>
     </div>
-
-  </div>
-<% end %>
-<div>
-  <div class="page">
-    <div class="container" role="contentinfo">
-      <h2>Sign Up</h2>
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-        <%= devise_error_messages! %>
-        <div class="form-group field">
-          <%= f.label :name %><br />
-          <%= f.text_field :name, autofocus: true, class: 'form-control' %>
-        </div>
-        <div class="form-group field">
-          <%= f.label :email %><br />
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control' %>
-        </div>
-        <div class="form-group field">
-          <%= f.label :password %><br />
-          <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
-          <% if @minimum_password_length %>
-            <small class="form-text text-muted">
-              (<%= @minimum_password_length %> characters minimum)
-            </small>
-          <% end %>
-        </div>
-        <div class="form-group field">
-          <%= f.label :password_confirmation %><br />
-          <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
-        </div>
-        <%= f.submit "Sign up", class: "btn btn-primary" %>
+    <div class="form-group field">
+      <%= f.label :email %><br />
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control' %>
+    </div>
+    <div class="form-group field">
+      <%= f.label :password %><br />
+      <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
+      <% if @minimum_password_length %>
+        <small class="form-text text-muted">
+          (<%= @minimum_password_length %> characters minimum)
+        </small>
       <% end %>
-      <%= render "devise/shared/links" %>
     </div>
-  </div>
-</div>
+    <div class="form-group field">
+      <%= f.label :password_confirmation %><br />
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+    </div>
+    <br />
+    <%= f.submit "Sign up", class: "button cyan" %>
+  <% end %>
+  <br />
+  <%= render "devise/shared/links" %>
+</article>
+

@@ -4,6 +4,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :configure_sign_up_params, only: [:create]
   # rubocop:enable Rails/LexicallyScopedActionFilter
+  #
 
   protected
 
