@@ -100,7 +100,7 @@ $(document).ready(function(){
           scrollUp()
         }
         firstTimeLoad = false;
-        var instance = new Mark("a.item-line");
+        var instance = new Mark(".search_item");
         if (instance) {
           instance.mark(searchText)
         }

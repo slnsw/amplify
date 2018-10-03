@@ -1,4 +1,9 @@
 <div class="search_results__list" role="list">
+<% if transcripts.empty? %>
+  <div class="cms">
+    No transcripts found
+  </div>
+<% end %>
 <% transcripts.each do |transcript|
    transcript = transcript.decorate
 %>
