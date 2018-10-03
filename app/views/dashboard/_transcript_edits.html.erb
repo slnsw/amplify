@@ -6,7 +6,7 @@
 %>
 <div class="flex-container">
   <div class="flex-container__img_div">
-    <%= link_to image_tag(transcript.image_url.to_s, height: 100) %>
+    <%= link_to image_tag(transcript.image_url.to_s, height: 100), transcript_url(transcript) %>
     <div>
       <%= link_to transcript.title, transcript_url(transcript) %>
     </div>
