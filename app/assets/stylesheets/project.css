@@ -555,10 +555,10 @@ p.text-center {
     color: #FFFFFF;
 }
 .inverse a {
-    color: #6fc3e3;
+    color: #231F20;
 }
 .inverse a:hover {
-    color: #9ad4eb;
+  color: #231F20;
 }
 .loading:after {
     content: 'loading';
