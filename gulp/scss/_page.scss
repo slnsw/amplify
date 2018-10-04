@@ -5,6 +5,10 @@
   max-width: 800px;
   margin: 0 auto;
 
+  p {
+    font-family: $font-family;
+  }
+
   img {
     width: 100%;
     height: auto;
@@ -216,6 +220,7 @@
     max-height: 0;
     overflow: hidden;
     @include transition(max-height 0.5s);
+    font-family: 'Muli', sans-serif;
 
     .table-conventions {
       display: table;
@@ -227,7 +232,7 @@
     height: 28px;
     line-height: 28px;
     position: absolute;
-    bottom: -71px;
+    bottom: -35px;
     left: 50%;
     margin-left: -100px;
     text-align: center;

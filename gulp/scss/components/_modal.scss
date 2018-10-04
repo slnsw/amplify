@@ -14,6 +14,7 @@ $modal-max-width: 650px;
   width: 0;
   height: 0;
   overflow: hidden;
+  font-family: $font-family;
   @include transform(translate3d(0, 100%, 0));
 
   // Show modal when requested
