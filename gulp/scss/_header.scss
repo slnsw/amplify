@@ -1,6 +1,7 @@
 @import "mixins";
 @import "variables";
 
+
 body {
   padding-top: $header-nav-height * 2;
   // padding-bottom: $secondary-header-nav-height * 2;
@@ -212,6 +213,13 @@ body {
       left: auto;
       width: auto;
       min-width: 100%;
+      margin-top: 12px;
+      a {
+        &:hover {
+          background: $background-color;
+        }
+      }
+      
     }
 
     .select {
@@ -233,6 +241,13 @@ body {
       margin-right: 3px;
       vertical-align: middle;
 
+      border-radius: 10px;
+      background: $soft-orange;
+      color: $very-dark-cyan;
+      margin-right: 3px;
+      display: inline-block;
+      margin-top: auto;
+
       &.active {
         display: inline-block;
       }
@@ -252,6 +267,14 @@ body {
 .header .menu-container .menu-item,
 .header .account-container .select {
   background: #231F20;
-  text-transform: uppercase;
-  font-size: 16px;
+  display: inline-block;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.header-menu {
+  padding-top: 10px;
+}
+.select-active{
+  padding-top: 10px;
 }

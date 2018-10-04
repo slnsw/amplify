@@ -73,6 +73,11 @@ $transcript-content-width: 800px;
       max-width: 500px;
       color: $black;
       font-size: 0.9em;
+      a {
+        color: $cyan;
+        font-size: 1.2rem;
+      }
+
     }
     .download-link a {
       color: $cyan;
@@ -81,6 +86,10 @@ $transcript-content-width: 800px;
     .original-link a:after {
       @include icon("\f08e");
       margin-left: 6px;
+      a {
+        color: $cyan;
+        font-size: 1.2rem;
+      }
     }
     .download-link a:after {
       @include icon("\f019");

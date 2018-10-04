@@ -24,13 +24,12 @@ $toolbar-notifications-width: 0px; // 200px
       float: left;
       text-align: center;
       cursor: pointer;
-      background: $link-color;
-      border-right: 1px solid darken($link-color, 5%);
-      border-left: 1px solid lighten($link-color, 5%);
-      border-top: 1px solid darken($link-color, 10%);
+      background: $very-dark-cyan;
+      border-left: 1px solid darken($cyan, 10%);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: $soft-orange;
       @include box-sizing();
     }
 
@@ -44,8 +43,8 @@ $toolbar-notifications-width: 0px; // 200px
       vertical-align: center;
 
       span {
-        background: $white;
-        color: $link-color;
+        background: $bright-orange;
+        color: $black;
         padding: 0.2em 0.4em;
         margin: 0 0.1em;
         @include box-shadow(0 1px 2px rgba(0,0,0,.2));
@@ -62,7 +61,7 @@ $toolbar-notifications-width: 0px; // 200px
     }
 
     .control:hover {
-      background: $link-hover-color;
+      background: $cyan;
     }
   }
 

@@ -18,6 +18,7 @@ p.text-center {
     color: $link-inverse-color;
     &:hover {
       color: $white;
+      text-decoration: underline;
     }
   }
 }

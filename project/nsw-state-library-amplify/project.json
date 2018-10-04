@@ -34,12 +34,12 @@
   },
   "menus": {
     "header": [
-      {"label": "Browse", "url": "/"},
-      {"label": "Search", "url": "/search"},
-      {"label": "Collections", "url": "/collections"},
-      {"label": "About", "url": "/page/about"},
+      {"label": "BROWSE", "url": "/"},
+      {"label": "SEARCH", "url": "/search"},
+      {"label": "COLLECTIONS", "url": "/collections"},
+      {"label": "ABOUT", "url": "/page/about"},
       {"label": "FAQ", "url": "/page/faq"},
-      {"label": "Tutorial", "url": "/page/tutorial", "target": "_blank" }
+      {"label": "TUTORIAL", "url": "/page/tutorial", "target": "_blank" }
     ],
     "footer": [
       {"label": "Privacy", "url": "http://www.sl.nsw.gov.au/privacy", "target": "_blank"},

@@ -21,11 +21,23 @@ $dark-red-black:    #231F20;
 $black:             #272727;
 $cyan:              #358B90;
 $bright-orange:     #E2B33B;
+$light-grey:        #E7E8E9;
+$light-grey-orange: #D5D4D2;
+$grey-orange:       #C8C7C5;
+$grey:              #CCCCCC;
+$dark-grey-orange:  #7B7670;
+$dark-grey:         #333333;
 
 $primary-color: $red-color;
 $secondary-color: $blue-color;
 $highlight-dark-color: $yellow-dark-color;
 $highlight-color: $yellow-color;
+$footer-foreground:       $white;
+$footer-background:       $very-dark-cyan;
+$sub-footer-foreground:   $light-grey;
+$sub-footer-background:   $dark-grey;
+
+$footer-height: 250px;
 
 // Material Design Colors
 // https://www.google.com/design/spec/style/color.html#color-color-palette
