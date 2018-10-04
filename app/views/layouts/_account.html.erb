@@ -9,7 +9,7 @@
       <% if current_user.staff? %>
         <a href="/admin" class="check-auth-link select-option menu-item" role="menuitem">Admin CMS</a>
       <% end %>
-      <%= link_to 'Sign out', destroy_user_session_path, method: 'delete', class: 'select-option menu-item' %>
+      <%= link_to 'Sign out', destroy_user_session_path, class: 'select-option menu-item' %>
     </div>
   <% else %>
     <div class="select-active">
