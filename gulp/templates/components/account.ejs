@@ -12,7 +12,7 @@
       <% if (user.user_role_id > 1) { %>
         <a href="/admin" class="select-option menu-item" role="menuitem">Admin CMS</a>
       <% } %>
-      <a class="select-option menu-item" rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a>
+      <a class="select-option menu-item" rel="nofollow" href="/users/sign_out">Sign out</a>
     </div>
   </div>
 
@@ -27,9 +27,8 @@
     </div>
     <div class="select-options account-menu menu" role="menu" aria-hidden="true" aria-labelledby="sign-in-label">
       <a href="/users/sign_in" class="select-option menu-item" data-active="Signing In..." role="menuitem">Sign in w/ Email</a>
-
       <% _.each(project.authProviders, function(provider) { %>
-        <a href="<%= provider.path %>" data-provider="<%= provider.name %>" class="select-option menu-item" data-active="Signing In..." role="menuitem">Sign in w/ <%= provider.label %></a>
+        <a href="/users<%= provider.path %>" data-provider="<%= provider.name %>" class="select-option menu-item" data-active="Signing In..." role="menuitem">Sign in w/ <%= provider.label %></a>
       <% }) %>
     </div>
   </div>
