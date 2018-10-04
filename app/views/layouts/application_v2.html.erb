@@ -18,6 +18,11 @@
   <body>
     <%= render "shared/header" %>
     <main>
+      <% unless flash[:notice].blank? %>
+        <div class="notice alert alert-info">
+          <%= flash[:notice] %>
+        </div>
+      <% end %>
       <%= yield %>
     </main>
     <%= render "shared/footer" %>
