@@ -6,10 +6,11 @@
     padding: 10px 0;
   }
   &__form {
-    display: grid;
+    display: flex;
     grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
     grid-gap: 10px;
     align-items: center;
+    flex-flow: column;
     @include mobile {
       grid-template-columns: 1fr;
     }
@@ -19,6 +20,7 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    padding: 5px;
     @include mobile {
       flex-direction: column;
     }

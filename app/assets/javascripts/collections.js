@@ -3,7 +3,7 @@
 $(document).ready(function() {
   var institutionId = 0;
 
-  $('#institution_search').on('click', '.select-option', function(){
+  $('#collection_search').on('click', '.select-option', function(){
     institutionId = $(this).attr('data-id')
     loadCollections();
   });
@@ -18,7 +18,7 @@ $(document).ready(function() {
     data = {
       institution_id: institutionId,
     };
-    $(".collect-list").html('<div class="loading"></div>')
+    $(".collect-list").html('<div class="lds-ripple"><div></div><div></div></div>')
     $.ajax({
       type: "POST",
       url: "/collections/list",

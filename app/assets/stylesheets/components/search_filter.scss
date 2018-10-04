@@ -2,6 +2,7 @@
   position: relative;
   z-index: 50;
   text-align: center;
+  font-weight: bold;
 }
 
 .transcript-facets.sticky {
@@ -79,6 +80,7 @@
   border-top: none;
   background: $soft-orange;
   box-sizing: border-box;
+  z-index: 50;
 }
 
 .select-option {

@@ -5,7 +5,7 @@
 <section class="search_results">
   <div class="search_results__list">
     <%= raw @page&.display_content %>
-    <div id="transcript-facets" class="filter_bar__form transcript-facets">
+    <div id="transcript-facets" class="transcript-facets">
       <div class="filter_bar__fieldset collection-select-left-align">
         <div class="facet" id="collection_search">
           <%= render partial: 'home/institutions', locals: { institutions: @institutions, selected_id: Institution.state_library_nsw.try(:id).to_i, hide_label: false } %>
