@@ -86,7 +86,7 @@ $(document).ready(function(){
   function scrollUp(){
     var target  = $('#transcript-results').offset().top;
     $('html, body').animate({
-      scrollTop: (target - 130)
+      scrollTop: (target - 170)
     }, 1000);
   }
 
