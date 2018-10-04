@@ -43,7 +43,7 @@
             <% if current_user.staff? %>
               <%= link_to "Admin CMS", "/admin", class: "auth-link"%>
             <% end %>
-            <%= link_to 'Sign out', destroy_user_session_path, method: 'delete', class: "auth-link" %>
+            <%= link_to 'Sign out', destroy_user_session_path, class: "auth-link" %>
           <% else %>
             <%= link_to 'Sign in w/ Email', "/users/sign_in", class: "auth-link"  %>
             <%= link_to "Sign in w/ Google", "/users/auth/google_oauth2", class: "auth-link"  %>

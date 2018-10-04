@@ -9,6 +9,9 @@
       title_text = institution.introductory_text
       logo = institution.image_url(:logo).to_s
       logo_alt = "#{institution.name} logo"
+    elsif defined?(app_config) && app_config.present?
+      background_image_url = app_config.image_url.to_s
+      title_text = app_config.main_title
     end
 %>
 <section class="main_hero home" style="background: url('<%= background_image_url %>')">

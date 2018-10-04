@@ -12,6 +12,8 @@ class ImageUploader < CarrierWave::Uploader::Base
   def store_dir
     if model.is_a?(Institution)
       "institutions/#{model.id}/images/"
+    elsif model.is_a?(AppConfig)
+      "app_configs/#{model.id}/images/"
     else
       "collections_v2/#{s3_collection_uid}/images/"
     end
