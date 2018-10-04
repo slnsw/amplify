@@ -33,6 +33,14 @@
               <div class="facet" id="collection_search">
               </div>
               <!-- Sort  collection -->
+              <% unless extended_controls  %>
+                <div>
+                  <%= link_to '', id: 'reset'  do %>
+                    <%= fa_icon "refresh" %>
+                    Reset
+                  <% end %>
+                </div>
+              <% end %>
             </div>
             <% if extended_controls %>
               <div class="filter_bar__fieldset">
