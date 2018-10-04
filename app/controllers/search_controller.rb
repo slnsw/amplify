@@ -9,7 +9,6 @@ class SearchController < ApplicationController
   def index
     new_collection = Collection.new(id: 0, title: "All Collections")
     @collection = Collection.published.to_a.unshift(new_collection)
-    @institutions = Institution.all
     @themes = Theme.all
     @page_title = "Search"
   end
