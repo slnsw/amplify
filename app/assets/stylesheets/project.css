@@ -719,7 +719,7 @@ p.text-center {
 }
 .select .select-option:hover {
     color: #FFFFFF;
-    background: #2388b0;
+    background: #231F20;
 }
 .select .select-option.selected:after {
     margin-left: 5px;
