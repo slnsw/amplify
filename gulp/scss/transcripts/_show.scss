@@ -75,20 +75,20 @@ $transcript-content-width: 800px;
       font-size: 0.9em;
       a {
         color: $cyan;
-        font-size: 1.2rem;
+        font-size: 1rem;
       }
 
     }
     .download-link a {
       color: $cyan;
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
     .original-link a:after {
       @include icon("\f08e");
       margin-left: 6px;
       a {
         color: $cyan;
-        font-size: 1.2rem;
+        font-size: 1rem;
       }
     }
     .download-link a:after {
