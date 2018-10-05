@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_04_125506) do
+ActiveRecord::Schema.define(version: 2018_10_05_005838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 2018_10_04_125506) do
     t.boolean "show_institutions", default: false
     t.string "image"
     t.string "main_title"
+    t.string "intro_title"
+    t.text "intro_text"
   end
 
   create_table "cms_image_uploads", force: :cascade do |t|
