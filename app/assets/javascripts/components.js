@@ -73,7 +73,6 @@ var COMPONENTS = (function() {
   };
 
   COMPONENTS.prototype.selectInit = function(){
-    console.log("init...")
     var _this = this;
 
     // select box

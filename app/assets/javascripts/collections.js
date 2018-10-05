@@ -8,12 +8,6 @@ $(document).ready(function() {
     loadCollections();
   });
 
-  // $('#collection_search').on('click', function(event){
-  //   event.preventDefault();
-  //   $('.collection-filter').toggle();
-  // })
-
-
   function loadCollections(){
     data = {
       institution_id: institutionId,
