@@ -3,18 +3,56 @@ config:
   webroot: public
 events:
   post-db-import:
-    - database: /app/test-script.sh
+    - database: /app/helpers/test-script.sh
 services:
   appserver:
-    type: ruby:2.5.3
-    port: 3000
-    command: bundle exec rails s
+    type: compose
+    services:
+      image: bitnami/rails
+      command: "bundle exec rails s -b 0.0.0.0 -p 3000"
+      user: root
+      environment:
+        GEM_HOME: /app/vendor
+        BUNDLE_DEFAULT_INSTALL_USERS_PATH: /app/vendor
+        DATABASE_HOST: database
+        DATABASE_NAME: rails
     build:
       - gem install bundler
       - bundle install
+      - npm install
+      - /app/helpers/lando-db-config.sh
+      - /app/helpers/lando-app-config.sh
+  redis:
+    type: redis:6
+    portforward: true
   database:
     type: postgres
+    creds:
+      user: rails
+      password: rails
+      database: rails
+  sidekiq:
+    type: compose
+    services:
+      image: bitnami/rails
+      command: bundle exec sidekiq
+    build:
+      - gem install bundler
+      - bundle install
+proxy:
+  appserver:
+    - amplify.lndo.site:3000
 tooling:
+  rails:
+    service: appserver
+  bundle:
+    service: appserver
+  rake:
+    service: appserver
+  npm:
+    service: appserver
+  npx:
+    service: appserver
   psql-verify:
     service: database
     user: root

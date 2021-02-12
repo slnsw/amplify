@@ -85,3 +85,7 @@ app/files/uploads/*
 # Allow for scratch space.
 /scratch/*
 !/scratch/.keep
+
+# Ignore vendor files.
+/vendor
+
