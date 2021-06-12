@@ -1,7 +1,7 @@
 server 'ec2-52-63-16-71.ap-southeast-2.compute.amazonaws.com', user: 'deploy', roles: %w{web app db}
 
 set :rails_env, 'staging'
-set :branch, fetch(:branch, "develop")
+set :branch, ENV['BRANCH'] || 'develop'
 
 # server-based syntax
 # ======================
