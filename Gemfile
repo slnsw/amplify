@@ -99,13 +99,16 @@ group :development do
   gem "web-console", ">= 3.3.0"
 
   gem "capistrano", "~> 3.11.0"
+  gem "capistrano3-puma", "~> 3.1.1"
   gem "capistrano-bundler", "~> 1.6.0", require: false
   gem "capistrano-npm", "~>1.0.3"
   gem "capistrano-rails", "~> 1.4.0", require: false
   gem "capistrano-rvm", "~> 0.1.2"
   gem "capistrano-sidekiq", "~> 1.0.2"
-  gem "capistrano3-puma", "~> 3.1.1"
   gem "rubocop", "~> 0.65.0"
+
+  gem "bcrypt_pbkdf", "~> 1.1"
+  gem "ed25519", "~> 1.2"
 
   gem "dotenv-rails", "~> 2.7.1"
   gem "letter_opener", "~> 1.7.0"
@@ -134,8 +137,8 @@ gem "bugsnag", "~> 6.11.1"
 gem "draper", "~> 3.1.0"
 gem "sanitize", "~> 5.0.0"
 
-gem "acts-as-taggable-on", "~> 6.0"
 gem "acts_as_singleton", "~> 0.0.8"
+gem "acts-as-taggable-on", "~> 6.0"
 gem "chartkick", "~> 3.0.2"
 gem "formdata", "~> 0.1.2"
 gem "friendly_id", "~> 5.2.0"
