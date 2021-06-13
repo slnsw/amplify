@@ -16,7 +16,11 @@ module Azure
         process_message: nil,
         process_started_at: Time.current
       )
-      lines = Azure::SpeechToTextService.new(file: file).recognize
+
+      speech_to_text = Azure::SpeechToTextService.new(file: file).recognize
+      lines = speech_to_text.lines
+      wav_file = File.open(speech_to_text.wav_file_path)
+
       ActiveRecord::Base.transaction do
         transcript.transcript_lines.clear
         lines.each do |line_attrbitues|
@@ -27,6 +31,7 @@ module Azure
           duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{file.to_s}`.to_i,
         )
       end
+      transcript.update(audio: wav_file)
       transcript.update_columns(
         process_status: :completed,
         process_message: nil,
@@ -40,6 +45,7 @@ module Azure
       Bugsnag.notify e
     ensure
       File.delete file if file && File.exist?(file)
+      File.delete speech_to_text&.wav_file_path if File.exist?(speech_to_text&.wav_file_path.to_s)
     end
 
     def download(audio)

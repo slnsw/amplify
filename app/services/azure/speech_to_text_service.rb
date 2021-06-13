@@ -7,7 +7,12 @@ module Azure
 
     def recognize
       convert_audio_to_wav
-      JSON.parse(transcripts_from_sdk).tap { cleanup }
+
+      result = OpenStruct.new
+      result.lines = JSON.parse(transcripts_from_sdk)
+      result.wav_file_path = wav_file
+
+      result
     rescue Exception => e
       cleanup
       raise e

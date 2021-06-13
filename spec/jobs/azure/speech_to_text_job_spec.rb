@@ -3,14 +3,20 @@ require 'rails_helper'
 RSpec.describe Azure::SpeechToTextJob do
   let(:transcript) { create :transcript, audio: fixture_file_upload("spec/fixtures/files/speech_to_text/aboutSpeechSdk.mp3") }
   let(:status) { double("command execution status", :success? => true) }
+  let(:wav_file) { File.open(File.join(Rails.root, 'spec/fixtures/files/speech_to_text/aboutSpeechSdk.wav')) }
 
   describe '#recognize' do
     before do
       stub_audio_file_convert
+      allow(File).to receive(:open).and_call_original
+      allow(File).to receive(:open).with(
+        a_string_including(".wav")
+      ).and_return(wav_file)
     end
 
     it 'returns the lines' do
       stub_azure_speech_to_text status: status
+      expect_any_instance_of(Transcript).to receive(:update).with(audio: wav_file)
       described_class.perform_now transcript.id
       transcript.reload
       expect(transcript.process_status).to eq 'completed'
