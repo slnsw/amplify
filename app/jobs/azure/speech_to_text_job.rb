@@ -21,16 +21,19 @@ module Azure
       lines = speech_to_text.lines
       wav_file = File.open(speech_to_text.wav_file_path)
 
-      ActiveRecord::Base.transaction do
-        transcript.transcript_lines.clear
-        lines.each do |line_attrbitues|
-          transcript.transcript_lines.create line_attrbitues
+      if transcript.transcript_lines.count == 0
+        ActiveRecord::Base.transaction do
+          transcript.transcript_lines.clear
+          lines.each do |line_attrbitues|
+            transcript.transcript_lines.create(line_attrbitues)
+          end
+          transcript.update_columns(
+            lines: lines.length,
+            duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{file.to_s}`.to_i,
+          )
         end
-        transcript.update_columns(
-          lines: lines.length,
-          duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{file.to_s}`.to_i,
-        )
       end
+
       transcript.update(audio: wav_file)
       transcript.update_columns(
         process_status: :completed,
