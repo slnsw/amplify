@@ -1,7 +1,7 @@
 server 'amplify.sl.nsw.gov.au', user: 'deploy', roles: %w{web app db}
 
 set :rails_env, 'production'
-set :branch, :master
+set :branch, ENV['BRANCH'] || 'master'
 set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-2.5.3@rails5/bundle'
 
 # server-based syntax
@@ -12,8 +12,6 @@ set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-2.5.3@rails5/bundle'
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
-
-
 
 # role-based syntax
 # ==================
@@ -27,8 +25,6 @@ set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-2.5.3@rails5/bundle'
 # role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
 # role :db,  %w{deploy@example.com}
 
-
-
 # Configuration
 # =============
 # You can set any configuration variable like in config/deploy.rb
@@ -36,8 +32,6 @@ set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-2.5.3@rails5/bundle'
 # For available Capistrano configuration variables see the documentation page.
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
-
-
 
 # Custom SSH Options
 # ==================
