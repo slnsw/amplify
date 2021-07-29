@@ -143,7 +143,7 @@ class Transcript < ApplicationRecord
   def self.get_for_home_page(params)
     sort = params[:sort_by].to_s
 
-    query = Transcript.includes(collection: [:institution])
+    query = Transcript.includes(collection: [:institution]).
       select('transcripts.*, COALESCE(collections.title, \'\') as collection_title').
       joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id').
       joins('LEFT OUTER JOIN institutions ON institutions.id = collections.institution_id').
@@ -163,10 +163,14 @@ class Transcript < ApplicationRecord
     end
 
     # search text
-    query = query.where("transcripts.title ILIKE :search or transcripts.description ILIKE :search", search: "%#{params[:search]}%") if params[:search].present?
+    if params[:search].present?
+      query = query.where(
+        "transcripts.title ILIKE :search or transcripts.description ILIKE :search", search: "%#{params[:search]}%"
+      )
+    end
 
     if sort.match(/title/i)
-      arr = query.sort_by {|e| e.title.gsub(/\d+/) {|num| "#{num.length} #{num}"}}
+      arr = query.sort_by { |e| e.title.gsub(/\d+/) { |num| "#{num.length} #{num}" } }
       sort == "title_asc" ? arr : arr.reverse
     else
       order = sort_string(params[:sort_by])
