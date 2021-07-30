@@ -6,7 +6,7 @@ module Azure
     attr_accessor :file
 
     def recognize
-      convert_audio_to_wav
+      convert_audio_to_wav unless extension == '.wav'
 
       result = OpenStruct.new
       result.lines = JSON.parse(transcripts_from_sdk)
