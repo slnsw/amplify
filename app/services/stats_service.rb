@@ -25,11 +25,13 @@ class StatsService
   def completion_stats(institution_id = nil, collection_id = nil)
     scope = stats_scope(institution_id, collection_id)
     total_count = scope.count
+    total_lines_count = scope.sum(:lines)
+    total_lines_count += 1 if total_lines_count.zero?
     {
       total: total_count,
-      completed: (scope.completed.count.to_f / total_count.to_f) * 100,
-      in_review: (scope.reviewing.count.to_f / total_count.to_f) * 100,
-      in_draft: (scope.pending.count.to_f / total_count.to_f) * 100,
+      completed: (scope.sum(:lines_completed).to_f / total_lines_count) * 100,
+      in_review: (scope.sum(:lines_reviewing).to_f / total_lines_count) * 100,
+      in_draft: (scope.sum(:lines_edited).to_f / total_lines_count) * 100,
       duration: scope.sum(&:duration)
     }
   end

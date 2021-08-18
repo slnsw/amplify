@@ -18,7 +18,7 @@ RSpec.feature 'Summary Page' do
       it 'shows an empty stats page' do
         expect(page).to have_text('Total number of items: 0')
         expect(page).to have_text('Total duration of items: 00h 00m 00s')
-        expect(page).to have_text('NaN %', count: 3)
+        expect(page).to have_text('0.00 %', count: 3)
 
         expect(page).to have_text('Disk usage')
         expect(page).to have_text('0 Bytes', count: 4)
