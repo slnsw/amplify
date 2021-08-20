@@ -6,7 +6,7 @@ set :repo_url, 'https://github.com/slnsw/amplify.git'
 set :branch, :develop
 set :deploy_to, '/home/deploy/nsw-state-library-amplify'
 set :pty, false
-set :linked_files, %w{config/database.yml config/application.yml config/frontend.yml config/initializers/bugsnag.rb}
+set :linked_files, %w{config/database.yml config/application.yml config/frontend.yml config/initializers/bugsnag.rb .env}
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle node_modules config/certificates app/files/uploads }
 set :keep_releases, 5
 set :rvm_type, :user
@@ -45,6 +45,7 @@ namespace :deploy do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       within release_path do
         with rails_env: fetch(:rails_env) do
+          execute :npm, 'install'
           execute :rake, 'project:load[\'nsw-state-library-amplify\']'
           execute :rake, 'assets:precompile'
           execute :rake, 'cache:clear'
