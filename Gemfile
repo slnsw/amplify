@@ -5,8 +5,9 @@ ruby "2.5.3"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 5.2.0"
-
+gem "activesupport", "~> 5.2.0"
 gem "marcel", "~> 0.3"
+gem "msgpack", [">= 1.0.0", "< 1.4.0"]
 
 # Use PostgreSQL as the database for Active Record
 gem "pg", "~> 1.1.4"
