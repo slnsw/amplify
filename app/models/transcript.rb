@@ -567,7 +567,7 @@ class Transcript < ApplicationRecord
 
   def process_speech_to_text_for_audio_file
     # no change? no process
-    return unless audio.identifier && saved_change_to_attribute?(:audio)
+    return unless audio.identifier && saved_change_to_attribute?(:audio) && !process_started?
 
     Azure::SpeechToTextJob.perform_later(id) if azure?
   end

@@ -16,7 +16,7 @@ RSpec.describe Azure::SpeechToTextJob do
 
     it 'returns the lines' do
       stub_azure_speech_to_text status: status
-      # expect_any_instance_of(Transcript).to receive(:update).with(audio: wav_file)
+      expect_any_instance_of(Transcript).to receive(:update).with(audio: wav_file)
       expect(transcript.transcript_lines.count).to eq 0
       described_class.perform_now transcript.id
       transcript.reload
