@@ -34,7 +34,7 @@ module Azure
         end
       end
 
-      transcript.update(audio: wav_file)
+      # transcript.update(audio: wav_file)
       transcript.update_columns(
         process_status: :completed,
         process_message: nil,
