@@ -32,6 +32,9 @@ class StatsService
       completed: (scope.sum(:lines_completed).to_f / total_lines_count) * 100,
       in_review: (scope.sum(:lines_reviewing).to_f / total_lines_count) * 100,
       in_draft: (scope.sum(:lines_edited).to_f / total_lines_count) * 100,
+      not_yet_started: (
+        (1.0 - ((scope.sum(:lines_completed) + scope.sum(:lines_reviewing) + scope.sum(:lines_edited)).to_f / total_lines_count)) * 100
+      ),
       duration: scope.sum(&:duration)
     }
   end

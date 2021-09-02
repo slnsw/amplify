@@ -44,7 +44,7 @@ RSpec.describe StatsService, type: :service do
     context "when viewing all" do
       it "shows stats for all" do
         expect(described_class.new(user).completion_stats).
-          to eq(completed: 75.0, in_draft: 12.5, in_review: 12.5, total: 4, duration: 0)
+          to eq(completed: 75.0, in_draft: 12.5, in_review: 12.5, total: 4, duration: 0, not_yet_started: 0.0)
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe StatsService, type: :service do
       it "shows stats for collection" do
         expect(described_class.new(user).completion_stats(institution.id,
                                                           collection1.id)).
-          to eq(completed: 75.0, in_draft: 0.0, in_review: 25.0, total: 2, duration: 0)
+          to eq(completed: 75.0, in_draft: 0.0, in_review: 25.0, total: 2, duration: 0, not_yet_started: 0.0)
       end
     end
   end
