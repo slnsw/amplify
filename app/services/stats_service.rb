@@ -27,13 +27,16 @@ class StatsService
     total_count = scope.count
     total_lines_count = scope.sum(:lines)
     total_lines_count += 1 if total_lines_count.zero?
+    total_lines_completed = scope.sum(:lines_completed)
+    total_lines_reviewing = scope.sum(:lines_reviewing)
+    total_lines_edited = scope.sum(:lines_edited)
     {
       total: total_count,
-      completed: ((scope.sum(:lines_completed).to_f / total_lines_count) * 100).round(2),
-      in_review: ((scope.sum(:lines_reviewing).to_f / total_lines_count) * 100).round(2),
-      in_draft: ((scope.sum(:lines_edited).to_f / total_lines_count) * 100).round(2),
+      completed: ((total_lines_completed.to_f / total_lines_count) * 100).round(2),
+      in_review: ((total_lines_reviewing.to_f / total_lines_count) * 100).round(2),
+      in_draft: (((total_lines_edited - total_lines_completed - total_lines_reviewing).to_f / total_lines_count) * 100).round(2),
       not_yet_started: (
-        (1.0 - (scope.sum(:lines_completed) + scope.sum(:lines_reviewing) + scope.sum(:lines_edited)).to_f / total_lines_count) * 100
+        (1.0 - (total_lines_edited.to_f / total_lines_count)) * 100
       ).round(2),
       duration: scope.sum(&:duration)
     }
