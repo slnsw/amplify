@@ -5,7 +5,9 @@ RSpec.describe TranscriptsController, type: :controller do
 
   let!(:page) { create(:page, page_type: 'instructions') }
   let!(:public_page) { create(:public_page, page: page) }
-  let!(:transcript) { create(:transcript) }
+  let!(:institution) { create(:institution) }
+  let!(:collection) { create(:collection, institution: institution, publish: true) }
+  let!(:transcript) { create(:transcript, collection: collection, publish: true, lines: 1) }
 
   describe "GET #show" do
     let(:action) { get :show, params: { id: transcript.uid }, format: :json }
