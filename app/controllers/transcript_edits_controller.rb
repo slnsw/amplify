@@ -2,7 +2,6 @@ class TranscriptEditsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   before_action :authenticate_user, only: [:create]
 
-
   before_action :set_transcript_edit, only: [:show, :update, :destroy]
 
   # GET /transcript_edits.json?transcript_line_id=1

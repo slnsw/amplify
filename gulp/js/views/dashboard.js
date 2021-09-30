@@ -46,7 +46,7 @@ app.views.Dashboard = app.views.Base.extend({
       t.index = i;
       t.edits = _.filter(edits, function(e){ return e.transcript_id==transcript.id; });
       t.edit_count = t.edits.length;
-      t.seconds_edited = t.edit_count * _this.secondsPerLine;
+      t.seconds_edited = t.edits.length * _this.secondsPerLine;
       var last_edit = _.max(t.edits, function(e){ return e.updated_at; });
       if (last_edit) t.updated_at = last_edit.updated_at;
       return t;
@@ -54,7 +54,7 @@ app.views.Dashboard = app.views.Base.extend({
 
     this.data.transcripts = _.sortBy(transcripts, function(t){ return t.updated_at; }).reverse();
     this.data.edit_count = edits.length;
-    this.data.seconds_edited = this.data.edit_count * this.secondsPerLine;
+    this.data.seconds_edited = edits.length * this.secondsPerLine;
   },
 
   render: function() {
