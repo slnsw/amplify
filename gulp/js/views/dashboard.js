@@ -41,6 +41,8 @@ app.views.Dashboard = app.views.Base.extend({
       t.edits = _.filter(edits, function(e){ return e.transcript_id == transcript.id; });
       t.edit_count = t.edits.length;
       t.seconds_edited = t.edits.length * _this.secondsPerLine;
+      console.log("transcript_id: " + t.id);
+      console.log("seconds_edited: " + t.seconds_edited);
       return t;
     });
 
