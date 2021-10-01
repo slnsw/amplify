@@ -17978,24 +17978,16 @@ app.views.Dashboard = app.views.Base.extend({
   parseEdits: function(edits, transcripts){
     var _this = this;
 
-    edits = _.map(edits, function(edit){
-      var e = _.clone(edit);
-      e.updated_at = Date.parse(e.updated_at)/1000;
-      return e;
-    });
-
     var transcripts = _.map(transcripts, function(transcript, i){
       var t = _.clone(transcript);
       t.index = i;
-      t.edits = _.filter(edits, function(e){ return e.transcript_id==transcript.id; });
+      t.edits = _.filter(edits, function(e){ return e.transcript_id == transcript.id; });
       t.edit_count = t.edits.length;
       t.seconds_edited = t.edits.length * _this.secondsPerLine;
-      var last_edit = _.max(t.edits, function(e){ return e.updated_at; });
-      if (last_edit) t.updated_at = last_edit.updated_at;
       return t;
     });
 
-    this.data.transcripts = _.sortBy(transcripts, function(t){ return t.updated_at; }).reverse();
+    this.data.transcripts = transcripts;
     this.data.edit_count = edits.length;
     this.data.seconds_edited = edits.length * this.secondsPerLine;
   },
