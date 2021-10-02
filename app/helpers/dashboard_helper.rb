@@ -1,5 +1,4 @@
 module DashboardHelper
-
   def edited_info(edits)
     time = display_time(edits.count * Transcript.seconds_per_line)
     "<p>You have edited <strong>#{edits.count}</strong> lines in <strong>#{edits.map(&:transcript_id).uniq.count}</strong> transcripts and listened to about <strong>#{time}</strong> of audio!</p>"
