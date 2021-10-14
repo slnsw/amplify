@@ -100,7 +100,7 @@ class TranscriptLine < ApplicationRecord
 
     # Super users override all others
     if status_id <= 1 && !best_edit.nil? && !best_edit[:edit].nil? && best_edit[:edit][:user_hiearchy] >= consensus["superUserHiearchy"]
-      completed_status = statuses.find{|s| s[:name]=="completed"}
+      completed_status = statuses.find { |s| s[:name] == "completed" }
       status_id = completed_status[:id]
       final_text = best_guess_text
     end
@@ -122,7 +122,7 @@ class TranscriptLine < ApplicationRecord
         #      consider the line as completed
         percentage = (best_edit[:group][:count].to_f / consensus["minLinesForConsensus"].to_f) * 100
         if percentage > 50
-          completed_status = statuses.find{|s| s[:name]=="completed"}
+          completed_status = statuses.find { |s| s[:name] == "completed" }
           status_id = completed_status[:id]
           final_text = best_guess_text
         end
@@ -137,7 +137,7 @@ class TranscriptLine < ApplicationRecord
         percent_agree = 1.0 * best_edit[:group][:count] / consensus["minLinesForConsensus"]
         # Mark as completed
         if percent_agree >= consensus["minPercentConsensus"]
-          completed_status = statuses.find{|s| s[:name]=="completed"}
+          completed_status = statuses.find { |s| s[:name] == "completed" }
           status_id = completed_status[:id]
           final_text = best_guess_text
         end
@@ -146,13 +146,13 @@ class TranscriptLine < ApplicationRecord
 
     # Ready for review
     if status_id <= 1 && edits_filtered.length >= consensus["maxLineEdits"]
-      reviewing_status = statuses.find{|s| s[:name]=="reviewing"}
+      reviewing_status = statuses.find { |s| s[:name] == "reviewing" }
       status_id = reviewing_status[:id]
     end
 
     # Edits have been received
     if status_id <= 1 && edits_filtered.length > 0
-      editing_status = statuses.find{|s| s[:name]=="editing"}
+      editing_status = statuses.find { |s| s[:name] == "editing" }
       status_id = editing_status[:id]
     end
 
@@ -170,7 +170,7 @@ class TranscriptLine < ApplicationRecord
     end
 
     # Update user count
-    transcript.updateUsersContributed()
+    transcript.updateUsersContributed
   end
 
   def recalculateSpeaker(edits=nil, project=nil)
@@ -209,39 +209,39 @@ class TranscriptLine < ApplicationRecord
     if edits.length > 0
       edits_priority = edits.select { |edit| edit[:user_hiearchy] >= consensus["superUserHiearchy"] }
       if edits_priority.length > 0
+        edits_priority = edits_priority.sort_by { |edit| [edit[:user_hiearchy] * -1, Time.now - edit.updated_at] }
         edits = edits_priority.select { |edit| true }
-        best_group = {text: edits[0].normalizedText, count: 1}
+        best_group = { text: edits[0].normalizedText, count: 1 }
         best_edit = edits[0]
       end
     end
 
     # Init to selecting the first
-    best_group = {text: edits[0].normalizedText, count: 1} if edits.length > 0
+    best_group = { text: edits[0].normalizedText, count: 1 } if edits.length > 0
     best_edit = edits[0] if edits.length > 0
 
     if edits.length > 1
-
       # Group the edits by normalized text
-      groups = edits.group_by{|edit| edit.normalizedText}
+      groups = edits.group_by { |edit| edit.normalizedText }
       # Convert groups from hash to array
-      groups = groups.collect {|group_text, group_edits| {text: group_text, count: group_edits.length} }
+      groups = groups.collect { |group_text, group_edits| { text: group_text, count: group_edits.length } }
       # Sort by frequency of text
       groups = groups.sort_by { |group| group[:count] * -1 }
       best_group = groups[0]
 
       # No group has more than one edit; treat them all the same
-      best_edits = edits.select {|edit| true }
+      best_edits = edits.select { |edit| true }
       # There's a group that has more than one edit, choose the one with the most
       if best_group[:count] > 1
         # Retrieve the edits based on the best group's text
-        best_edits = edits.select { |edit| edit.normalizedText==best_group[:text] }
+        best_edits = edits.select { |edit| edit.normalizedText == best_group[:text] }
       end
 
       # Sort the edits
       best_edits = best_edits.sort_by { |edit|
         score = 0
         score -= 1 if edit[:text] =~ /\d/ # Plus 1 if contains a number
-        score -= edit[:text].scan(/[A-Z]+/).length  # Count uppercase letters
+        score -= edit[:text].scan(/[A-Z]+/).length # Count uppercase letters
         score -= edit[:text].scan(/[^0-9A-Za-z ]/).length # Count puncuation
         score -= edit[:text].scan(/\bu+h+m*\b|\bu+m+\b/).length # Count umm's, uhh's, uhhm's
         score -= edit[:user_hiearchy] # Give a preference users with higher hiearchy

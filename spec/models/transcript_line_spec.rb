@@ -1,5 +1,6 @@
 RSpec.describe TranscriptLine, type: :model do
   describe "#recalculate" do
+    let(:admin) { create(:user, :admin) }
     let(:min_lines_for_consensus) { 2 }
     let(:institution) do
       FactoryBot.create :institution,
@@ -64,6 +65,21 @@ RSpec.describe TranscriptLine, type: :model do
 
         create_edit_and_recalculate("first")
         expect(transcript_line.transcript_line_status.name).to eq("completed")
+
+        create_edit_and_recalculate("second")
+        expect(transcript_line.text).to eq("first")
+
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: "third", user_id: admin.id
+        re_calculate
+        expect(transcript_line.text).to eq("third")
+
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: "first", user_id: admin.id
+        re_calculate
+        expect(transcript_line.text).to eq("first")
+
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: "fourth", user_id: admin.id
+        re_calculate
+        expect(transcript_line.text).to eq("fourth")
       end
     end
 
