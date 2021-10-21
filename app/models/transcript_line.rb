@@ -220,7 +220,7 @@ class TranscriptLine < ApplicationRecord
     best_group = { text: edits[0].normalizedText, count: 1 } if edits.length > 0
     best_edit = edits[0] if edits.length > 0
 
-    if edits.length > 1
+    if edits.length > 1 && edits_priority.blank?
       # Group the edits by normalized text
       groups = edits.group_by { |edit| edit.normalizedText }
       # Convert groups from hash to array
