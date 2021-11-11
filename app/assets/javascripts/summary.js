@@ -26,13 +26,20 @@ $(document).ready(function() {
       0 :
       $("#collection_select").val() || 0
     );
+
+    let params = (new URL(document.location)).searchParams;
+    let start_date = params.get("start_date");
+    let end_date = params.get("end_date");
+
     loadIndicator(true);
     $.ajax({
       method: 'get',
       url: '/admin/summary/details',
       data: {
         institution_id: institutionId,
-        collection_id: collectionId
+        collection_id: collectionId,
+        start_date: start_date,
+        end_date: end_date
       },
       type: 'script',
       success: function(data, testStatus, jqXHR) {

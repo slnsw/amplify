@@ -1,8 +1,10 @@
 class StatsService
   attr_accessor :user
 
-  def initialize(user)
+  def initialize(user, start_date = nil, end_date = nil)
     @user = user
+    @start_date = start_date
+    @end_date = end_date
   end
 
   def all_stats
@@ -53,42 +55,35 @@ class StatsService
   end
 
   def past_n_days(institution_id, days)
-    get_stats_by_day(institution_id).
-      where(created_at: days.days.ago..Time.zone.now)
+    get_stats_by_day(institution_id).where(created_at: days.days.ago..Time.zone.now)
   end
 
   def user_past_n_days(days)
-    user_get_stats_by_day.
-      where(created_at: days.days.ago..Time.zone.now)
+    user_get_stats_by_day.where(created_at: days.days.ago..Time.zone.now)
   end
 
   def disk_usage(institution_id = nil, collection_id = nil)
-    unless collection_id.nil?
-      return Collection.find(collection_id).disk_usage
-    end
-    unless institution_id.nil?
-      return Institution.find(institution_id).disk_usage
-    end
+    return Collection.find(collection_id).disk_usage unless collection_id.nil?
+    return Institution.find(institution_id).disk_usage unless institution_id.nil?
+
     Institution.all_institution_disk_usage
   end
 
   private
 
-  # rubocop:disable Metrics/LineLength
   def stats_scope(institution_id, collection_id)
     scope = Transcript.
       joins("INNER JOIN collections ON
       transcripts.collection_id = collections.id")
     scope = scope.where("collections.institution_id = ?", institution_id) if institution_id
     scope = scope.where("collections.id = ?", collection_id) if collection_id
+    scope = scope.where("transcripts.updated_at >= ?", @start_date) if @start_date.present?
+    scope = scope.where("transcripts.updated_at <= ?", @end_date) if @end_date.present?
     scope
   end
-  # rubocop:enable Metrics/LineLength
 
-  # original query
   def get_stats_by_day(institution_id)
-    TranscriptEditPolicy::Scope.new(user, TranscriptEdit).
-      resolve(institution_id)
+    TranscriptEditPolicy::Scope.new(user, TranscriptEdit).resolve(institution_id)
   end
 
   def user_get_stats_by_day
