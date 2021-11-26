@@ -30,3 +30,9 @@
   margin-top: 100px;
   padding-bottom: 100px;
 }
+
+#start_date, #end_date {
+  max-width: 450px;
+  display: inline;
+  height: 46px;
+}

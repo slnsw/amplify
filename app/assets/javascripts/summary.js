@@ -8,6 +8,10 @@ $(document).ready(function() {
     loadSummary();
   });
 
+  $('#start_date, #end_date').change(function() {
+    loadSummary();
+  });
+
   function loadIndicator(show) {
     if (show) {
       $('#summary-stats').attr('aria-busy', 'true')
@@ -27,9 +31,8 @@ $(document).ready(function() {
       $("#collection_select").val() || 0
     );
 
-    let params = (new URL(document.location)).searchParams;
-    let start_date = params.get("start_date");
-    let end_date = params.get("end_date");
+    let start_date = $("#start_date").val() || 0;
+    let end_date = $("#end_date").val() || 0;
 
     loadIndicator(true);
     $.ajax({

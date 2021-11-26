@@ -19,6 +19,14 @@
                    selected_collection_id: @selected_collection_id,
                    aria: { controls: 'summary-stats' } %>
       </span>
+      <div class="form-group">
+        <label for="start_date">Start date:</label>
+        <input type="date" id="start_date" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="end_date">End date:</label>
+        <input type="date" id="end_date" class="form-control">
+      </div>
     </form>
   </div>
   <div class="card-body" id="summary-stats" aria-busy="false"></div>
