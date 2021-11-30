@@ -11,7 +11,7 @@ RSpec.feature 'Summary Page' do
       end
 
       it 'shows the summary page' do
-        expect(page).to have_text('Summary of Completion percentages')
+        expect(page).to have_text('Collection transcription progress')
         expect(page).to have_text('Start date')
         expect(page).to have_text('End date')
         expect(page).to have_current_path(admin_summary_index_path)
