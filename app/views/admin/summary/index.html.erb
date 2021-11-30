@@ -6,26 +6,34 @@
 <div class="card">
   <div class="card-header">
     <form>
-      <p>
-        <label for="institution">Institution:</label>
-        <%= collection_select(:institution, :id, @institutions,
-                              :id, :name,
-                              { include_blank: 'All Institutions' },
-                              { aria: { controls: 'summary-stats' }}) %>
-      </p>
-      <span id="collection">
-        <%= render "collection",
-                   collection: @collection,
-                   selected_collection_id: @selected_collection_id,
-                   aria: { controls: 'summary-stats' } %>
-      </span>
-      <div class="form-group">
-        <label for="start_date">Start date:</label>
-        <input type="date" id="start_date" class="form-control">
-      </div>
-      <div class="form-group">
-        <label for="end_date">End date:</label>
-        <input type="date" id="end_date" class="form-control">
+      <div class="row">
+        <div class="col">
+          <p><strong>Select institution:</strong></p>
+          <div class="form-group">
+            <label for="institution">Institution:</label>
+            <%= collection_select(:institution, :id, @institutions,
+                                  :id, :name,
+                                  { include_blank: 'All Institutions' },
+                                  { aria: { controls: 'summary-stats' }}) %>
+          </div>
+          <div class="form-group" id="collection">
+            <%= render "collection",
+                       collection: @collection,
+                       selected_collection_id: @selected_collection_id,
+                       aria: { controls: 'summary-stats' } %>
+          </div>
+        </div>
+        <div class="col">
+          <p><strong>Select date range:</strong></p>
+          <div class="form-group">
+            <label for="start_date">Start date:</label>
+            <input type="date" id="start_date" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="end_date">End date:</label>
+            <input type="date" id="end_date" class="form-control">
+          </div>
+        </div>
       </div>
     </form>
   </div>
