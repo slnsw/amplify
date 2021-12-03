@@ -1,19 +1,33 @@
 <h3>Institution edits</h3>
 <div class="card mb-2">
-  <div class="card-header heading">
-  </div>
+  <div class="card-header heading"></div>
   <div class="card-body">
     <form>
-      <p>Institution:
-      <%= collection_select(:institution, :id, institutions,
-                            :id, :name,
-                            include_blank: 'Select an institution') %>
-      </p>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="institution">Institution:</label>
+            <%= collection_select(:institution, :id, institutions, :id, :name, include_blank: 'Select an institution') %>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="start_date">Start date:</label>
+            <input type="date" id="start_date" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="end_date">End date:</label>
+            <input type="date" id="end_date" class="form-control">
+          </div>
+        </div>
+      </div>
     </form>
-
-    <div class="sums" id="edits_for_institution">
-    </div>
+    <div class="sums" id="edits_for_institution"></div>
   </div>
 </div>
-
-
