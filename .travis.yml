@@ -16,8 +16,6 @@ addons:
   postgresql: "9.6"
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y ghostscript
   - nvm install 12
   - export TZ=Australia/Sydney
   - gem update --system
