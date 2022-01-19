@@ -30,11 +30,11 @@ RSpec.feature 'Summary Page' do
     context 'with collections and institutions' do
       let!(:institution) { create(:institution) }
       let!(:collection) { create(:collection, institution: institution) }
-      let!(:transcript) { create(:transcript, collection: collection, duration: 2000, created_at: Date.new(2021, 11, 26)) }
+      let!(:transcript) { create(:transcript, collection: collection, duration: 2000, created_at: Date.new(2021, 11, 28)) }
 
       let!(:another_institution) { create(:institution) }
       let!(:another_collection) { create(:collection, institution: another_institution) }
-      let!(:another_transcript) { create(:transcript, collection: another_collection, duration: 1988, created_at: Date.new(2021, 11, 25)) }
+      let!(:another_transcript) { create(:transcript, collection: another_collection, duration: 1988, created_at: Date.new(2021, 11, 24)) }
 
       before do
         sign_in admin
@@ -55,9 +55,9 @@ RSpec.feature 'Summary Page' do
         it 'filters the stats by date' do
           fill_in 'start_date', with: '26112021'
           expect(page).to have_text('Total number of items: 2')
+          expect(page).to have_text('Total duration of items: 01h 06m 28s')
           expect(page).to have_text('Completed')
           expect(page).to have_text('0.00 %')
-          expect(page).to have_text('Total duration of items: 01h 06m 28s')
         end
       end
 
