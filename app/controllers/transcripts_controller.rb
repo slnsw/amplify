@@ -65,7 +65,7 @@ class TranscriptsController < ApplicationController
           @user_role = user.user_role
           @user_flags = Flag.getByTranscriptUser(@transcript.id, user.id)
         else
-          @user_edits = TranscriptEdit.getByTranscriptSession(@transcript.id, session.id)
+          @user_edits = TranscriptEdit.getByTranscriptSession(@transcript.id, session.id.to_s)
           @user_flags = Flag.getByTranscriptSession(@transcript.id, session.id)
         end
       end
