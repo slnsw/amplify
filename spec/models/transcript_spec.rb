@@ -24,6 +24,7 @@ RSpec.describe Transcript, type: :model do
   end
 
   describe "scopes" do
+    let(:user) { create(:user) }
     let!(:completed_trasncript) { create :transcript, percent_completed: 100 }
     let!(:reviewing_trasncript) { create :transcript, percent_reviewing: 37 }
     let!(:not_completed_trasncript) { create :transcript, percent_edited: 37 }
@@ -39,12 +40,24 @@ RSpec.describe Transcript, type: :model do
     it "gets pending" do
       expect(described_class.pending.to_a).to eq([not_completed_trasncript])
     end
+
+    it 'gets edited' do
+      expect(described_class.getEdited).to eq([])
+    end
+
+    it 'gets user edited' do
+      expect(described_class.getByUserEdited(user.id)).to eq([])
+    end
+  end
+
+  it "returns .seconds_per_line" do
+    expect(described_class.seconds_per_line).to eq(5)
   end
 
   describe "validate uid does not change after create" do
     let(:vendor) { Vendor.create!(uid: "voice_base", name: "VoiceBase") }
     let(:transcript) do
-      Transcript.new(
+      described_class.new(
         uid: "transcript_test",
         vendor_id: vendor.id,
       )
@@ -64,6 +77,22 @@ RSpec.describe Transcript, type: :model do
     end
   end
 
+  describe "#transcription_conventions" do
+    let(:transcript) { create(:transcript) }
+
+    it "returns conventions" do
+      expect(transcript.transcription_conventions.size).to eq(8)
+    end
+  end
+
+  describe "#to_param" do
+    let(:transcript) { create(:transcript) }
+
+    it "returns uid" do
+      expect(transcript.to_param).to eq(transcript.uid)
+    end
+  end
+
   describe "#speakers" do
     let(:vendor) { Vendor.create(uid: "voice_base", name: "VoiceBase") }
     let(:institution) { FactoryBot.create :institution }
@@ -78,7 +107,7 @@ RSpec.describe Transcript, type: :model do
       )
     end
     let(:transcript) do
-      Transcript.create!(
+      described_class.create!(
         uid: "test_transcript",
         vendor: vendor,
         collection: collection,
@@ -148,17 +177,21 @@ RSpec.describe Transcript, type: :model do
   describe "#get_for_home_page" do
     let(:collection) { create :collection, :published }
     let(:params) do
-      { collections: [collection.title], sort_by: sort_by,
-      search: "", institution: nil, theme: [""] }
+      {
+        collections: [collection.title], sort_by: sort_by, search: "", institution: nil, theme: [""]
+      }
     end
 
     before do
       %w[B A].each do |title|
-        create :transcript, :published,
+        create(
+          :transcript,
+          :published,
           title: title,
           collection: collection,
           project_uid: "nsw-state-library-amplify",
           lines: 1
+        )
       end
     end
 
@@ -175,7 +208,7 @@ RSpec.describe Transcript, type: :model do
       let!(:sort_by) { "" } # blank means random
 
       it "return random records" do
-        expect(Transcript).to receive(:randomize_list)
+        expect(described_class).to receive(:randomize_list)
         described_class.get_for_home_page(params)
       end
     end
@@ -216,9 +249,7 @@ RSpec.describe Transcript, type: :model do
       end
 
       it "shows theme1 records" do
-        expect(described_class.search({
-          theme: ["theme1"],
-        })).to eq([transcript2])
+        expect(described_class.search({ theme: ["theme1"] })).to eq([transcript2])
       end
     end
   end

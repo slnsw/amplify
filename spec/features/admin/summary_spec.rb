@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Summary Page' do
+RSpec.describe 'Summary Page', type: :feature do
   let(:admin) { create(:user, :admin) }
 
   describe 'the Summary page as an admin', js: true do

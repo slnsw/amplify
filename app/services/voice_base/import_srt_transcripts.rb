@@ -22,21 +22,18 @@ module VoiceBase
       update_records(transcript, contents.lines)
     end
 
-
     private
 
     def call
       # Retrieve empty transcripts that have VoiceBase as their vendor.
       transcripts = Transcript.getForDownloadByVendor('voice_base', @project_id)
-      puts "Retrieved #{transcripts.count} empty transcripts from collections \
-      with VoiceBase as their vendor."
+      Rails.logger.info("Retrieved #{transcripts.count} empty transcripts from collections with VoiceBase as their vendor.")
 
       transcripts.find_each { |transcript| load_from_file(transcript) }
     end
 
     def transcript_file_path(transcript)
-      Rails.root.join('project', @project_id, 'transcripts', 'voice_base',
-                      "#{transcript.vendor_identifier}.srt")
+      Rails.root.join('project', @project_id, 'transcripts', 'voice_base', "#{transcript.vendor_identifier}.srt")
     end
 
     # Read lines from a single transcript.
@@ -45,8 +42,7 @@ module VoiceBase
       if transcript.script.file.nil?
         fp = transcript_file_path(transcript)
         unless File.exist?(fp)
-          puts "Couldn't find transcript in project folder for Transcript \
-          ##{transcript.id} at #{fp}."
+          Rails.logger.info("Couldn't find transcript in project folder for Transcript ##{transcript.id} at #{fp}.")
           return []
         end
         File.read(fp).lines
@@ -70,12 +66,12 @@ module VoiceBase
         debug = "Created #{transcript_lines.length} lines from \
         transcript #{transcript.uid}."
       end
-      puts debug
+      Rails.logger.info(debug)
     end
 
     # Ingest processed lines into the transcript.
     def ingest_transcript_lines(transcript, transcript_lines)
-      return nil if transcript_lines.nil? or transcript_lines.empty?
+      return nil if transcript_lines.nil? || transcript_lines.empty?
 
       TranscriptLine.where(transcript_id: transcript.id).destroy_all
       TranscriptLine.create!(transcript_lines)

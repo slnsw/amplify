@@ -41,11 +41,11 @@ module Azure
     # Convert the file to what azure speech-to-text javascript SDK requires
     # @see speech-to-text.js
     def convert_audio_to_wav
-      stdout, stderr, status =
-        Open3.capture3("ffmpeg", "-i", file.to_s, "-ac", "1", "-ar", "16000", wav_file)
+      _stdout, stderr, status = Open3.capture3("ffmpeg", "-i", file.to_s, "-ac", "1", "-ar", "16000", wav_file)
       raise Exception, stderr unless status.success?
+
       Rails.logger.debug("--- convert_audio_to_wav ---")
-      Rails.logger.debug(File.size wav_file) if File.exist? wav_file
+      Rails.logger.debug(File.size(wav_file)) if File.exist? wav_file
     end
 
     def transcripts_from_sdk
@@ -58,6 +58,7 @@ module Azure
       Rails.logger.debug(stdout)
       Rails.logger.debug(stderr)
       raise Exception, stderr.presence || stdout unless status.success?
+
       stdout
     end
 
