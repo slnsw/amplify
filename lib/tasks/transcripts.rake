@@ -5,9 +5,8 @@ require 'open-uri'
 require 'securerandom'
 
 namespace :transcripts do
-
   # Usage rake transcripts:export['oral-history']
-  task :export, [:project_key, :host, :collection_uid, :target] => :environment do |task, args|
+  task :export, [:project_key, :host, :collection_uid, :target] => :environment do |_task, args|
     args.with_defaults host: "http://localhost:3000", target: "exports", collection_uid: false
 
     # export_path = Rails.root.join('exports', args[:project_key])
@@ -16,11 +15,11 @@ namespace :transcripts do
     transcripts = Transcript.getForExport(args[:project_key], args[:collection_uid])
 
     formats = [
-      {id: "text", label: "Text", urlExt: ".text", fileType: ".txt"},
-      {id: "text_with_timestamps", label: "Text With Timestamps", urlExt: ".text?timestamps=1", fileType: ".txt"},
-      {id: "webvtt", label: "WebVTT (Captions)", urlExt: ".vtt", fileType: ".vtt"},
-      {id: "json", label: "JSON", urlExt: ".json", fileType: ".json"},
-      {id: "json_with_edits", label: "JSON With Edits", urlExt: ".json?edits=1", fileType: ".json"}
+      { id: "text", label: "Text", urlExt: ".text", fileType: ".txt" },
+      { id: "text_with_timestamps", label: "Text With Timestamps", urlExt: ".text?timestamps=1", fileType: ".txt" },
+      { id: "webvtt", label: "WebVTT (Captions)", urlExt: ".vtt", fileType: ".vtt" },
+      { id: "json", label: "JSON", urlExt: ".json", fileType: ".json" },
+      { id: "json_with_edits", label: "JSON With Edits", urlExt: ".json?edits=1", fileType: ".json" }
     ]
 
     transcripts.each do |transcript|
@@ -46,8 +45,7 @@ namespace :transcripts do
 
   # Usage rake transcripts:load['oral-history','transcripts_seeds.csv']
   desc "Load transcripts by project key and csv file"
-  task :load, [:project_key, :filename] => :environment do |task, args|
-
+  task :load, [:project_key, :filename] => :environment do |_task, args|
     # Validate project
     project_path = Rails.root.join('project', args[:project_key])
     if !File.directory?(project_path)
@@ -97,7 +95,7 @@ namespace :transcripts do
 
   # Usage rake transcripts:reset_status['adrian-wagner-nxr3fk','1']
   desc "Reset all lines in a single transcript"
-  task :reset_status, [:transcript_uid, :status_id] => :environment do |task, args|
+  task :reset_status, [:transcript_uid, :status_id] => :environment do |_task, args|
     args.with_defaults transcript_uid: false
     args.with_defaults status_id: 1
 
@@ -107,11 +105,11 @@ namespace :transcripts do
       transcript = Transcript.where(uid: args[:transcript_uid]).first
     end
 
-    unless transcript.nil?
-      transcript.transcript_lines.each { |l|
+    if transcript.present?
+      transcript.transcript_lines.each do |l|
         l.transcript_line_status_id = args[:status_id].to_i
         l.save!
-      }
+      end
       transcript.recalculate
     else
       puts "No transcript with uid #{transcript_uid} found."
@@ -122,14 +120,13 @@ namespace :transcripts do
   #     rake transcripts:recalculate['adrian-wagner-nxr3fk']
   #     rake transcripts:recalculate
   desc "Recalculate a transcript, or all transcript"
-  task :recalculate, [:transcript_uid] => :environment do |task, args|
+  task :recalculate, [:transcript_uid] => :environment do |_task, args|
     args.with_defaults transcript_uid: false
 
     transcripts = []
 
     if !args[:transcript_uid].blank?
       transcripts = Transcript.where(uid: args[:transcript_uid])
-
     else
       transcripts = Transcript.getEdited
     end
@@ -137,13 +134,11 @@ namespace :transcripts do
     transcripts.each do |transcript|
       transcript.recalculate
     end
-
   end
 
   # Usage rake transcripts:update_file['oral-history','transcripts_seeds.csv']
   desc "Update a csv file based on data in database"
-  task :update_file, [:project_key, :filename] => :environment do |task, args|
-
+  task :update_file, [:project_key, :filename] => :environment do |_task, args|
     # Validate project
     project_path = Rails.root.join('project', args[:project_key], '/')
     if !File.directory?(project_path)
@@ -176,8 +171,7 @@ namespace :transcripts do
 
   # Usage rake transcripts:download_audio['oral-history','transcripts_seeds.csv']
   desc "Download audio files by project key and csv file"
-  task :download_audio, [:project_key, :filename] => :environment do |task, args|
-
+  task :download_audio, [:project_key, :filename] => :environment do |_task, args|
     # Validate project
     project_path = Rails.root.join('project', args[:project_key])
     if !File.directory?(project_path)
@@ -199,7 +193,6 @@ namespace :transcripts do
     # Download files
     downloads = 0
     transcripts.each do |transcript|
-
       # Download file if uid and audio_url are present
       if transcript[:uid].present? && transcript[:audio_url].present?
         extension = File.extname(URI.parse(transcript[:audio_url]).path)
@@ -216,9 +209,7 @@ namespace :transcripts do
         end
 
         # ensure target directory exists
-        unless File.directory?(destinationDir)
-          FileUtils.mkdir_p(destinationDir)
-        end
+        FileUtils.mkdir_p(destinationDir) unless File.directory?(destinationDir)
 
         # download file if it doesn't exist
         destinationFile = Rails.root.join(destinationDir, "#{transcript[:uid]}#{extension}")
@@ -229,7 +220,6 @@ namespace :transcripts do
           downloads += 1
         end
       end
-
     end
 
     puts "Finished. Downloaded #{downloads} files"
@@ -243,7 +233,7 @@ namespace :transcripts do
       header_converters: :symbol,
       converters: [:all]
     )
-    csv.to_a.map {|row| row.to_hash }
+    csv.to_a.map(&:to_hash)
   end
 
   def update_transcripts_to_file(file_path, transcripts)
@@ -254,5 +244,4 @@ namespace :transcripts do
       end
     end
   end
-
 end

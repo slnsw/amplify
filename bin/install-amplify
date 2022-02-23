@@ -51,8 +51,6 @@ app_cfg_input[env_name] = {}
 app_cfg_input[env_name]['PROJECT_ID'] = cli.ask("Default project ID? ") { |q| q.default = "nsw-state-library-amplify" }
 
 app_cfg_input[env_name]['SECRET_KEY_BASE'] = SecureRandom.hex(64)
-# app_cfg_input[env_name]['PUA_CLIENT_ID'] = cli.ask("Pop-Up Archive client ID? ") { |q| q.default = "xxx" }
-# app_cfg_input[env_name]['PUA_CLIENT_SECRET'] = cli.ask("Pop-Up Archive client secret? ") { |q| q.default = "xxx" }
 app_cfg_input[env_name]['VOICEBASE_API_KEY'] = cli.ask("Voicebase API key? ") { |q| q.default = "xxx" }
 # app_cfg_input[env_name]['VOICEBASE_CLIENT_ID'] = cli.ask("Voicebase client ID? ") { |q| q.default = "xxx" }
 # app_cfg_input[env_name]['VOICEBASE_CLIENT_SECRET'] = cli.ask("Voicebase client secret? ") { |q| q.default = "xxx" }
