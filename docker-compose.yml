@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+
+  # Web
+
+  nginx:
+    build: ./docker/compose/nginx
+    ports:
+      - 8080:8080
+      - 3306:3306
+      - 8307:8307
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/data
+
+  # ruby-puma:
+  #   build: ./docker/compose/ruby-puma
+  #   network_mode: service:nginx
+  #   volumes:
+  #     - ./:/data
+  #   environment: {}
+
+  # CLI
+
+  # ruby-cli: {}
+
+  # Databases
+
+  # postgresql-default:
+  #   image: bitnami/postgresql:12
+  #   network_mode: service:nginx
+
+  # Services
+
+  # ffmpeg:
+  #   image: ffmpeg:4.1-alpine
+  #   network_mode: service:nginx
+
+  # redis:
+  #   image: bitnami/redis:latest
+  #   network_mode: service:nginx
+
+  # mailhog:
+  #   image: mailhog/mailhog
+  #   ports:
+  #     - 8025:8025
