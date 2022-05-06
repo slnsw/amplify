@@ -8,7 +8,7 @@ services:
     build: ./docker/compose/nginx
     ports:
       - 8080:8080
-      - 3306:3306
+      - 5432:5432
       - 8307:8307
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -28,9 +28,14 @@ services:
 
   # Databases
 
-  # postgresql-default:
-  #   image: bitnami/postgresql:12
-  #   network_mode: service:nginx
+  postgresql-default:
+    image: bitnami/postgresql:12
+    network_mode: service:nginx
+    environment:
+      - POSTGRESQL_DATABASE=postgresql
+      - POSTGRESQL_USERNAME=postgresql
+      - POSTGRESQL_PASSWORD=postgresql
+      - POSTGRESQL_POSTGRES_PASSWORD=postgresql
 
   # Services
 

@@ -149,6 +149,18 @@ gulp sass js # Runs once
 Be sure to commit the changes to `public/assets/css` and
 `public/assets/js`.
 
+#### Docker Compose (under development)
+
+Map of containers:
+
+* NGINX: nginx
+* Postgresql: postgresql-default
+  * Database name: postgresql
+  * Username: postgresql
+  * Password: postgresql
+  * Import command: `./bin/import-db database-tarball.tar`
+    * TODO: Add gzip support
+
 ## Generating your transcripts
 
 Amplify is integrated with Azure Cognitive Speech-to-Text service. And the process will be kicked off after user uploads an audio file.
