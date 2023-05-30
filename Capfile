@@ -16,6 +16,7 @@ require 'capistrano/sidekiq'
 
 require 'capistrano/puma'
 install_plugin Capistrano::Puma
+install_plugin Capistrano::Puma::Systemd
 
 require 'capistrano/seed_migration_tasks'
 
