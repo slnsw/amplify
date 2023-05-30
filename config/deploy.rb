@@ -20,13 +20,29 @@ set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
 set :puma_conf, "#{shared_path}/puma.rb"
 set :puma_access_log, "#{shared_path}/log/puma_access.log"
 set :puma_error_log, "#{shared_path}/log/puma_error.log"
-set :puma_role, :app
+set :puma_roles, :app
 set :puma_env, fetch(:rack_env, fetch(:rails_env))
 set :puma_threads, [0, 8]
 set :puma_workers, 0
 set :puma_worker_timeout, nil
 set :puma_init_active_record, true
 set :puma_preload_app, false
+
+# Set the Puma configuration file path
+set :puma_config_file, "#{current_path}/config/puma.rb"
+
+# Set the Puma service systemd unit name
+set :puma_systemctl_unit, 'puma.service'
+
+# Set the Puma restart command
+set :puma_restart_command, 'sudo systemctl restart puma.service'
+
+# Set the Puma phased-restart command
+set :puma_phased_restart_command, 'sudo systemctl reload puma.service'
+
+# Specify the tasks to run after deployment
+after 'deploy:publishing', 'deploy:restart'
+after 'deploy:restart', 'puma:restart'
 
 # Necessary for Sidekiq support.
 set :sidekiq_processes, 5
