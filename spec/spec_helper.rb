@@ -12,6 +12,7 @@ SimpleCov.start do
   add_filter 'app/mailers/application_mailer.rb'
   add_filter 'app/models/cms_image_upload.rb'
   add_filter 'app/controllers/v2_controller.rb'
+  add_filter 'app/controllers/amplify_base_controller.rb'
   # this controller is unused
   # not sure if we will be needed this in the future
   add_filter 'app/controllers/admin/reports_controller.rb'
