@@ -16,6 +16,8 @@ SimpleCov.start do
   # this controller is unused
   # not sure if we will be needed this in the future
   add_filter 'app/controllers/admin/reports_controller.rb'
+  add_filter 'app/controllers/default_controller.rb'
+  add_filter 'app/controllers/institutions_controller.rb'
 end
 SimpleCov.start 'rails'
 
