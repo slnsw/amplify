@@ -13,11 +13,15 @@ SimpleCov.start do
   add_filter 'app/models/cms_image_upload.rb'
   add_filter 'app/controllers/v2_controller.rb'
   add_filter 'app/controllers/amplify_base_controller.rb'
-  # this controller is unused
+  # This controller is unused
   # not sure if we will be needed this in the future
   add_filter 'app/controllers/admin/reports_controller.rb'
   add_filter 'app/controllers/default_controller.rb'
   add_filter 'app/controllers/institutions_controller.rb'
+  # This is all handled by devise
+  add_filter 'app/controllers/users/omniauth_callbacks_controller.rb'
+  add_filter 'app/controllers/users/registrations_controller.rb'
+  add_filter 'app/controllers/users/sessions_controller.rb'
 end
 SimpleCov.start 'rails'
 
