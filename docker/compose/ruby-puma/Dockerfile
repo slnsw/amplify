@@ -17,10 +17,11 @@ COPY ./Gemfile.lock /data/Gemfile.lock
 COPY ./package.json /data/package.json
 COPY ./package-lock.json /data/package-lock.json
 RUN bundle install
-RUN npm install --loglevel verbose
+# RUN npm install --loglevel verbose
 
 COPY . .
 
 # CMD
 USER amplify
-ENTRYPOINT ["bundle", "exec", "pumactl", "-F", "config/puma.rb", "start"]
+# ENTRYPOINT ["bundle", "exec", "pumactl", "-F", "config/puma.rb", "start"]
+ENTRYPOINT ["bundle", "exec", "rails", "s"]

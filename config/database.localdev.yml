@@ -1,4 +1,4 @@
-production:
+development:
   host: <%= ENV['DB_HOST'] %>
   adapter: postgresql
   encoding: unicode

@@ -17,7 +17,7 @@ COPY ./Gemfile.lock /data/Gemfile.lock
 COPY ./package.json /data/package.json
 COPY ./package-lock.json /data/package-lock.json
 RUN bundle install
-RUN npm install --loglevel verbose
+# RUN npm install --loglevel verbose
 
 COPY . .
 
