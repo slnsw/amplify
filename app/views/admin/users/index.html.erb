@@ -1,33 +1,22 @@
 <%= render partial: 'layouts/admin_side_pane' %>
-<div class="accordion" id="accordionUser">
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h5 class="mb-0">
-        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          <h3>Top Users</h3>
-        </button>
-      </h5>
-    </div>
 
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionUser">
-      <div class="card-body">
-        <%= render "users", users: @users, user_roles: @user_roles, institutions: @institutions, can_delete: true %>
-      </div>
-    </div>
+<ul class="nav nav-tabs" id="users-tab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="registered-tab" data-toggle="tab" href="#registered" role="tab" aria-controls="registered" aria-selected="true">
+      Registered Users
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="administrative-tab" data-toggle="tab" href="#administrative" role="tab" aria-controls="administrative" aria-selected="false">
+      Administrative Users
+    </a>
+  </li>
+</ul>
+<div class="tab-content" id="users-content">
+  <div class="tab-pane fade show active" id="registered" role="tabpanel" aria-labelledby="registered-tab">
+    <%= render "users", users: @users, user_roles: @user_roles, institutions: @institutions, can_delete: true %>
   </div>
-  <div class="card">
-    <div class="card-header" id="headingTwo">
-      <h5 class="mb-0">
-        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-         <h3>Administrative Users</h3>
-        </button>
-      </h5>
-    </div>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionUser">
-      <div class="card-body">
-        <%= render "users", users: @staff, user_roles: @user_roles, institutions: @institutions, can_delete: false %>
-      </div>
-    </div>
+  <div class="tab-pane fade" id="administrative" role="tabpanel" aria-labelledby="administrative-tab">
+    <%= render "users", users: @staff, user_roles: @user_roles, institutions: @institutions, can_delete: false %>
   </div>
 </div>
-

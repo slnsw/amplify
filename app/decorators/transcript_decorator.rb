@@ -18,7 +18,7 @@ class TranscriptDecorator < Draper::Decorator
   end
 
   def homepage_description
-    text = Sanitize.fragment(object.description)
+    text = Sanitize.fragment(object.description, parser_options: { max_tree_depth: -1 })
     h.truncate(text, length: 50, separator: ' ', escape: false)
   end
 

@@ -1,0 +1,42 @@
+// ----
+// Sass (v3.4.21)
+// Compass (v1.0.3)
+// ----
+// Usage example: spacer-out-sm, spacer-out-sm-v
+
+$spacer-size-list: (
+  sm : 8px,
+  base : 16px,
+  md : 24px,
+  lg : 32px,
+  none: 0
+);
+
+$spacer-sides: top right bottom left;
+$box-boundary-list: (in: padding, out: margin);
+
+/* Special */
+.spacer {
+  @each $boundary, $boundary-property in $box-boundary-list {
+    &-#{$boundary} {
+      @each $current-size, $current-size-value in $spacer-size-list {
+        @each $side in $spacer-sides {
+          &-#{$side}-#{$current-size} {
+            #{$boundary-property}-#{$side}: $current-size-value;
+          }
+        }
+        &-#{$current-size} {
+          #{$boundary-property}: $current-size-value;
+        }
+        &-v-#{$current-size} {
+          #{$boundary-property}-top: $current-size-value;
+          #{$boundary-property}-bottom: $current-size-value;
+        }
+        &-h-#{$current-size} {
+          #{$boundary-property}-left: $current-size-value;
+          #{$boundary-property}-right: $current-size-value;
+        }
+      }
+    }
+  }
+}

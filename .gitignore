@@ -85,3 +85,4 @@ app/files/uploads/*
 # Allow for scratch space.
 /scratch/*
 !/scratch/.keep
+.vscode

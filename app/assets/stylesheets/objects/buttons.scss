@@ -43,6 +43,11 @@
     line-height: 51px;
     font-size: rem-calc(20);
   }
+  &.medium {
+    height: 35px;
+    line-height: 36px;
+    font-size: rem-calc(16);
+  }
   &.small {
     height: 26px;
     line-height: 24px;
@@ -75,6 +80,11 @@
       background-size: 20px 20px;
       cursor: pointer;
     }
+    &.cross-black {
+      background-image: $cross-icon-black;
+      background-size: 20px 20px;
+      cursor: pointer;
+    }
     &.search {
       @include button-background($button-yellow);
       background-image: $search-icon;
@@ -84,5 +94,8 @@
         background-color: #eead0e;
       }
     }
+  }
+  &.pill {
+    border-radius: 16px;
   }
 }

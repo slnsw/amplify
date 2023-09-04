@@ -40,8 +40,7 @@ You will need to have the following installed to run this project on your machin
 
 - [Git](https://git-scm.com/)
 - [FFmpeg](https://ffmpeg.org/) - convert the file and process the transcript using azure cognitive service
-- [Ruby](https://www.ruby-lang.org/en/) - this app has been developed using 2.5.0. Older versions may not work
-- [Rails](https://rubyonrails.org/) - rails 5.2.0
+- [Ruby](https://www.ruby-lang.org/en/) - this app has been developed using 3.0.0. Older versions may not work
 - [PostgreSQL](http://www.postgresql.org/)
 
 For local development:

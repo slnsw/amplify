@@ -8,6 +8,10 @@ $(document).ready(function() {
     loadSummary();
   });
 
+  $('#start_date, #end_date').change(function() {
+    loadSummary();
+  });
+
   function loadIndicator(show) {
     if (show) {
       $('#summary-stats').attr('aria-busy', 'true')
@@ -26,13 +30,19 @@ $(document).ready(function() {
       0 :
       $("#collection_select").val() || 0
     );
+
+    let start_date = $("#start_date").val() || 0;
+    let end_date = $("#end_date").val() || 0;
+
     loadIndicator(true);
     $.ajax({
       method: 'get',
       url: '/admin/summary/details',
       data: {
         institution_id: institutionId,
-        collection_id: collectionId
+        collection_id: collectionId,
+        start_date: start_date,
+        end_date: end_date
       },
       type: 'script',
       success: function(data, testStatus, jqXHR) {

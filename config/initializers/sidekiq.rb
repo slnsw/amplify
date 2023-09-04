@@ -16,4 +16,10 @@ unless %w(test development).include?(Rails.env)
     cron: "0 16 * * *",
     class: "DailyAnalyticsJob",
   )
+
+  Sidekiq::Cron::Job.create(
+    name: "Recalculate transcript analytics data",
+    cron: "0 1,13 * * *",
+    class: "RecalculateTranscriptsJob",
+  )
 end

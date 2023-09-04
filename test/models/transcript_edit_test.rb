@@ -6,24 +6,23 @@
 require 'test_helper'
 
 class TranscriptEditTest < ActiveSupport::TestCase
-
   # called before every single test
   def setup
     # Seed/update the database with test data
+    Vendor.create!(uid: 'voice_base', name: 'VoiceBase')
     seedProject
     seedTranscript
     seedUsers
 
     # Retrieve transcript line statuses
-    @status_initialized = TranscriptLineStatus.find_by name: 'initialized'
-    @status_editing = TranscriptLineStatus.find_by name: 'editing'
-    @status_reviewing = TranscriptLineStatus.find_by name: 'reviewing'
-    @status_completed = TranscriptLineStatus.find_by name: 'completed'
+    @status_initialized = TranscriptLineStatus.find_or_create_by name: 'initialized'
+    @status_editing = TranscriptLineStatus.find_or_create_by name: 'editing'
+    @status_reviewing = TranscriptLineStatus.find_or_create_by name: 'reviewing'
+    @status_completed = TranscriptLineStatus.find_or_create_by name: 'completed'
   end
 
   # called after every single test
-  def teardown
-  end
+  def teardown; end
 
   def seedProject
     puts "Seeding project..."
@@ -39,12 +38,15 @@ class TranscriptEditTest < ActiveSupport::TestCase
       }
     }
     data = JSON.parse(data.to_json)
-    @project = {uid: 'test_project', data: data}
+    @project = { uid: 'test_project', data: data }
   end
 
   def seedTranscript
     puts "Seeding transcript..."
-    attributes = {uid: 'lucy', title: 'Lucy in the Sky with Diamonds'}
+    attributes = {
+      uid: 'lucy', title: 'Lucy in the Sky with Diamonds',
+      vendor: Vendor.find_or_create_by(uid: 'voice_base', name: 'VoiceBase')
+    }
     @transcript = Transcript.find_or_initialize_by(uid: attributes[:uid])
     @transcript.update(attributes)
   end
@@ -53,18 +55,18 @@ class TranscriptEditTest < ActiveSupport::TestCase
     puts "Seeding users..."
 
     # registered user
-    user_role = UserRole.find_by name: 'user'
-    @registered_user = User.new(:email => 'registered_user_1@test.com', :password => 'password', :password_confirmation => 'password', user_role_id: user_role.id)
+    user_role = UserRole.find_or_create_by name: 'user', hiearchy: 1
+    @registered_user = User.new(email: 'registered_user_1@test.com', password: 'password', password_confirmation: 'password', user_role_id: user_role.id)
     @registered_user.save
 
     # admin user
-    admin_role = UserRole.find_by name: 'admin'
-    @admin_user = User.new(:email => 'admin_user_1@test.com', :password => 'password', :password_confirmation => 'password', user_role_id: admin_role.id)
+    admin_role = UserRole.find_or_create_by name: 'admin', hiearchy: 5
+    @admin_user = User.new(email: 'admin_user_1@test.com', password: 'password', password_confirmation: 'password', user_role_id: admin_role.id)
     @admin_user.save
   end
 
   def seedLine(attributes)
-    line = TranscriptLine.find_or_initialize_by({transcript_id: attributes[:transcript_id], sequence: attributes[:sequence]})
+    line = TranscriptLine.find_or_initialize_by({ transcript_id: attributes[:transcript_id], sequence: attributes[:sequence] })
     line.update(attributes)
     line
   end
@@ -336,12 +338,15 @@ class TranscriptEditTest < ActiveSupport::TestCase
 
   # Consensus: three edits, all are original text; no consensus
   test "consensus eleven" do
-    line = seedLine({transcript_id: @transcript.id, sequence: 17, original_text: 'Climb in the back with your head in the clouds', guess_text: '', text: '', transcript_line_status_id: 1})
-    seedEdits([
-      {transcript_id: @transcript.id, transcript_line_id: line.id, session_id: 'seventeen_1', text: 'Climb in the back with your head in the clouds'},
-      {transcript_id: @transcript.id, transcript_line_id: line.id, session_id: 'seventeen_2', text: 'Climb in the back with your head in the clouds'},
-      {transcript_id: @transcript.id, transcript_line_id: line.id, session_id: 'seventeen_3', text: 'Climb in the back with your head in the clouds'}
-    ])
+    text = 'Climb in the back with your head in the clouds'
+    line = seedLine({ transcript_id: @transcript.id, sequence: 17, original_text: text, guess_text: '', text: '', transcript_line_status_id: 1 })
+    seedEdits(
+      [
+        { transcript_id: @transcript.id, transcript_line_id: line.id, session_id: 'seventeen_1', text: text },
+        { transcript_id: @transcript.id, transcript_line_id: line.id, session_id: 'seventeen_2', text: text },
+        { transcript_id: @transcript.id, transcript_line_id: line.id, session_id: 'seventeen_3', text: text }
+      ]
+    )
     line.recalculate(nil, @project)
     correct_text = ""
 

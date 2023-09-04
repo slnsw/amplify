@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :transcript do
-    uid { Faker::Lorem.characters(10) }
+    uid { Faker::Lorem.characters(number:10) }
     title { Faker::Lorem.sentence }
     description { "Faith Bandler interviewed by Carol" }
     audio_url { "http://google.com" }

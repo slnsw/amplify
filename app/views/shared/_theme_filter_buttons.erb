@@ -1,0 +1,7 @@
+<% themes.each do |theme| %>
+  <%= link_to theme.name.titleize,
+    Rails.application.
+      routes.recognize_path(base_href).
+      merge('themes[]' => theme.name),
+    class: "button cyan medium pill spacer-out-left-sm spacer-out-bottom-sm" %>
+<% end %>

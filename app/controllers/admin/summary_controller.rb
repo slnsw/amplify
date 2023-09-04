@@ -10,13 +10,13 @@ class Admin::SummaryController < AdminController
     @collection = policy_scope(Collection).
       where(institution_id: params[:institution_id].to_i)
     @selected_collection_id = collection_id
-    load_stats(institution_id, collection_id)
+    load_stats(institution_id, collection_id, start_date, end_date)
   end
 
   private
 
-  def load_stats(institution_id, collection_id)
-    service = StatsService.new(current_user)
+  def load_stats(institution_id, collection_id, start_date, end_date)
+    service = StatsService.new(current_user, start_date, end_date)
 
     completion_stats = service.completion_stats(institution_id, collection_id)
     @total = completion_stats.extract!(:total)
@@ -24,6 +24,14 @@ class Admin::SummaryController < AdminController
     @stats = completion_stats
 
     @disk_usage = service.disk_usage(institution_id, collection_id)
+  end
+
+  def start_date
+    params[:start_date].to_i > 0 ? params[:start_date] : nil
+  end
+
+  def end_date
+    params[:end_date].to_i > 0 ? params[:end_date] : nil
   end
 
   def collection_id

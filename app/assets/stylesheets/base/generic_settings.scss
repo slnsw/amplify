@@ -29,3 +29,15 @@ time, mark, audio, video {
   font-family: $body-font;
   color: inherit;
 }
+
+.staging-notice {
+  height: 2em;
+  line-height: 2em;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.2em;
+  font-family: sans-serif;
+}

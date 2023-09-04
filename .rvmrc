@@ -1,2 +1,2 @@
 rvm_trust_rvmrcs_flag=1
-rvm --create use ruby-2.5.3@rails5
+rvm --create use ruby-3.0.0@global

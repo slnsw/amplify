@@ -30,7 +30,7 @@ class Admin::UsersController < AdminController
 
   def load_collections
     @users = policy_scope(User).only_public_users.getAll.decorate
-    @staff = policy_scope(User).only_staff_users.getAll.decorate
+    @staff = policy_scope(User).only_staff_users.orderByInstitution.decorate
     @user_roles = policy_scope(UserRole).getAll
     @institutions = policy_scope(Institution).all
   end

@@ -10,12 +10,6 @@
                   Filter by:
                 </legend>
 
-                <% if show_theme? %>
-                  <div class="facet" id="theme_search">
-                    <%= render partial: 'home/themes', locals: { themes: @themes } %>
-                  </div>
-                <% end %>
-
                 <% if show_institutions? %>
                   <div class="facet" id="institution_search">
                     <%= render partial: 'home/institutions', locals: { institutions: @institutions } %>
@@ -53,6 +47,17 @@
                   <% end %>
                 </div>
               </div>
+              <div class="filter_bar__divider"></div>
+              <% if show_theme? %>
+                <div class="filter_bar__themes_filter">
+                  <legend class="desktop-only">
+                    Browse by theme:
+                  </legend>
+                  <div class="filter_bar__themes_filter-buttons">
+                    <%= render partial: 'shared/theme_filter_buttons', locals: { themes: @themes, base_href: @form_url } %>
+                  </div>
+                </div>
+              <% end %>
             </div>
           </div>
         </div>

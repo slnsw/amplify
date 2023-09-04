@@ -64,21 +64,14 @@ module ApplicationHelper
   end
 
   # FIXME: this needs to be changed to the current time format
-  def display_time(time)
-    time_string = ""
-    t = Time.at(time).utc
-    h = t.hour
-    m = t.min
-    s = t.sec
+  def display_time(secs)
+    [[60, :s], [60, :m], [9999, :h]].map do |count, name|
+      if secs > 0
+        secs, n = secs.divmod(count)
 
-    if h > 0 && m > 0
-      time_string = "#{h}h #{m}m"
-    elsif m > 0 && s > 0
-      time_string = "#{m}m #{s}s"
-    elsif s > 0
-      time_string = "#{s}s"
-    end
-    time_string
+        "#{n.to_i}#{name}" unless n.to_i == 0
+      end
+    end.compact.reverse.join(' ')
   end
 
   def footer_link(link)
@@ -107,5 +100,13 @@ module ApplicationHelper
     (next_index..last_index).map do |i|
       presence_of(collection[i])
     end.any?
+  end
+
+  def oauth_url(p)
+    "/users#{p['path']}?state=#{@transcript.try(:uid)}"
+  end
+
+  def site_alerts
+    SiteAlert.where(published: true)
   end
 end

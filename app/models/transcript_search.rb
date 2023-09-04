@@ -25,7 +25,7 @@ class TranscriptSearch
         .joins('INNER JOIN institutions ON institutions.id = collections.institution_id')
 
       # Do the query
-      @transcripts = transcripts.search_by_all_text(options[:search])
+      @transcripts = transcripts.fuzzy_search(options[:search])
 
     # else just normal search (title, description)
     else

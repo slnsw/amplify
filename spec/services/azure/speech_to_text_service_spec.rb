@@ -13,8 +13,15 @@ RSpec.describe Azure::SpeechToTextService, type: :service do
     it 'returns the lines' do
       stub_azure_speech_to_text status: status
       result = subject.recognize
-      expect(result.count).to eq 5
-      expect(result.first["text"]).to eq "the speech SDK exposes many features from the speech service but not all of them"
+      expect(result.lines.count).to eq 5
+      expect(result.lines.first["text"]).to eq "the speech SDK exposes many features from the speech service but not all of them"
+    end
+
+    it 'returns wav_file' do
+      stub_azure_speech_to_text status: status
+      result = subject.recognize
+      expect(result.wav_file_path).to be_present
+      expect(result.wav_file_path).to include('.wav')
     end
 
     context 'when there is error' do

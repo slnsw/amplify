@@ -17,14 +17,25 @@
   const JSONStream = require("JSONStream");
 
   const filename = process.argv[2];
+  let language = '';
+
   if (!filename) {
     exitLog(`
       usage: node speech-to-text.js <path_to_wav_file> [<language>]
 
       <path_to_wav_file>: required. it's the path to the wav file to be transcribed.
       <language>: optional. e.g. en-US
+        Language may be inferred from filename if it contains text matching locale-(locale).
     `);
   }
+
+  const languageMatches = filename.match(/locale-([a-z]+-[A-Z]+)/);
+  if (process.argv[3]) {
+    language = process.argv[3];
+  } else if (languageMatches) {
+    language = languageMatches[1];
+  }
+
   const recognizer = recognizerFor(streamAudio(filename));
   setup(recognizer);
   recognizer.startContinuousRecognitionAsync();
@@ -50,7 +61,9 @@
 
     const audioConfig = sdk.AudioConfig.fromStreamInput(pushStream);
     const speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
-    if (process.argv[3]) { speechConfig.speechRecognitionLanguage = process.argv[3] ; }
+    if (language.length > 0) {
+      speechConfig.speechRecognitionLanguage = language;
+    }
     speechConfig.enableDictation();
 
     return new sdk.SpeechRecognizer(speechConfig, audioConfig);

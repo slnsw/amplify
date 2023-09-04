@@ -143,7 +143,7 @@ class Transcript < ApplicationRecord
   def self.get_for_home_page(params)
     sort = params[:sort_by].to_s
 
-    query = Transcript.
+    query = Transcript.includes(collection: [:institution]).
       select('transcripts.*, COALESCE(collections.title, \'\') as collection_title').
       joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id').
       joins('LEFT OUTER JOIN institutions ON institutions.id = collections.institution_id').
@@ -163,10 +163,14 @@ class Transcript < ApplicationRecord
     end
 
     # search text
-    query = query.where("transcripts.title ILIKE :search or transcripts.description ILIKE :search", search: "%#{params[:search]}%") if params[:search].present?
+    if params[:search].present?
+      query = query.where(
+        "transcripts.title ILIKE :search or transcripts.description ILIKE :search", search: "%#{params[:search]}%"
+      )
+    end
 
     if sort.match(/title/i)
-      arr = query.sort_by {|e| e.title.gsub(/\d+/) {|num| "#{num.length} #{num}"}}
+      arr = query.sort_by { |e| e.title.gsub(/\d+/) { |num| "#{num.length} #{num}" } }
       sort == "title_asc" ? arr : arr.reverse
     else
       order = sort_string(params[:sort_by])
@@ -297,7 +301,7 @@ class Transcript < ApplicationRecord
       new_percent_completed = (1.0 * new_lines_completed / lines * 100).round.to_i
       new_percent_reviewing = (1.0 * new_lines_reviewing / lines * 100).round.to_i
 
-      update_attributes(lines_edited: new_lines_edited, lines_completed: new_lines_completed, lines_reviewing: new_lines_reviewing, percent_edited: new_percent_edited, percent_completed: new_percent_completed, percent_reviewing: new_percent_reviewing)
+      update(lines_edited: new_lines_edited, lines_completed: new_lines_completed, lines_reviewing: new_lines_reviewing, percent_edited: new_percent_edited, percent_completed: new_percent_completed, percent_reviewing: new_percent_reviewing)
     end
   end
 
@@ -332,13 +336,13 @@ class Transcript < ApplicationRecord
       transcript_duration = _getDurationFromHash(contents)
       vendor_audio_urls = _getAudioUrlsFromHash(contents)
 
-      update_attributes(lines: transcript_lines.length, transcript_status_id: transcript_status[:id], duration: transcript_duration, vendor_audio_urls: vendor_audio_urls, transcript_retrieved_at: DateTime.now)
+      update(lines: transcript_lines.length, transcript_status_id: transcript_status[:id], duration: transcript_duration, vendor_audio_urls: vendor_audio_urls, transcript_retrieved_at: DateTime.now)
       puts "Created #{transcript_lines.length} lines from transcript #{uid}"
 
     # transcript is still processing
     elsif contents["audio_files"] && contents["audio_files"].length > 0
       transcript_status = TranscriptStatus.find_by_name("transcript_processing")
-      update_attributes(transcript_status_id: transcript_status[:id])
+      update(transcript_status_id: transcript_status[:id])
       puts "Transcript #{uid} still processing with status: #{contents["audio_files"][0]["current_status"]}"
 
     # no audio recognized
@@ -361,7 +365,7 @@ class Transcript < ApplicationRecord
       transcript_status = TranscriptStatus.find_by_name("transcript_downloaded")
       transcript_duration = _getDurationFromWebVTT(webvtt)
 
-      update_attributes(lines: transcript_lines.length, transcript_status_id: transcript_status[:id], duration: transcript_duration, transcript_retrieved_at: DateTime.now)
+      update(lines: transcript_lines.length, transcript_status_id: transcript_status[:id], duration: transcript_duration, transcript_retrieved_at: DateTime.now)
       puts "Created #{transcript_lines.length} lines from transcript #{uid}"
     end
 
@@ -383,10 +387,10 @@ class Transcript < ApplicationRecord
 
     # And all the completed/reviewing lines
     statuses = TranscriptLineStatus.allCached
-    completed_status = statuses.find{|s| s[:name]=="completed"}
-    completed_lines = edited_lines.select{|s| s[:transcript_line_status_id]==completed_status[:id]}
-    reviewing_status = statuses.find{|s| s[:name]=="reviewing"}
-    reviewing_lines = edited_lines.select{|s| s[:transcript_line_status_id]==reviewing_status[:id]}
+    completed_status = statuses.find { |s| s[:name] == "completed" }
+    completed_lines = edited_lines.select { |s| s[:transcript_line_status_id] == completed_status[:id] }
+    reviewing_status = statuses.find { |s| s[:name] == "reviewing" }
+    reviewing_lines = edited_lines.select { |s| s[:transcript_line_status_id] == reviewing_status[:id] }
 
     # Calculate
     _lines_edited = edited_lines.length
@@ -397,10 +401,14 @@ class Transcript < ApplicationRecord
     _percent_reviewing = (1.0 * _lines_reviewing / lines * 100).round.to_i
 
     # Get user count
-    _users_contributed = getUsersContributedCount()
+    _users_contributed = getUsersContributedCount
 
     # Update
-    update_attributes(lines_edited: _lines_edited, lines_completed: _lines_completed, lines_reviewing: _lines_reviewing, percent_edited: _percent_edited, percent_completed: _percent_completed, percent_reviewing: _percent_reviewing, users_contributed: _users_contributed)
+    update(
+      lines_edited: _lines_edited, lines_completed: _lines_completed, lines_reviewing: _lines_reviewing,
+      percent_edited: _percent_edited, percent_completed: _percent_completed, percent_reviewing: _percent_reviewing,
+      users_contributed: _users_contributed
+    )
   end
 
   def self.search(options)
@@ -465,14 +473,14 @@ class Transcript < ApplicationRecord
 
   def updateFromHash(contents)
     vendor_audio_urls = _getAudioUrlsFromHash(contents)
-    update_attributes(vendor_audio_urls: vendor_audio_urls)
+    update(vendor_audio_urls: vendor_audio_urls)
   end
 
   def updateUsersContributed(edits=[])
     _users_contributed = getUsersContributedCount(edits)
 
     if _users_contributed != users_contributed
-      update_attributes(users_contributed: _users_contributed)
+      update(users_contributed: _users_contributed)
     end
   end
 
@@ -563,7 +571,7 @@ class Transcript < ApplicationRecord
 
   def process_speech_to_text_for_audio_file
     # no change? no process
-    return unless audio.identifier && saved_change_to_attribute?(:audio)
+    return unless audio.identifier && saved_change_to_attribute?(:audio) && !process_started?
 
     Azure::SpeechToTextJob.perform_later(id) if azure?
   end
@@ -580,6 +588,6 @@ class Transcript < ApplicationRecord
 
   # If the image has a cropped version we display it, otherwise we display the original image.
   def image_cropped_thumb_url
-    crop_x.present? ? image_url(:cropped_thumb) : image_url
+    crop_x.present? ? image_url(:cropped_thumb) : (image_url || collection.image_url)
   end
 end

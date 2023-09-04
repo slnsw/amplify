@@ -1,4 +1,4 @@
-lock '3.11.2'
+lock '3.17.3'
 
 set :application, 'nsw-state-library-amplify'
 # set :scm, :git
@@ -10,7 +10,7 @@ set :linked_files, %w{config/database.yml config/application.yml config/frontend
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle node_modules config/certificates app/files/uploads }
 set :keep_releases, 5
 set :rvm_type, :user
-set :rvm_ruby_version, 'ruby-2.5.3'
+set :rvm_ruby_version, 'ruby-3.0.0'
 set :rake, "RAILS_ENV=#{fetch(:rails_env)} bundle exec rake" # force to set RAILS_ENV
 
 set :puma_rackup, -> { File.join(current_path, 'config.ru') }
@@ -33,7 +33,7 @@ set :sidekiq_processes, 5
 set :sidekiq_user, 'deploy'
 set :init_system, :systemd
 append :rvm1_map_bins, 'rake', 'gem', 'bundle', 'ruby', 'puma', 'pumactl', 'sidekiq', 'sidekiqctl'
-set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-2.5.3@rails5/bundle'
+set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-3.0.0@global/bundle'
 SSHKit.config.command_map[:sidekiq] = "bundle exec sidekiq"
 SSHKit.config.command_map[:sidekiqctl] = "bundle exec sidekiqctl"
 

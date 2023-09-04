@@ -6,7 +6,7 @@ RSpec.feature 'Transcript Preview' do
   let!(:public_page) { create(:public_page, page: my_page) }
 
   describe 'can see an unpublished transcript preview page', js: true do
-    context 'as an admin' do
+    context 'when an admin' do
       let(:admin) { create(:user, :admin) }
 
       before do
@@ -16,13 +16,13 @@ RSpec.feature 'Transcript Preview' do
 
       it 'shows the preview page' do
         expect(page).to have_text(transcript.title)
-        expect(page).to have_current_path(institution_transcript_path(
-          transcript.collection.institution.slug, transcript.collection.uid, transcript, preview: true)
+        expect(page).to have_current_path(
+          institution_transcript_path(transcript.collection.institution.slug, transcript.collection.uid, transcript, preview: true)
         )
       end
     end
 
-    context 'as a content editor' do
+    context 'when a content editor' do
       let(:content_editor) { create(:user, :content_editor) }
 
       before do
@@ -32,13 +32,13 @@ RSpec.feature 'Transcript Preview' do
 
       it 'shows the preview page' do
         expect(page).to have_text(transcript.title)
-        expect(page).to have_current_path(institution_transcript_path(
-          transcript.collection.institution.slug, transcript.collection.uid, transcript, preview: true)
+        expect(page).to have_current_path(
+          institution_transcript_path(transcript.collection.institution.slug, transcript.collection.uid, transcript, preview: true)
         )
       end
     end
 
-    context 'as a normal user' do
+    context 'when a normal user' do
       let(:user) { create(:user) }
 
       before do
@@ -47,8 +47,8 @@ RSpec.feature 'Transcript Preview' do
       end
 
       it "doesn't show the preview of the unpublished transcript" do
-        expect(page).to_not have_text(transcript.title)
-        expect(page).to_not have_text('Error 500 Internal server error')
+        expect(page).not_to have_text(transcript.title)
+        expect(page).not_to have_text('Error 500 Internal server error')
         expect(page).to have_current_path(transcript_path(transcript, preview: true))
       end
     end

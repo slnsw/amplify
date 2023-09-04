@@ -11,14 +11,16 @@ RSpec.feature 'Summary Page' do
       end
 
       it 'shows the summary page' do
-        expect(page).to have_text('Summary of Completion percentages')
+        expect(page).to have_text('Collection transcription progress')
+        expect(page).to have_text('Start date')
+        expect(page).to have_text('End date')
         expect(page).to have_current_path(admin_summary_index_path)
       end
 
       it 'shows an empty stats page' do
         expect(page).to have_text('Total number of items: 0')
         expect(page).to have_text('Total duration of items: 00h 00m 00s')
-        expect(page).to have_text('NaN %', count: 3)
+        expect(page).to have_text('0.00 %', count: 4)
 
         expect(page).to have_text('Disk usage')
         expect(page).to have_text('0 Bytes', count: 4)
@@ -28,11 +30,11 @@ RSpec.feature 'Summary Page' do
     context 'with collections and institutions' do
       let!(:institution) { create(:institution) }
       let!(:collection) { create(:collection, institution: institution) }
-      let!(:transcript) { create(:transcript, collection: collection, duration: 2000) }
+      let!(:transcript) { create(:transcript, collection: collection, duration: 2000, created_at: Date.new(2021, 11, 28)) }
 
       let!(:another_institution) { create(:institution) }
       let!(:another_collection) { create(:collection, institution: another_institution) }
-      let!(:another_transcript) { create(:transcript, collection: another_collection, duration: 1988) }
+      let!(:another_transcript) { create(:transcript, collection: another_collection, duration: 1988, created_at: Date.new(2021, 11, 24)) }
 
       before do
         sign_in admin
@@ -41,6 +43,17 @@ RSpec.feature 'Summary Page' do
 
       context 'viewing all stats' do
         it 'shows all stats on the page' do
+          expect(page).to have_text('Total number of items: 2')
+          expect(page).to have_text('Total duration of items: 01h 06m 28s')
+          expect(page).to have_text('Completed')
+          expect(page).to have_text('0.00 %')
+          expect(page).to have_text('Not yet started')
+        end
+      end
+
+      context 'when selecting a start_date' do
+        it 'filters the stats by date' do
+          fill_in 'start_date', with: '26112021'
           expect(page).to have_text('Total number of items: 2')
           expect(page).to have_text('Total duration of items: 01h 06m 28s')
           expect(page).to have_text('Completed')
@@ -55,6 +68,7 @@ RSpec.feature 'Summary Page' do
           expect(page).to have_text('Total duration of items: 00h 33m 20s')
           expect(page).to have_text('Completed')
           expect(page).to have_text('0.00 %')
+          expect(page).to have_text('Not yet started')
         end
 
         it 'shows the stats of the second institution' do

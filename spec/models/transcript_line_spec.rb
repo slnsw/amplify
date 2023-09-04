@@ -1,5 +1,6 @@
 RSpec.describe TranscriptLine, type: :model do
   describe "#recalculate" do
+    let(:admin) { create(:user, :admin) }
     let(:min_lines_for_consensus) { 2 }
     let(:institution) do
       FactoryBot.create :institution,
@@ -64,6 +65,21 @@ RSpec.describe TranscriptLine, type: :model do
 
         create_edit_and_recalculate("first")
         expect(transcript_line.transcript_line_status.name).to eq("completed")
+
+        create_edit_and_recalculate("second")
+        expect(transcript_line.text).to eq("first")
+
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: "third", user_id: admin.id
+        re_calculate
+        expect(transcript_line.text).to eq("third")
+
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: "first", user_id: admin.id
+        re_calculate
+        expect(transcript_line.text).to eq("first")
+
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: "fourth", user_id: admin.id
+        re_calculate
+        expect(transcript_line.text).to eq("fourth")
       end
     end
 
@@ -131,6 +147,27 @@ RSpec.describe TranscriptLine, type: :model do
       end
     end
     # rubocop:enable RSpec/ExampleLength: Example has too many lines
+  end
+
+  describe 'scopes' do
+    describe '#fuzzy_search' do
+      subject(:fuzzy_search) { TranscriptLine.fuzzy_search(keyword) }
+
+      let!(:jenna) do
+        FactoryBot.create :transcript_line, original_text: "And Jenna bent."
+      end
+      let(:jenni) do
+        FactoryBot.create :transcript_line, original_text: "who was Jennifer"
+      end
+
+      context 'when searching with jenna' do
+        let(:keyword) { "Jenna" }
+
+        it 'returns' do
+          expect(fuzzy_search).to contain_exactly(jenna, jenni)
+        end
+      end
+    end
   end
 
   private

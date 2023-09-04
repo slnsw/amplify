@@ -1,0 +1,58 @@
+<%= form_with(model: [:admin, site_alert], local: true) do |form| %>
+    <%= render 'layouts/cms_errors', object: site_alert %>
+  
+    <div class="form-group">
+      <%= form.label :level %>
+      <%= form.select :level, options_for_select(SiteAlert.levels.map{|k, v| [k, v]}), required: true, class: 'form-control' %>
+      <div class="alert-light" role="alert">
+        Specify the level of urgency indicated by this message.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :machine_name %>
+      <%= form.text_field :machine_name, class: 'form-control', required: true, maxlength: 50 %>
+      <div class="alert-light" role="alert">
+        * <strong>Machine name</strong> is a Unique Identifier assigned to each alert created in the database. They should have the created date within them, and have the following properties:
+        <br />
+        <ul>
+          <li>- be maximum 50 characters</li>
+          <li>- not have any spaces</li>
+          <li>- only include characters that are letters, numbers, underscore (_) and hyphen (-)</li>
+        </ul>
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <%= form.label :message %>
+      <%= form.text_area :message, class: 'form-control', 'data-provider': :summernote %>
+    </div>
+    <div class="form-check">
+      <%= form.check_box :published, class: 'form-check-input' %>
+      <%= form.label 'Publish version to live site', for: 'site_alert_published', class: 'form-check-label' %>
+    </div>
+
+    <% if false %>
+      <div class="form-check">
+        <%= form.check_box :admin_access, class: 'form-check-input' %>
+        <%= form.label 'Restrict access for public users', for: 'site_alert_admin_access', class: 'form-check-label' %>
+      </div>
+      <div class="form-check">
+        <%= form.check_box :scheduled, class: 'form-check-input' %>
+        <%= form.label 'Manage published state on schedule', for: 'site_alert_scheduled', class: 'form-check-label' %>
+      </div>
+      <div class="form-group">
+          <%= form.label :publish_at %>
+          <%= form.date_select :publish_at %>
+      </div>
+      <div class="form-group">
+          <%= form.label :unpublish_at %>
+          <%= form.date_select :unpublish_at %>
+      </div>
+    <% end %>
+  
+    <br />
+  
+    <%= form.submit 'Save', class: 'btn btn-primary' %>
+  <% end %>
+  

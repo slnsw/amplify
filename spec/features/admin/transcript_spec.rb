@@ -4,13 +4,23 @@ RSpec.feature 'Transcript Page', sidekiq: true do
   let(:admin) { create(:user, :admin) }
   let!(:collection) { create(:collection) }
   let(:status) { double("command execution status", :success? => true) }
+  let(:wav_file) { File.open(File.join(Rails.root, 'spec/fixtures/files/speech_to_text/aboutSpeechSdk.wav')) }
 
   describe 'upload an audio file as an admin', js: true do
-    before { sign_in admin }
+    before do
+      sign_in admin
+      allow(File).to receive(:open).and_call_original
+      allow(File).to receive(:open).with(
+        a_string_including(".wav")
+      ).and_return(wav_file)
+    end
 
     it 'shows the summary page' do
       stub_audio_file_convert
       stub_azure_speech_to_text status: status
+
+      allow_any_instance_of(Transcript).to receive(:update).and_call_original
+      allow_any_instance_of(Transcript).to receive(:update).with(audio: wav_file)
 
       visit admin_cms_path
       first('.fa-list').click

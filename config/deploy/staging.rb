@@ -1,8 +1,7 @@
-server 'ec2-52-63-16-71.ap-southeast-2.compute.amazonaws.com', user: 'deploy', roles: %w{web app db}
+server 'stage.amplify.gov.au', user: 'deploy', roles: %w{web app db}
 
 set :rails_env, 'staging'
-set :branch, 'develop'
-
+set :branch, ENV['BRANCH'] || 'develop'
 
 # server-based syntax
 # ======================
@@ -12,8 +11,6 @@ set :branch, 'develop'
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
-
-
 
 # role-based syntax
 # ==================
@@ -27,8 +24,6 @@ set :branch, 'develop'
 # role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
 # role :db,  %w{deploy@example.com}
 
-
-
 # Configuration
 # =============
 # You can set any configuration variable like in config/deploy.rb
@@ -36,8 +31,6 @@ set :branch, 'develop'
 # For available Capistrano configuration variables see the documentation page.
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
-
-
 
 # Custom SSH Options
 # ==================
@@ -65,3 +58,11 @@ set :branch, 'develop'
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
+
+ssh_keys = []
+ssh_keys = ssh_keys.push(ENV['DEPLOY_SSH_KEY']) if ENV['DEPLOY_SSH_KEY']
+set :ssh_options, {
+  keys: ssh_keys,
+  forward_agent: false,
+  keys_only: true
+}

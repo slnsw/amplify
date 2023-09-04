@@ -21,6 +21,5 @@ FactoryBot.define do
     trait :content_editor do
       association :user_role, factory: [:user_role, :content_editor]
     end
-
   end
 end

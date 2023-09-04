@@ -25,6 +25,8 @@
 //= require mobile_transcripts
 //= require jquery.Jcrop.min
 //= require select2
+//= require dashboard
+//= require site_alerts
 
 // Convert legacy thumbnails.
 (function () {

@@ -13,12 +13,21 @@
   </div>
   <div class="flex-container__edits_div">
     <div class="transcript-edits">
-       <% edits.each do |e| %>
+       <% edits.first(edits_min_display).each do |e| %>
          <div class="transcript-edit">
            <%= e.text %>
          </div>
        <% end %>
-     </div>
+    </div>
+    <% if edits.length > edits_min_display %>
+      <div class="transcript-edits collapsed" id="collapsed-<%= transcript.id %>">
+        <% edits[edits_min_display..-1].each do |e| %>
+            <div class="transcript-edit">
+              <%= e.text %>
+            </div>
+        <% end %>
+      </div>
+    <% end %>
   </div>
   <div class="flex-container__stats_div">
     <div class="stat-details">
@@ -38,8 +47,11 @@
         ~<%= time_in_seconds(edits.length)  %> of audio
       </h4>
     </div>
+    <% if edits.length > edits_min_display %>
+      <div class="text-center">
+        <%= link_to 'Expand', '#', class: "toggle-link", id: transcript.id %>
+      </div>
+    <% end %>
   </div>
 </div>
 <% end  %>
-
-

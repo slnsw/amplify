@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 require 'sidekiq/cron/web'
-Rails.application.routes.draw do
 
+Rails.application.routes.draw do
   namespace :admin do
     resources :institutions do
       resources :transcription_conventions
@@ -38,15 +38,17 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users,
+  devise_for(
+    :users,
     controllers: {
-    sessions: "users/sessions",
-    omniauth_callbacks: 'users/omniauth_callbacks',
-    registrations: "users/registrations",
-    passwords: "users/passwords"
-  }
+      sessions: "users/sessions",
+      omniauth_callbacks: 'users/omniauth_callbacks',
+      registrations: "users/registrations",
+      passwords: "users/passwords"
+    }
+  )
 
-  authenticate :user, lambda { |u| u.admin?  } do
+  authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
 
@@ -63,6 +65,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :update, :destroy]
     resources :transcripts, only: [:index]
     resources :flags, only: [:index]
+    resources :site_alerts
 
     get 'cms', to: 'cms#show'
     namespace :cms do
@@ -95,8 +98,7 @@ Rails.application.routes.draw do
   get 'v2/edit',   to: 'v2#edit'
   get 'v2/search', to: 'v2#search'
 
-  # root :to => 'default#index'
-  root :to => 'home#index'
+  root to: 'home#index'
 
   match '*path' => "institutions#index", via: [:get], as: :institution
 end

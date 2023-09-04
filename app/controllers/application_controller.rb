@@ -80,8 +80,6 @@ class ApplicationController < ActionController::Base
       institution = transcript.collection.institution.slug
 
       institution_transcript_path(institution: institution, collection: collection, id: transcript.uid)
-    elsif params[:redirect_uri].present?
-      params[:redirect_uri]
     else
       super
     end

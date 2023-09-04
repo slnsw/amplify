@@ -1,0 +1,47 @@
+<%= render partial: 'layouts/admin_side_pane' %>
+
+<h1>Site Alerts</h1>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Level</th>
+      <th scope="col">Message</th>
+      <th scope="col">Published</th>
+
+      <% if false %>
+        <th scope="col">Scheduled</th>
+      <% end %>
+
+      <th colspan="2" scope="col"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @site_alerts.each do |site_alert| %>
+      <tr>
+        <td><%= site_alert.level.capitalize %></td>
+        <td><%= site_alert.message %></td>
+        <td><%= site_alert.published %></td>
+
+        <% if false %>
+          <td><%= site_alert.scheduled %></td>
+        <% end %>
+
+        <td>
+          <%= link_to edit_admin_site_alert_path(site_alert)  do %>
+            <%= fa_icon "edit" %>
+          <% end %>
+        </td>
+        <td>
+          <%= button_to admin_site_alert_path(site_alert), data: {confirm: 'Are you sure you want to delete this site alert? This action cannot be undone.'}, method: :delete do %>
+            <%= fa_icon "trash" %>
+          <% end %>
+        </td>
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<%= link_to 'New Site Alert', new_admin_site_alert_path, class: 'btn btn-primary' %>

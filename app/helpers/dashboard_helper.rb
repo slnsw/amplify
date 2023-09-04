@@ -1,5 +1,4 @@
 module DashboardHelper
-
   def edited_info(edits)
     time = display_time(edits.count * Transcript.seconds_per_line)
     "<p>You have edited <strong>#{edits.count}</strong> lines in <strong>#{edits.map(&:transcript_id).uniq.count}</strong> transcripts and listened to about <strong>#{time}</strong> of audio!</p>"
@@ -24,5 +23,9 @@ module DashboardHelper
 
   def time_in_seconds(time)
     display_time(time.to_i * Transcript.seconds_per_line)
+  end
+
+  def edits_min_display
+    7 # assign to environment variable maybe?, so there will be no code change if client decides to change the minimum display
   end
 end

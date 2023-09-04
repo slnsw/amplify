@@ -1,0 +1,12 @@
+<div>
+    <% site_alerts.each do |alert| %>
+        <div class="site-alert site-alert--<%= alert.level %>" id="site-alert--<%= alert.machine_name %>">
+            <div class="site-alert__message">
+                <%= sanitize alert.message %>
+            </div>
+            <button type="button" class="site-alert__close button icon cross-black" aria-title="Close">
+                Close
+            </button>
+        </div>
+    <% end %>
+</div>

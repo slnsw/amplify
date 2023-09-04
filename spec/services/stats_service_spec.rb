@@ -35,16 +35,17 @@ RSpec.describe StatsService, type: :service do
     let!(:collection2) { create :collection, institution: institution }
 
     before do
-      create :transcript, collection: collection1, percent_completed: 100
-      create :transcript, collection: collection2, percent_completed: 100
-      create :transcript, collection: collection1, percent_reviewing: 50
-      create :transcript, collection: collection2, percent_edited: 50
+      create :transcript, collection: collection1, lines: 10, lines_completed: 10, lines_edited: 10, updated_at: Date.new(2021, 11, 11)
+      create :transcript, collection: collection2, lines: 10, lines_completed: 10, lines_edited: 10, updated_at: Date.new(2021, 11, 10)
+      create :transcript, collection: collection1, lines: 10, lines_completed: 5, lines_reviewing: 5, lines_edited: 10, updated_at: Date.new(2021, 11, 10)
+      create :transcript, collection: collection2, lines: 10, lines_completed: 5, lines_edited: 5, updated_at: Date.new(2021, 11, 10)
+      create :transcript, collection: collection1, lines: 10, lines_completed: 0, lines_reviewing: 0, lines_edited: 5, updated_at: Date.new(2021, 11, 10)
     end
 
     context "when viewing all" do
       it "shows stats for all" do
         expect(described_class.new(user).completion_stats).
-          to eq(completed: 50.0, in_draft: 25.0, in_review: 25.0, total: 4, duration: 0)
+          to eq(completed: 60.0, in_draft: 10.0, in_review: 10.0, total: 5, duration: 0, not_yet_started: 20.0)
       end
     end
 
@@ -52,7 +53,14 @@ RSpec.describe StatsService, type: :service do
       it "shows stats for collection" do
         expect(described_class.new(user).completion_stats(institution.id,
                                                           collection1.id)).
-          to eq(completed: 50.0, in_draft: 0.0, in_review: 50.0, total: 2, duration: 0)
+          to eq(completed: 50.0, in_draft: 16.67, in_review: 16.67, total: 3, duration: 0, not_yet_started: 16.67)
+      end
+    end
+
+    context "when filtering by date" do
+      it "filters data" do
+        expect(described_class.new(user, '2021-11-11', '2021-11-12').completion_stats).
+          to eq(completed: 100.0, in_draft: 0.0, in_review: 0.0, total: 1, duration: 0, not_yet_started: 0.0)
       end
     end
   end

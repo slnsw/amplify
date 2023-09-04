@@ -1,8 +1,5 @@
-.modal.show {
-  width: 400px;
-  height: 400px;
-  left: 33%;
-  top: -30%;
+.modal {
+  z-index: 2011;
 }
 #sn-checkbox-open-in-new-window {
   position: inherit;
@@ -58,4 +55,9 @@
 
 .alert-primary {
   padding: 5px 10px;
+}
+
+#users-tab a {
+  font-weight: bold;
+  font-size: 20px;
 }

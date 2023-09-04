@@ -8,6 +8,7 @@
       background_image_url = institution.hero_image_url.to_s
       title_text = institution.introductory_text
       logo = institution.image_url(:logo).to_s
+      url = institution.url
       logo_alt = "#{institution.name} logo"
     elsif defined?(app_config) && app_config.present?
       background_image_url = app_config.image_url.to_s
@@ -17,7 +18,14 @@
 <section class="main_hero home" style="background-image: url('<%= background_image_url %>')">
   <article class="main_hero__content">
     <header class="main_hero__header">
-      <%= image_tag logo, alt: logo_alt, width: 300 if logo.present? %>
+      <% if url.present? %>
+        <%= link_to url, target: :_blank do %>
+          <%= image_tag logo, alt: logo_alt, width: 300 if logo.present? %>
+        <% end %>
+      <% else %>
+        <%= image_tag logo, alt: logo_alt, width: 300 if logo.present? %>
+      <% end %>
+
       <h1 class="main_hero__title">
         <%= raw title_text %>
       </h1>

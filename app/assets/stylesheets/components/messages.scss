@@ -65,3 +65,50 @@
     opacity: 0;
   }
 }
+
+.site-alert {
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+
+  a {
+    font-weight: 700;
+  }
+
+  &--status {
+    background: #eee;
+    color: #333;
+
+    a {
+      color: #111;
+    }
+  }
+
+  &--warning {
+    background: #ff9;
+    color: #660;
+
+    a {
+      color: #330;
+    }
+  }
+
+  &--error {
+    background: #f99;
+    color: #900;
+
+    a {
+      color: #600;
+    }
+  }
+
+  &__message {
+    flex: 1 1 auto;
+  }
+
+  &__close {
+    flex: 0 0 auto;
+    border: 0 none;
+    background-color: transparent;
+  }
+}

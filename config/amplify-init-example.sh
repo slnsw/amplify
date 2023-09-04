@@ -13,7 +13,7 @@ RUNAS_UID=$(id -u $RUNAS)
 
 APP_DIR="/home/$RUNAS/nsw-state-library-amplify/current"
 RVM_BIN="/home/$RUNAS/.rvm/bin/rvm"
-RVM_RUBY="ruby-2.5.3"
+RVM_RUBY="ruby-3.0.0"
 PUMA_SCRIPT="/home/$RUNAS/nsw-state-library-amplify/shared/puma.rb"
 PUMA_STATE="/home/$RUNAS/nsw-state-library-amplify/shared/tmp/pids/puma.state"
 SIDEKIQ_SERVICE="sidekiq-staging.service"

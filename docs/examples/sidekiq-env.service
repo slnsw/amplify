@@ -6,7 +6,7 @@ After=syslog.target network.target
 Type=simple
 Environment=RAILS_ENV=yourenv
 WorkingDirectory=/home/deploy/nsw-state-library-amplify/current
-ExecStart=/bin/bash -lc '/home/deploy/.rvm/wrappers/ruby-2.5.0@nsl-rails5/bundle exec sidekiq -e yourenv'
+ExecStart=/bin/bash -lc '/home/deploy/.rvm/wrappers/ruby-3.0.0@global/bundle exec sidekiq -e yourenv'
 ExecReload=/bin/kill -TSTP $MAINPID
 ExecStop=/bin/kill -TERM $MAINPID
 

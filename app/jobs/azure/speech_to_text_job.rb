@@ -16,17 +16,25 @@ module Azure
         process_message: nil,
         process_started_at: Time.current
       )
-      lines = Azure::SpeechToTextService.new(file: file).recognize
-      ActiveRecord::Base.transaction do
-        transcript.transcript_lines.clear
-        lines.each do |line_attrbitues|
-          transcript.transcript_lines.create line_attrbitues
+
+      speech_to_text = Azure::SpeechToTextService.new(file: file).recognize
+      lines = speech_to_text.lines
+      wav_file = File.open(speech_to_text.wav_file_path)
+
+      if transcript.transcript_lines.count == 0
+        ActiveRecord::Base.transaction do
+          transcript.transcript_lines.clear
+          lines.each do |line_attrbitues|
+            transcript.transcript_lines.create(line_attrbitues)
+          end
+          transcript.update_columns(
+            lines: lines.length,
+            duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{file.to_s}`.to_i,
+          )
         end
-        transcript.update_columns(
-          lines: lines.length,
-          duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{file.to_s}`.to_i,
-        )
       end
+
+      transcript.update(audio: wav_file)
       transcript.update_columns(
         process_status: :completed,
         process_message: nil,
@@ -40,13 +48,21 @@ module Azure
       Bugsnag.notify e
     ensure
       File.delete file if file && File.exist?(file)
+      File.delete speech_to_text&.wav_file_path if File.exist?(speech_to_text&.wav_file_path.to_s)
     end
 
     def download(audio)
       audio.cache_stored_file!
-      Rails.root.join(
-        "public", audio.cache_dir, audio.cached?, audio.sanitized_file.filename
-      )
+      default_name = Rails.root.join("public", audio.cache_dir, audio.cached?, audio.sanitized_file.filename)
+      return default_name if default_name.to_s.size <= 150
+
+      extension = audio.sanitized_file.filename.split('.').last
+      new_random_name = SecureRandom.hex
+      new_name = Rails.root.join("public", audio.cache_dir, audio.cached?, "#{new_random_name}.#{extension}")
+
+      File.rename(default_name, new_name)
+
+      new_name
     end
   end
 end
