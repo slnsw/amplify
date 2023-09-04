@@ -23,4 +23,5 @@ COPY . .
 
 # CMD
 USER amplify
-ENTRYPOINT ["bundle", "exec", "pumactl", "-F", "config/puma.rb", "start"]
+RUN git config --global --add safe.directory /data
+ENTRYPOINT ["tail", "-f", "/dev/null"]

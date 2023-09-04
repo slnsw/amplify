@@ -8,6 +8,7 @@ services:
     build: ./docker/compose/nginx
     ports:
       - 8080:8080
+      - 3000:3000
       - 5432:5432
       - 8307:8307
     extra_hosts:
@@ -15,16 +16,33 @@ services:
     volumes:
       - ./:/data
 
-  # ruby-puma:
-  #   build: ./docker/compose/ruby-puma
-  #   network_mode: service:nginx
-  #   volumes:
-  #     - ./:/data
-  #   environment: {}
+  ruby-puma:
+    build:
+      context: .
+      dockerfile: ./docker/compose/ruby-puma/Dockerfile
+    network_mode: service:nginx
+    volumes:
+      - ./:/data
+    environment:
+      DB_HOST: 127.0.0.1
+      DB_NAME: postgresql
+      DB_USER: postgresql
+      DB_PASS: postgresql
 
   # CLI
 
-  # ruby-cli: {}
+  ruby-cli:
+    build:
+      context: .
+      dockerfile: ./docker/compose/ruby-cli/Dockerfile
+    network_mode: service:nginx
+    volumes:
+      - ./:/data
+    environment:
+      DB_HOST: 127.0.0.1
+      DB_NAME: postgresql
+      DB_USER: postgresql
+      DB_PASS: postgresql
 
   # Databases
 
@@ -38,6 +56,8 @@ services:
       - POSTGRESQL_POSTGRES_PASSWORD=postgresql
 
   # Services
+
+  # sidekiq:
 
   # ffmpeg:
   #   image: ffmpeg:4.1-alpine

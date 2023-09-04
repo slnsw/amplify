@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:3.18
 
 RUN adduser -D -u 1000 amplify
 RUN apk --update --no-cache add util-linux ca-certificates nginx
