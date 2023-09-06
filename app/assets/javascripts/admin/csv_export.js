@@ -3,7 +3,6 @@
         constructor(button) {
             this.button = button;
             this.page = 1;
-            this.limit = 2;
             this.stopped = true;
             this.pages = [];
         }
@@ -27,13 +26,19 @@
 
             const fetchURL = new URL(this.button.getAttribute('data-csv-export-path'), `${window.location.protocol}//${window.location.host}`)
             fetchURL.searchParams.set('page', this.page);
+            if ((document.querySelector('#start_date').value || '').length > 0) {
+                fetchURL.searchParams.set('start_date', document.querySelector('#start_date').value);   
+            }
+            if ((document.querySelector('#end_date').value || '').length > 0) {
+                fetchURL.searchParams.set('end_date', document.querySelector('#end_date').value);   
+            }
 
             fetch(fetchURL.toString())
                 .then((result) => result.text())
                 .then((text) => {
                     this.pages.push(text);
                     const lines = text.split("\n").filter(x => x && x.length).length;
-                    if (lines <= 1 || this.page >= this.limit) {
+                    if (lines <= 1) {
                         this.doStopped();
                     } else {
                         this.page += 1;
