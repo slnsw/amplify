@@ -19,6 +19,13 @@ Rails.application.routes.draw do
         get :institution
       end
     end
+    resources :reports, only: [:index] do
+      collection do
+        get :edits
+        get :transcripts
+        get :users
+      end
+    end
     resources :summary, only: [:index] do
       collection do
         get :details

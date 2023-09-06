@@ -1,3 +1,6 @@
+@import "../base/editor_mixins";
+@import "../base/editor_variables";
+
 .main_header {
   display: flex;
   align-items: center;
@@ -22,6 +25,72 @@
 
     @include tablet {
       flex: 0 0 auto;
+    }
+
+    .auth-link {
+      display: block;
+      width: 100%;
+      min-width: 240px;
+      padding: 10px;
+      line-height: 32px;
+      margin: 0;
+      text-align: left;
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      font-family: $font-family;
+      font-size: rem-calc(16);
+      font-weight: bold;
+
+      &:focus, &:hover, &.active {
+        border-bottom: 2px solid white;
+      }
+
+      &.auth-link--email {
+        background-color: $auth-email-background;
+        color: $auth-email-foreground;
+        .auth-link__logo {
+          background-image: $auth-link-email-icon;
+        }
+      }
+
+      &.auth-link--facebook {
+        background-color: $third-party-facebook-background;
+        color: $third-party-facebook-foreground;
+        .auth-link__logo {
+          background-image: $auth-link-facebook-icon;
+        }
+      }
+
+      &.auth-link--google {
+        background: $third-party-google-background;
+        color: $third-party-google-foreground;
+        .auth-link__logo {
+          background-image: $auth-link-google-icon;
+          margin: -4px 2px -4px -4px;
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+
+    .auth-link__logo {
+      display: inline-block;
+      background-size: contain;
+      background-position: top left;
+      background-repeat: no-repeat;
+      width: 32px;
+      height: 32px;
+      margin: 0;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    button {
+      &.auth-link {
+        border-top: 0 none;
+        border-right: 0 none;
+        border-left: 0 none;
+      }
     }
 
     a {
@@ -51,54 +120,11 @@
       }
 
       &.auth-link {
-        padding: 10px;
-        line-height: 32px;
         margin: 0;
-        text-decoration: none;
-        border-bottom: 2px solid transparent;
-        &:focus, &:hover, &.active {
-          border-bottom: 2px solid white;
-        }
-      }
-
-      .auth-link__logo {
-        display: inline-block;
-        background-size: contain;
-        background-position: top left;
-        background-repeat: no-repeat;
-        width: 32px;
-        height: 32px;
-        margin: 0;
-        vertical-align: middle;
-        margin-right: 6px;
-      }
-
-      &.auth-link--email {
-        background-color: $auth-email-background;
-        color: $auth-email-foreground;
-        .auth-link__logo {
-          background-image: $auth-link-email-icon;
-        }
-      }
-      &.auth-link--facebook {
-        background-color: $third-party-facebook-background;
-        color: $third-party-facebook-foreground;
-        .auth-link__logo {
-          background-image: $auth-link-facebook-icon;
-        }
-      }
-      &.auth-link--google {
-        background: $third-party-google-background;
-        color: $third-party-google-foreground;
-        .auth-link__logo {
-          background-image: $auth-link-google-icon;
-          margin: -4px 2px -4px -4px;
-          width: 40px;
-          height: 40px;
-        }
       }
     }
   }
+
   &__title {
     color: $header-text-active;
     font-size: rem-calc(16);

@@ -17,9 +17,21 @@
       <span id="sign-in-label" class="sign-in-copy">Track My Progress</span>
     </div>
     <div class="select-options account-menu menu" role="menu" aria-hidden="true" aria-labelledby="sign-in-label">
-      <a href="/users/sign_in" class="auth-link select-option menu-item" data-active="Signing In..." role="menuitem">Sign in w/ Email</a>
-      <a href="/users/auth/google_oauth2" data-provider="google" class="auth-link select-option menu-item" data-active="Signing In..." role="menuitem">Sign in w/ Google</a>
-      <a href="/users/auth/facebook" data-provider="facebook" class="auth-link select-option menu-item" data-active="Signing In..." role="menuitem">Sign in w/ Facebook</a>
+      <%= link_to "Sign in w/ Email", new_user_session_path,
+          method: :get, data-provider: 'email',
+          class: "auth-link select-option menu-item",
+          data-active: 'Signing In...', role: 'menuitem'
+        %>
+      <%= button_to "Sign in w/ Google", user_google_oauth2_omniauth_authorize_path,
+          method: :post, data-provider: 'google',
+          class: 'auth-link select-option menu-item',
+          data-active: 'Signing In...', role: 'menuitem'
+          %>
+      <%= button_to "Sign in w/ Facebook", user_facebook_omniauth_authorize_path,
+          method: :post, data-provider: 'facebook',
+          class: 'auth-link select-option menu-item',
+          data-active: 'Signing In...', role: 'menuitem'
+          %>
     </div>
   <% end %>
 </div>

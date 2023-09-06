@@ -18,8 +18,6 @@ class InstitutionsController < ApplicationController
     @disabled = true
 
     load_institution_footer
-  rescue ActiveRecord::RecordNotFound
-    render_404
   end
 
   private
@@ -50,13 +48,13 @@ class InstitutionsController < ApplicationController
     @global_content[:footer_links] = @institution.institution_links
   end
 
-  def render_404
-    respond_to do |format|
-      format.html { render file: "#{Rails.root}/public/404", layout: "public", status: :not_found }
-      format.xml  { head :not_found  }
-      format.any  { head :not_found  }
-    end
-  end
+  # def render_404
+  #   respond_to do |format|
+  #     format.html { render file: "#{Rails.root}/public/404", layout: "public", status: :not_found }
+  #     format.xml  { head :not_found  }
+  #     format.any  { head :not_found  }
+  #   end
+  # end
 
   def params_list
     list = params[:path].to_s.split("/")

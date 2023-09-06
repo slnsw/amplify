@@ -20,5 +20,5 @@ Rails.application.config.assets.paths << Rails.root.join("node_modules")
 Rails.application.config.assets.precompile += %w(
   admin.js admin.css search_auto_complete.css editor.js admin_base.css
   admin_base.js application_v2.css home.js search.js summernote-cleaner.js
-  collections.js stats.js summary.js transcripts.js editor.css
+  collections.js stats.js summary.js transcripts.js editor.css admin/csv_export.js
 )
