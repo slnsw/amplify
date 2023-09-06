@@ -56,7 +56,7 @@
               Sign in with Email
             <% end %>
             <% Project::getActive[:data]['authProviders'].each do |p| %>
-              <%= link_to oauth_url(p), method: :post, class: "dropdown-link auth-link auth-link--#{p['name']}", 'data-menu-level': 2 do %>
+              <%= button_to oauth_url(p), method: :post, class: "dropdown-link auth-link auth-link--#{p['name']}", 'data-menu-level': 2 do %>
                 <span class="auth-link__logo">&nbsp;</span>
                 Sign in with <%= p['label'] %>
               <% end %>
