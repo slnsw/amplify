@@ -1,0 +1,14 @@
+Username,Lines,Edits,Transcripts,Collections,Institutions,Time
+<%= CSV.generate { |csv|
+  @users[:results].each do |user|
+    csv << [
+        user[:name],
+        user[:lines],
+        user[:edits],
+        user[:transcripts],
+        user[:collections],
+        user[:institutions],
+        user[:time]
+    ]
+  end
+}.html_safe %>

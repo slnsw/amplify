@@ -1,0 +1,68 @@
+<%= render partial: 'layouts/admin_side_pane' %>
+
+<h1>Users</h1>
+
+<%= form_tag(users_admin_reports_path, {method: :get}) do %>
+    <div class="col">
+        <p><strong>Select date range:</strong></p>
+        <div class="form-group">
+            <label for="start_date">Start date:</label>
+            <%= date_field_tag :start_date, @start_date_str,
+                { max: Date.today.strftime("%Y-%m-%d") } %>
+        </div>
+        <div class="form-group">
+            <label for="end_date">End date:</label>
+            <%= date_field_tag :end_date, @end_date_str,
+                { max: Date.today.strftime("%Y-%m-%d") } %>
+        </div>
+    </div>
+    <div class="col">
+        <div class="form-group">
+            <label for="per_page">Per page:</label>
+            <%= select_tag :per_page, options_for_select(@per_page_options) %>
+        </div>
+    </div>
+    <%= submit_tag 'Filter' %>
+<% end %>
+
+<button type="button" data-csv-export-path="<%= users_admin_reports_path(format: :csv) %>">
+    Export all as CSV
+</button>
+<%= javascript_include_tag 'admin/csv_export' %>
+
+<p>
+    Found <%= @users[:total_items] %> users
+    with parameters <%= @users[:params] %>
+    and other params <%= params %>
+    and start date <%= @start_date %>
+    and end date <%= @end_date %>
+</p>
+
+<%= link_to "CSV", users_admin_reports_path(format: :csv) %>
+
+<table class="report-table">
+    <thead>
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Lines</th>
+            <th scope="col">Edits</th>
+            <th scope="col">Transcripts</th>
+            <th scope="col">Collections</th>
+            <th scope="col">Institutions</th>
+            <th scope="col">Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @users[:results].each do |u| %>
+            <tr>
+                <td><%= u[:name] %></td>
+                <td><%= u[:lines] %></td>
+                <td><%= u[:edits] %></td>
+                <td><%= u[:transcripts] %></td>
+                <td><%= u[:collections] %></td>
+                <td><%= u[:institutions] %></td>
+                <td><%= display_time u[:time] %></td>
+            </tr>
+        <% end%>
+    </tbody>
+</table>
