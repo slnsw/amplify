@@ -85,6 +85,7 @@ gem "devise", "~> 4.9.0"
 gem "oauth2", github: "oauth-xx/oauth2", ref: "v2.0.1"
 gem "omniauth-facebook", "~> 9.0.0"
 gem "omniauth-google-oauth2", "< 1.1.1"
+gem "omniauth-rails_csrf_protection"
 
 # Beef up security.
 gem "invisible_captcha", "~> 0.12.0"
