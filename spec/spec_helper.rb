@@ -22,6 +22,10 @@ SimpleCov.start do
   add_filter 'app/controllers/users/omniauth_callbacks_controller.rb'
   add_filter 'app/controllers/users/registrations_controller.rb'
   add_filter 'app/controllers/users/sessions_controller.rb'
+  # nothing to test here
+  add_filter 'app/decorators/admin/institution_decorator.rb'
+  add_filter 'app/decorators/institution_decorator.rb'
+  add_filter 'app/jobs/daily_analytics_job.rb'
 end
 SimpleCov.start 'rails'
 
