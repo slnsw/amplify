@@ -29,7 +29,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
-# gem "redis", "~> 4.0"
+gem "redis", "~> 4.0"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -54,7 +54,7 @@ gem "marcel", "~> 1.0.2"
 # Use PostgreSQL as the database for Active Record
 gem "pg", "~> 1.1.4"
 gem "pg_search", "~> 2.1.4"
-gem "will_paginate", "~> 3.1.6"
+gem "will_paginate", "~> 3.3.0"
 
 # Caching
 gem "dalli", "~> 2.7.9"
