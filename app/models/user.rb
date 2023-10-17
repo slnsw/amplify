@@ -76,10 +76,6 @@ class User < ApplicationRecord
     admin? || moderator?
   end
 
-  def self.getAll
-    User.order("lines_edited DESC").limit(1000)
-  end
-
   def self.orderByInstitution
     self.includes(:institution).order("institutions.name ASC NULLS FIRST").limit(1000)
   end

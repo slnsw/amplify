@@ -17,10 +17,11 @@
 @import "admin";
 @import "admin_cms";
 
+@import "components/will_paginate";
+
 @import "components/admin_main";
 @import "components/report";
 @import 'base/trumps';
 
 @import "speaker_autocomplete";
 @import "jquery.Jcrop.min";
-
