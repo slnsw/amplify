@@ -765,7 +765,7 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     webvtt-ruby (0.3.2)
-    will_paginate (3.1.8)
+    will_paginate (3.3.1)
     xml-simple (1.1.9)
       rexml
     xmlrpc (0.3.2)
@@ -872,7 +872,7 @@ DEPENDENCIES
   web-console
   webdrivers
   webvtt-ruby (~> 0.3.2)
-  will_paginate (~> 3.1.6)
+  will_paginate (~> 3.3.0)
 
 RUBY VERSION
    ruby 3.0.0p0

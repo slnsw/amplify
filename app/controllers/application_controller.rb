@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   before_action :load_footer
   before_action :set_ie_headers
   before_action :load_app_config
+  before_action :set_pagination_params
 
   helper_method :project_key
   helper_method :frontend_config
@@ -83,5 +84,10 @@ class ApplicationController < ActionController::Base
     else
       super
     end
+  end
+
+  def set_pagination_params
+    params[:page] ||= 1
+    params[:per_page] ||= 50
   end
 end
