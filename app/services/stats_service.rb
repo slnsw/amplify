@@ -8,18 +8,27 @@ class StatsService
   end
 
   def all_stats
-    {
-      transcript_edits: transcript_edits,
-      user_registration_stats: user_registrations,
-    }
+    cache_keys = [
+      'stats_service',
+      'all_stats',
+      @user.id,
+      @start_date.to_i,
+      @end_date.to_i
+    ]
+    Rails.cache.fetch(cache_keys, expires_in: 24.hours) do
+      {
+        transcript_edits: transcript_edits,
+        user_registration_stats: user_registrations,
+      }
+    end
   end
 
   def transcript_edits(institution_id = nil)
     {
-      all: get_stats_by_day(institution_id).length,
-      past_30_days: past_n_days(institution_id, 30).length,
-      past_7_days: past_n_days(institution_id, 7).length,
-      past_24_hours: past_n_days(institution_id, 1).length,
+      all: get_stats_by_day(institution_id).count,
+      past_30_days: past_n_days(institution_id, 30).count,
+      past_7_days: past_n_days(institution_id, 7).count,
+      past_24_hours: past_n_days(institution_id, 1).count,
     }
   end
 
@@ -47,10 +56,10 @@ class StatsService
 
   def user_registrations
     {
-      all: user_get_stats_by_day.length,
-      past_30_days: user_past_n_days(30).length,
-      past_7_days: user_past_n_days(7).length,
-      past_24_hours: user_past_n_days(1).length,
+      all: user_get_stats_by_day.count,
+      past_30_days: user_past_n_days(30).count,
+      past_7_days: user_past_n_days(7).count,
+      past_24_hours: user_past_n_days(1).count,
     }
   end
 

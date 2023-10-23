@@ -43,8 +43,7 @@ if Rails.env.production? || Rails.env.staging?
     limit: 10,
     period: 60.seconds,
   ) do |req|
-    if req.path.include?("/users") && req.post? &&
-        req.params["user"]["email"].presence
+    if req.path.include?("/users") && req.post? && req.params.dig('user', 'email')
       "#{req.ip},#{req.params['user']['email']}"
     end
   end

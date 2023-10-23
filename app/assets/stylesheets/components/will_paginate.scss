@@ -1,0 +1,62 @@
+.pagination {
+  margin-bottom: 16px;
+  background: white;
+  cursor: default;
+  a,
+  span,
+  em {
+    padding: 0.2em 0.5em;
+    display: block;
+    float: left;
+    margin: 0;
+    margin-right: 1px;
+    color: #212529 !important;
+  }
+  .disabled {
+    color: #999999;
+    border: 1px solid #dddddd;
+  }
+  .current {
+    font-style: normal;
+    font-weight: bold;
+    background: #212529;
+    color: white !important;
+    border: 1px solid #212529;
+  }
+  a {
+    text-decoration: none;
+    color: #105cb6;
+    border: 1px solid #212529;
+    &:hover,
+    &:focus {
+      color: #000033;
+      border-color: #000033;
+    }
+  }
+  .page_info {
+    background: #2e6ab1;
+    color: white;
+    padding: 0.4em 0.6em;
+    width: 22em;
+    margin-bottom: 0.3em;
+    text-align: center;
+    b {
+      color: #000033;
+      background: #212529 + 60;
+      padding: 0.1em 0.25em;
+    }
+  }/* self-clearing method:*/
+  &:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+  * html & {
+    height: 1%;
+  }
+  *:first-child + html & {
+    overflow: hidden;
+  }
+}

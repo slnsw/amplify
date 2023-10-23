@@ -14,7 +14,8 @@
 </ul>
 <div class="tab-content" id="users-content">
   <div class="tab-pane fade show active" id="registered" role="tabpanel" aria-labelledby="registered-tab">
-    <%= render "users", users: @users, user_roles: @user_roles, institutions: @institutions, can_delete: true %>
+    <%= render "users", users: @users.map(&:decorate), user_roles: @user_roles, institutions: @institutions, can_delete: true %>
+    <%= will_paginate @users %>
   </div>
   <div class="tab-pane fade" id="administrative" role="tabpanel" aria-labelledby="administrative-tab">
     <%= render "users", users: @staff, user_roles: @user_roles, institutions: @institutions, can_delete: false %>

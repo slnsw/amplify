@@ -1,0 +1,22 @@
+.report-table {
+    width: 100%;
+
+    thead {
+        th {
+            background-color: #ddd;
+            padding: 0.5rem;
+        }
+    }
+
+    tbody {
+        tr {
+            &:nth-child(2n + 1) {
+                background-color: #eee;
+            }
+
+            td {
+                padding: 0.5rem;
+            }
+        }
+    }
+}

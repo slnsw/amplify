@@ -76,10 +76,6 @@ class User < ApplicationRecord
     admin? || moderator?
   end
 
-  def self.getAll
-    User.order("lines_edited DESC").limit(1000)
-  end
-
   def self.orderByInstitution
     self.includes(:institution).order("institutions.name ASC NULLS FIRST").limit(1000)
   end
@@ -108,5 +104,45 @@ class User < ApplicationRecord
       user.save
     end
     user
+  end
+
+  def self.getReport(params)
+    users = User.all
+    if (params[:page])
+      params[:per_page] ||= 20
+      users = users.paginate(page: params[:page], per_page: params[:per_page])
+    end
+    {
+      params: params,
+      page_count: users.count,
+      total_items: User.all.count,
+      total_pages: (User.all.count / (params[:per_page] || 1)).ceil,
+      results: users.map { |u|
+        u.getUserReport({
+          start_date: params[:start_date],
+          end_date: params[:end_date]
+        })
+      }
+    }
+  end
+
+  def getUserReport(params)
+    edits = TranscriptEdit.where(user_id: id)
+    edits = edits.where("transcript_edits.updated_at >= ?", params[:start_date]) if (params[:start_date])
+    edits = edits.where("transcript_edits.updated_at <= ?", params[:end_date]) if (params[:end_date])
+    lines = edits.map { |e| e.transcript_line }.compact.uniq
+    transcripts = lines.map { |l| l.transcript }.compact.uniq
+    collections = transcripts.map { |t| t.collection }.compact.uniq
+    institutions = collections.map { |c| c.institution }.compact.uniq
+    time = edits.count * Transcript.seconds_per_line
+    {
+      name: name,
+      lines: lines.count,
+      edits: edits.count,
+      transcripts: transcripts.count,
+      collections: collections.count,
+      institutions: institutions.count,
+      time: time,
+    }
   end
 end
