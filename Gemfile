@@ -184,7 +184,7 @@ group :staging, :production do
 end
 
 # tracking errors
-gem "bugsnag", "~> 6.11.1"
+gem "bugsnag"
 gem "draper", "~> 4.0.2"
 gem 'nokogiri', '1.12.5'
 gem "sanitize", "~> 5.2.0"
