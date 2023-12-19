@@ -7,6 +7,8 @@ module HomeSearch
     params.permit(
       :sort_by, :search,
       :institution,
+      :page,
+      :per_page,
       themes: [],
       collections: []
     ).reject { |_, v| v.blank? }
