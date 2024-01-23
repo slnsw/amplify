@@ -7,7 +7,7 @@ class SearchController < ApplicationController
 
   def index
     @page_title = "Search"
-
+    build_params[:page] ||= 1
     @build_params = build_params
     @transcripts = TranscriptSearch.new(build_params).transcripts
     @themes = Theme.all.order(name: :asc)

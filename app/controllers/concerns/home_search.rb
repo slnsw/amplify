@@ -7,6 +7,8 @@ module HomeSearch
     params.permit(
       :sort_by, :search,
       :institution,
+      :page,
+      :per_page,
       themes: [],
       collections: []
     ).reject { |_, v| v.blank? }
@@ -14,8 +16,11 @@ module HomeSearch
 
   def build_params
     sort_params.reject do |_key, value|
-      value.blank? ||
-        (value&.first && (value.first.blank? || value.first == "0"))
+      return true if value.blank?
+
+      if value.is_a?(Array)
+        value.first.blank? || value.first == '0'
+      end
     end
   end
 

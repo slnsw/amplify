@@ -3,8 +3,8 @@ class TranscriptSearch
 
   def initialize(options)
     options[:page] ||= 1
+    options[:per_page] ||= 30
     project = Project.getActive
-    per_page = 500
     per_page = project[:data]["transcriptsPerPage"].to_i if project && project[:data]["transcriptsPerPage"]
     sort_order = "ASC"
     sort_order = "DESC" if options[:order].present? && options[:order].downcase=="desc"
@@ -25,7 +25,7 @@ class TranscriptSearch
         .joins('INNER JOIN institutions ON institutions.id = collections.institution_id')
 
       # Do the query
-      @transcripts = transcripts.fuzzy_search(options[:search])
+      @transcripts = @transcripts.fuzzy_search(options[:search])
 
     # else just normal search (title, description)
     else
@@ -38,8 +38,7 @@ class TranscriptSearch
 
     @transcripts = transcripts.where("transcripts.published_at IS NOT NULL")
     @transcripts = transcripts.where("collections.published_at IS NOT NULL")
-    # Paginate
-    @transcripts = transcripts.where("transcripts.project_uid = :project_uid", {project_uid: ENV['PROJECT_ID']}).paginate(:page => options[:page], :per_page => per_page)
+    @transcripts = transcripts.where("transcripts.project_uid = :project_uid", {project_uid: ENV['PROJECT_ID']})
 
     # Check for collection filter
     @transcripts = transcripts.where("collections.title in (?)", options[:collections]) if options[:collections].present?
@@ -54,5 +53,8 @@ class TranscriptSearch
 
     # Check for sort
     @transcripts = transcripts.order("transcripts.#{sort_by} #{sort_order}")
+
+    # paginate
+    @transcripts = @transcripts.paginate(:page => options[:page], :per_page => options[:per_page])
   end
 end

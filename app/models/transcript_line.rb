@@ -5,7 +5,12 @@ class TranscriptLine < ApplicationRecord
   pg_search_scope :search_by_all_text, :against => [:guess_text, :original_text] # User text weighted more than original text
   pg_search_scope :search_by_original_text, :against => :original_text
   pg_search_scope :search_by_guess_text, :against => :guess_text
-  pg_search_scope :fuzzy_search, :against => [:guess_text, :original_text], using: { dmetaphone: {} }
+  pg_search_scope :fuzzy_search, against: :guess_text,
+                  using: {
+                    trigram: {
+                      threshold: 0.1
+                    }
+                  }
   belongs_to :transcript_line_status, optional: true
   belongs_to :transcript, optional: true,touch: true
   has_many :transcript_edits
