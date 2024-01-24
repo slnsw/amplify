@@ -203,3 +203,6 @@ gem "sidekiq-cron", "~> 1.2.0"
 
 # Track object changes
 gem "paper_trail", "~> 10.3.1"
+
+# Sitemap generator'
+gem 'sitemap_generator'
