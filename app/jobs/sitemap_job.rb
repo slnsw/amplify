@@ -3,7 +3,7 @@ class SitemapJob < ApplicationJob
 
   def perform
     # Set the host name for URL creation
-		SitemapGenerator::Sitemap.default_host = "https://amplify.gov.au"
+		SitemapGenerator::Sitemap.default_host = ENV['SITEMAP_HOSTNAME'] || "https://amplify.gov.au"
 
 		SitemapGenerator::Sitemap.create do
 			# Put links creation logic here.

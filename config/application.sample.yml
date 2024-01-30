@@ -26,6 +26,7 @@ RACK_ATTACK_WHITELIST: ""
 # Used by speech-to-text.js
 SPEECH_TO_TEXT_KEY: Ask admin to obtain the subscription key from Azure portal -> Cognitive Services -> Keys and Endpoint
 SPEECH_TO_TEXT_REGION: Ask admin to obtain the region from Azure portal -> Cognitive Services -> Keys and Endpoint
+SITEMAP_HOSTNAME: 'https://amplify.gov.au'
 
 development:
   GOOGLE_CLIENT_ID: xxx
