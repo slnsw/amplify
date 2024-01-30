@@ -501,6 +501,8 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (9.2.2)
     nio4r (2.5.9)
+    nokogiri (1.12.5-arm64-darwin)
+      racc (~> 1.4)
     nokogiri (1.12.5-x86_64-linux)
       racc (~> 1.4)
     nokogumbo (2.0.5)
@@ -707,6 +709,8 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
+    sitemap_generator (6.3.0)
+      builder (~> 3.0)
     spring (4.1.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
@@ -860,6 +864,7 @@ DEPENDENCIES
   sidekiq (< 6)
   sidekiq-cron (~> 1.2.0)
   simplecov (~> 0.16.1)
+  sitemap_generator
   spring
   spring-commands-rspec
   sprockets-rails
