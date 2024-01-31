@@ -56,7 +56,5 @@ class SitemapJob < ApplicationJob
 				add institution_path(institution.slug), lastmod: institution.updated_at
 			end
 		end
-
-		SitemapGenerator::Sitemap.ping_search_engines
   end
 end
