@@ -10,4 +10,7 @@ class InstitutionDecorator < ApplicationDecorator
   #     end
   #   end
 
+  def path
+    "/#{slug}"
+  end
 end
