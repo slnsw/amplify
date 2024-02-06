@@ -25,6 +25,10 @@ class SitemapJob < ApplicationJob
       Collection.published.find_each do |collection|
         add collection.decorate.path
       end
+
+      Institution.slugged.find_each do |institution|
+        add institution.decorate.path
+      end
     end
   end
 end
