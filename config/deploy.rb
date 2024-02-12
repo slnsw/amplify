@@ -48,6 +48,7 @@ namespace :deploy do
           execute :rake, 'project:load[\'nsw-state-library-amplify\']'
           execute :rake, 'assets:precompile'
           execute :rake, 'cache:clear'
+          execute :rake, 'sitemap:generate'
         end
       end
     end
