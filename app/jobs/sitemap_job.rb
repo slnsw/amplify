@@ -10,8 +10,6 @@ class SitemapJob < ApplicationJob
       add '/page/about', priority: 0.3
       add '/page/faq', priority: 0.3
       add '/page/tutorial', priority: 0.3
-      add '/disclaimer', priority: 0.3
-      add '/right-to-information', priority: 0.3
 
       # All transcrips
       Transcript.find_each do |transcript|
