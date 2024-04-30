@@ -148,6 +148,38 @@ gulp sass js # Runs once
 Be sure to commit the changes to `public/assets/css` and
 `public/assets/js`.
 
+### Setting up with Docker
+This instruction assumes that you have installed docker successfully.
+Visit https://docs.docker.com/engine/install/ if you haven't
+
+```
+# setup .env file
+cp .env.sample .env
+
+# build the containers
+docker compose up --build -d
+
+# create and populate the database
+docker compose exec amplify rake db:create
+docker compose exec postgres psql -U postgres amplify-development < path/to/you/dump.sql
+
+# make sure you have the latest schema
+docker compose exec amplify rake db:migrate
+```
+
+Check the containers by running
+```
+docker ps -a
+```
+If you need to check for container logs
+```
+docker container logs <id of the container> --follow
+```
+
+If everything is done and working you are able to visit
+http://localhost:9090
+
+
 ## Generating your transcripts
 
 Amplify is integrated with Azure Cognitive Speech-to-Text service. And the process will be kicked off after user uploads an audio file.
