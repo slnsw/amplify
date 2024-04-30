@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: amplify-development
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    restart: always
+    volumes:
+      - amplify_pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
+  amplify:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "9090:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql://postgres@postgres:5432/amplify-development"
+      REDIS_URL: "redis://redis:6379/1"
+
+volumes:
+  amplify_pgdata:
