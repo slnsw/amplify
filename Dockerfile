@@ -7,11 +7,19 @@ WORKDIR /app
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install essential dependencies
-RUN apt-get update && apt-get install -y nodejs postgresql-client
+RUN apt-get update \
+    && apt-get install -y \
+        nodejs \
+        npm \
+        postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the Gemfile and Gemfile.lock into the image and install gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
+
+# Run npm install
+RUN npm install
 
 # Copy the rest of the application code into the image
 COPY . .
