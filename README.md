@@ -152,22 +152,48 @@ Be sure to commit the changes to `public/assets/css` and
 This instruction assumes that you have installed docker successfully.
 Visit https://docs.docker.com/engine/install/ if you haven't
 
+#### setup your environment variables
 ```
 # setup .env file
 cp .env.sample .env
+```
 
+##### place your dump file right outside you project directory and name it the directory as dump and the file as dump.sql
+```
+##### from project root
+cd ../
+mkdir dump
+cp <path to you dump file> dump/dump.sql
+```
+
+##### Back your project root path. Build the containers
+```
 # build the containers
 docker compose up --build -d
+```
 
-# create and populate the database
+##### create and populate the database
+```
 docker compose exec amplify rake db:create
-docker compose exec postgres psql -U postgres amplify-development < path/to/you/dump.sql
+docker compose exec postgres psql -U postgres amplify-development < /dump/dump.sql
 
-# make sure you have the latest schema
+# make sure you are in the latest schema
 docker compose exec amplify rake db:migrate
 ```
 
-Check the containers by running
+#### setup test environment
+```
+cp .env.sample .env.test
+docker compose exec -e RAILS_ENV=test amplify rake db:create
+docker compose exec -e amplify rake db:test:load
+```
+
+#### Run rspec
+```
+docker compose --env-file .env.test exec -e RAILS_ENV=test amplify rspec
+```
+
+##### Check the containers by running
 ```
 docker ps -a
 ```

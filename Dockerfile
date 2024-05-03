@@ -11,8 +11,13 @@ RUN apt-get update \
     && apt-get install -y \
         nodejs \
         npm \
+        chromium \
+        chromium-driver \
         postgresql-client \
     && rm -rf /var/lib/apt/lists/*
+
+# Set Chrome binary path
+ENV CHROME_BIN=/usr/bin/chromium
 
 # Copy the Gemfile and Gemfile.lock into the image and install gems
 COPY Gemfile Gemfile.lock ./
@@ -26,6 +31,3 @@ COPY . .
 
 # Expose port 3000 to the host
 EXPOSE 3000
-
-# Start the Rails server when the container starts
-CMD ["rails", "server", "-b", "0.0.0.0"]
