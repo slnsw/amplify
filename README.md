@@ -158,7 +158,7 @@ Visit https://docs.docker.com/engine/install/ if you haven't
 cp .env.sample .env
 ```
 
-##### place your dump file right outside you project directory and name it the directory as dump and the file as dump.sql
+##### place your db dump file right outside your project directory and name the directory as dump and the file as dump.sql
 ```
 ##### from project root
 cd ../
@@ -166,7 +166,7 @@ mkdir dump
 cp <path to you dump file> dump/dump.sql
 ```
 
-##### Back your project root path. Build the containers
+##### Back to your project root path. Build the containers
 ```
 # build the containers
 docker compose up --build -d
