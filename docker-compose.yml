@@ -31,10 +31,27 @@ services:
       - .:/app
     depends_on:
       - postgres
-      - redis
     env_file:
       - .env
     command: bundle exec rails s -b 0.0.0.0
+    environment:
+      DBUSER: postgres
+      DBHOST: postgres
+      DBPORT: 5432
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+    command: bundle exec sidekiq -c 2 -C config/sidekiq.yml
     environment:
       DBUSER: postgres
       DBHOST: postgres
