@@ -21,6 +21,9 @@ RUN bundle install
 # Run npm install
 RUN npm install
 
+# Precompile all assets
+RUN bundle exec assets:precompile
+
 # Copy ssl pem keys
 COPY /etc/letsencrypt/amplify.gov.au/fullchain.pem .
 COPY /etc/letsencrypt/amplify.gov.au/privkey.pem .
