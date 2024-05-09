@@ -11,8 +11,13 @@ RUN apt-get update \
     && apt-get install -y \
         nodejs \
         npm \
+        chromium \
+        chromium-driver \
         postgresql-client \
     && rm -rf /var/lib/apt/lists/*
+
+# Set Chrome binary path
+ENV CHROME_BIN=/usr/bin/chromium
 
 # Copy the Gemfile and Gemfile.lock into the image and install gems
 COPY Gemfile Gemfile.lock ./
@@ -20,10 +25,6 @@ RUN bundle install
 
 # Run npm install
 RUN npm install
-
-# Copy ssl pem keys
-COPY /etc/letsencrypt/amplify.gov.au/fullchain.pem .
-COPY /etc/letsencrypt/amplify.gov.au/privkey.pem .
 
 # Copy the rest of the application code into the image
 COPY . .

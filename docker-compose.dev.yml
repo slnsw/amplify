@@ -6,12 +6,13 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: amplify-production
-      POSTGRES_USER: ${DBUSER}
-      POSTGRES_PASSWORD: ${DBPASS}
+      POSTGRES_DB: amplify-development
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
     restart: always
     volumes:
-      - amplify_production_pgdata:/var/lib/postgresql/data
+      - amplify_pgdata:/var/lib/postgresql/data
+      - ../dump:/dump
 
   redis:
     image: redis:latest
@@ -26,15 +27,15 @@ services:
     restart: always
     ports:
       - "9090:3000"
+    volumes:
+      - .:/app
     depends_on:
       - postgres
     env_file:
       - .env
-    command: ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+    command: bundle exec rails s -b 0.0.0.0
     environment:
-      RAILS_ENV: production
-      DBUSER: ${DBUSER}
-      DBPASS: ${DBPASS}
+      DBUSER: postgres
       DBHOST: postgres
       DBPORT: 5432
 
@@ -43,6 +44,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
+    volumes:
+      - .:/app
     depends_on:
       - postgres
       - redis
@@ -50,21 +53,9 @@ services:
       - .env
     command: bundle exec sidekiq -c 2 -C config/sidekiq.yml
     environment:
-      DBUSER: ${DBUSER}
-      DBPASS: ${DBPASS}
+      DBUSER: postgres
+      DBHOST: postgres
       DBPORT: 5432
       REDIS_URL: "redis://redis:6379/1"
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./fullchain.pem:/etc/letsencrypt/amplify.gov.au/fullchain.pem
-      - ./privkey.pem:/etc/letsencrypt/amplify.gov.au/fullchain.pem
-    depends_on:
-      - amplify
-
 volumes:
-  amplify_production_pgdata:
+  amplify_pgdata:
