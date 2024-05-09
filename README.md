@@ -152,10 +152,11 @@ Be sure to commit the changes to `public/assets/css` and
 This instruction assumes that you have installed docker successfully.
 Visit https://docs.docker.com/engine/install/ if you haven't
 
-#### setup your environment variables
+#### setup your environment variables and database.yml
 ```
 # setup .env file
 cp .env.sample .env
+cp database.docker.sample.yml database.yml
 ```
 
 ##### place your db dump file right outside your project directory and name the directory as dump and the file as dump.sql
@@ -169,28 +170,28 @@ cp <path to you dump file> dump/dump.sql
 ##### Back to your project root path. Build the containers
 ```
 # build the containers
-docker compose up --build -d
+docker compose -f docker-compose.dev.yml up --build -d
 ```
 
 ##### create and populate the database
 ```
-docker compose exec amplify rake db:create
-docker compose exec postgres psql -U postgres amplify-development < /dump/dump.sql
+docker compose -f docker-compose.dev.yml exec amplify rake db:create
+docker compose -f docker-compose.dev.yml exec postgres psql -U postgres amplify-development < /dump/dump.sql
 
 # make sure you are in the latest schema
-docker compose exec amplify rake db:migrate
+docker compose -f docker-compose.dev.yml exec amplify rake db:migrate
 ```
 
 #### setup test environment
 ```
 cp .env.sample .env.test
-docker compose exec -e RAILS_ENV=test amplify rake db:create
-docker compose exec -e amplify rake db:test:load
+docker compose -f docker-compose.dev.yml exec -e RAILS_ENV=test amplify rake db:create
+docker compose -f docker-compose.dev.yml exec -e amplify rake db:test:load
 ```
 
 #### Run rspec
 ```
-docker compose --env-file .env.test exec -e RAILS_ENV=test amplify rspec
+docker compose -f docker-compose.dev.yml --env-file .env.test exec -e RAILS_ENV=test amplify rspec
 ```
 
 ##### Check the containers by running
