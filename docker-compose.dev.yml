@@ -23,7 +23,7 @@ services:
   amplify:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: always
     ports:
       - "9090:3000"
@@ -42,7 +42,7 @@ services:
   sidekiq:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: always
     volumes:
       - .:/app
