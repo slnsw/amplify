@@ -18,7 +18,7 @@ class SitemapJob < ApplicationJob
         add transcript.decorate.path
       end
 
-      Collection.published.find_each do |collection|
+      Collection.joins(:institution).where("institutions.hidden = ?", false).published.find_each do |collection|
         next unless collection.published?
 
         add collection.decorate.path
