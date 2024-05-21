@@ -41,7 +41,15 @@
       <% end %>
     <% end %>
   </td>
-
+  <td class="text-center">
+    <% if item.respond_to? :decorate %>
+      <% if item.decorate.respond_to? :absolute_url %>
+        <button onclick="window.copyLink('<%= item.decorate.absolute_url %>')">
+          <%= fa_icon "copy" %>
+        </button>
+      <% end %>
+    <% end %>
+  </td>
   <td class="text-center">
     <%= check_box_tag "transcript_ids[]", item.uid, nil, class: 'check' %>
   </td>

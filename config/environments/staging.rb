@@ -65,10 +65,12 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
 
+
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: ENV["DEFAULT_MAILER_HOST"] }
+  config.action_controller.default_url_options = { host: "stage.amplify.gov.au" }
 
   # Store uploaded files on the local file system in a temporary directory
   config.active_storage.service = :test
