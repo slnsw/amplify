@@ -5,6 +5,18 @@ class TranscriptDecorator < Draper::Decorator
     "/transcripts/#{institution.slug}/#{collection.uid}/#{object.uid}"
   end
 
+  def absolute_url
+    Rails.application.routes.url_helpers.url_for(
+      host: Rails.application.config.action_controller.default_url_options[:host],
+      controller: "transcripts",  
+      action: "show", 
+      institution: institution.slug,
+      collection: collection.uid,
+      id: object.uid,
+      only_path: false,
+    )
+  end
+
   def collection
     object.collection
   end

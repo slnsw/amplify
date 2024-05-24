@@ -13,4 +13,8 @@ class InstitutionDecorator < ApplicationDecorator
   def path
     "/#{slug}"
   end
+
+  def absolute_url
+    url
+  end
 end

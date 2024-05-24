@@ -12,19 +12,19 @@ class SitemapJob < ApplicationJob
       add '/page/tutorial', priority: 0.3
 
       # All transcrips
-      Transcript.find_each do |transcript|
+      Transcript.joins(collection: :institution).where("institutions.hidden = ?", false).find_each do |transcript|
         next unless transcript.published?
 
         add transcript.decorate.path
       end
 
-      Collection.published.find_each do |collection|
+      Collection.joins(:institution).where("institutions.hidden = ?", false).published.find_each do |collection|
         next unless collection.published?
 
         add collection.decorate.path
       end
 
-      Institution.slugged.find_each do |institution|
+      Institution.published.slugged.find_each do |institution|
         add institution.decorate.path
       end
     end
