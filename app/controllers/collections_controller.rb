@@ -9,7 +9,7 @@ class CollectionsController < ApplicationController
   # GET /collections.json
   def index
     @page_title = "Collections"
-    @institutions = Institution.all
+    @institutions = Institution.published
     @page = Page.find_by(page_type: "collections")&.public_page&.decorate
     @build_params = params
   end
