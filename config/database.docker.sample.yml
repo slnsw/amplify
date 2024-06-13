@@ -1,0 +1,26 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  host: <%= ENV.fetch('DBHOST', 'localhost') %>
+  username: <%= ENV.fetch('DBUSER', 'postgres') %>
+  password: <%= ENV.fetch('DBPASS', 'ABC12abc') %>
+  port: <%= ENV.fetch('DBPORT', 5432) %>
+
+development:
+  <<: *default
+  username: postgres
+  password: null
+  database: <%= ENV.fetch('DBNAME', 'amplify_development') %>
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  password: null
+  database: <%= ENV.fetch('DBNAME', 'amplify_test') %>
+
+production:
+  <<: *default
+  database: <%= ENV.fetch('DBNAME', 'amplify_production') %>

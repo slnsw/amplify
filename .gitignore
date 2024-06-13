@@ -9,6 +9,8 @@
 # Ignore bundler config.
 /.bundle
 .env
+.env.test
+.env.production
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
