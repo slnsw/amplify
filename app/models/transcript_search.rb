@@ -44,7 +44,7 @@ class TranscriptSearch
     @transcripts = transcripts.where("collections.title in (?)", options[:collections]) if options[:collections].present?
 
     # check for institution
-    @transcripts = transcripts.where("institutions.slug = '#{options[:institution]}'") if options[:institution].present?
+    @transcripts = transcripts.where("institutions.slug = ?", options[:institution]) if options[:institution].present?
 
     if options[:theme].present?
       @transcripts = transcripts.joins('inner join taggings on taggings.taggable_id = collections.id inner join tags on tags.id =  taggings.tag_id')

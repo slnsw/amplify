@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'shellwords'
 
 module Azure
   class SpeechToTextJob < ApplicationJob
@@ -29,7 +30,7 @@ module Azure
           end
           transcript.update_columns(
             lines: lines.length,
-            duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{file.to_s}`.to_i,
+            duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{Shellwords.escape(file.to_s)}`.to_i,
           )
         end
       end

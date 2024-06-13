@@ -116,6 +116,8 @@ GEM
       autoprefixer-rails (>= 6.0.3)
       popper_js (>= 1.12.9, < 2)
       sass (>= 3.5.2)
+    brakeman (6.1.2)
+      racc
     bugsnag (6.26.0)
       concurrent-ruby (~> 1.0)
     builder (3.2.4)
@@ -788,6 +790,7 @@ DEPENDENCIES
   bcrypt_pbkdf (~> 1.1)
   bootsnap
   bootstrap (~> 4.1.1)
+  brakeman
   bugsnag
   byebug (~> 11.0.0)
   capistrano (~> 3.17)

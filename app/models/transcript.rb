@@ -154,7 +154,7 @@ class Transcript < ApplicationRecord
     query = query.where("collections.title in (?)", params[:collections]) if params[:collections].present?
 
     # scope by institution
-    query = query.where("institutions.slug = '#{params[:institution]}'") if params[:institution].present?
+    query = query.where("institutions.slug = ?", params[:institution]) if params[:institution].present?
 
     # scope for theme
     # since the theme is coming from the dropdown, we can use it as is
