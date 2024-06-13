@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+FILENAME=$1
+
+POSTGRES_USERNAME="postgresql"
+POSTGRES_PASSWORD="postgresql"
+POSTGRES_COMMAND="psql -h localhost -U ${POSTGRES_USERNAME}"
+
+tar -xOf $FILENAME | \
+bash -xc "docker-compose -f docker-compose.yml exec -T -e PGPASSWORD=${POSTGRES_PASSWORD} postgresql-default ${POSTGRES_COMMAND}"
