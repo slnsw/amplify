@@ -3,20 +3,20 @@ class TranscriptSpeakerEditsController < ApplicationController
   before_action :authenticate_user, only: [:create]
 
   before_action :set_transcript_speaker_edit, only: [:show, :update, :destroy]
+  # Note (jonjon): As per the routes, only :create action is included
+  # # GET /transcript_speaker_edits.json
+  # def index
+  #   @transcript_speaker_edits = []
 
-  # GET /transcript_speaker_edits.json
-  def index
-    @transcript_speaker_edits = []
+  #   render json: @transcript_speaker_edits
+  # end
 
-    render json: @transcript_speaker_edits
-  end
+  # # GET /transcript_speaker_edits/1.json
+  # def show
+  #   @transcript_speaker_edit = nil
 
-  # GET /transcript_speaker_edits/1.json
-  def show
-    @transcript_speaker_edit = nil
-
-    render json: @transcript_speaker_edit
-  end
+  #   render json: @transcript_speaker_edit
+  # end
 
   # POST /transcript_speaker_edits.json
   def create
@@ -65,22 +65,22 @@ class TranscriptSpeakerEditsController < ApplicationController
   end
 
   # PATCH/PUT /transcript_speaker_edits/1.json
-  def update
-    @transcript_speaker_edit = TranscriptSpeakerEdit.find(params[:id])
+  # def update
+  #   @transcript_speaker_edit = TranscriptSpeakerEdit.find(params[:id])
 
-    if @transcript_speaker_edit.update(transcript_speaker_edit_params)
-      head :no_content
-    else
-      render json: @transcript_speaker_edit.errors, status: :unprocessable_entity
-    end
-  end
+  #   if @transcript_speaker_edit.update(transcript_speaker_edit_params)
+  #     head :no_content
+  #   else
+  #     render json: @transcript_speaker_edit.errors, status: :unprocessable_entity
+  #   end
+  # end
 
-  # DELETE /transcript_speaker_edits/1.json
-  def destroy
-    @transcript_speaker_edit.destroy
+  # # DELETE /transcript_speaker_edits/1.json
+  # def destroy
+  #   @transcript_speaker_edit.destroy
 
-    head :no_content
-  end
+  #   head :no_content
+  # end
 
   private
 

@@ -1,5 +1,6 @@
 class Admin::TranscriptsController < ApplicationController
   include ActionController::MimeResponds
+  include IndexTemplate
 
   before_action :authenticate_admin!
 

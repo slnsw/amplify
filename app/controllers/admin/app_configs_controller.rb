@@ -1,6 +1,4 @@
 class Admin::AppConfigsController < AdminController
-  def index; end
-
   def edit; end
 
   def update

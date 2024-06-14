@@ -83,22 +83,24 @@ class TranscriptEditsController < ApplicationController
   end
 
   # PATCH/PUT /transcript_edits/1.json
-  def update
-    @transcript_edit = TranscriptEdit.find(params[:id])
+  # Note (jonjon): As per routes, this action is not included
+  # def update
+  #   @transcript_edit = TranscriptEdit.find(params[:id])
 
-    if @transcript_edit.update(transcript_edit_params)
-      head :no_content
-    else
-      render json: @transcript_edit.errors, status: :unprocessable_entity
-    end
-  end
+  #   if @transcript_edit.update(transcript_edit_params)
+  #     head :no_content
+  #   else
+  #     render json: @transcript_edit.errors, status: :unprocessable_entity
+  #   end
+  # end
 
   # DELETE /transcript_edits/1.json
-  def destroy
-    @transcript_edit.destroy
+  # Note (jonjon): As per routes, this action is not included
+  # def destroy
+  #   @transcript_edit.destroy
 
-    head :no_content
-  end
+  #   head :no_content
+  # end
 
   private
 

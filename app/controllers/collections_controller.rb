@@ -21,32 +21,35 @@ class CollectionsController < ApplicationController
   # GET /collections/the-uid.json
   def show; end
 
-  # POST /collections.json
-  def create
-    @collection = Collection.new(collection_params)
+  # NOTE (jonjon): Based on routes.rb line 35
+  # these actions below is not being used anymore
 
-    if @collection.save
-      render json: @collection, status: :created, location: @collection
-    else
-      render json: @collection.errors, status: :unprocessable_entity
-    end
-  end
+  # POST /collections.json
+  # def create
+  #   @collection = Collection.new(collection_params)
+
+  #   if @collection.save
+  #     render json: @collection, status: :created, location: @collection
+  #   else
+  #     render json: @collection.errors, status: :unprocessable_entity
+  #   end
+  # end
 
   # PATCH/PUT /collections/the-uid.json
-  def update
-    if @collection.update(collection_params)
-      head :no_content
-    else
-      render json: @collection.errors, status: :unprocessable_entity
-    end
-  end
+  # def update
+  #   if @collection.update(collection_params)
+  #     head :no_content
+  #   else
+  #     render json: @collection.errors, status: :unprocessable_entity
+  #   end
+  # end
 
   # DELETE /collections//the-uid.json
-  def destroy
-    @collection.destroy
+  # def destroy
+  #   @collection.destroy
 
-    head :no_content
-  end
+  #   head :no_content
+  # end
 
   private
 

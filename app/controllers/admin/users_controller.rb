@@ -21,7 +21,9 @@ class Admin::UsersController < AdminController
   def destroy
     authorize User
 
-    unless @user.delete
+    if @user.delete
+      head :no_content
+    else
       render json: @user.errors, status: :unprocessable_entity
     end
   end
