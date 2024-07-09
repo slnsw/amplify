@@ -31,6 +31,8 @@ Rails.application.routes.draw do
         get :details
       end
     end
+    resources :analytics, only: [:index] do
+    end
   end
   resources :flags, only: [:index, :show, :create]
   resources :transcript_speaker_edits, only: [:create]
