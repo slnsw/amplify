@@ -11,7 +11,7 @@ class Api::Institutions::GuidsController < ActionController::Base
 
   def authenticate_request
     token = extract_bearer_token
-    if !token
+    if token != ENV['LOOKER_STUDIO_EXTERNAL_SECRET']
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end
   end
