@@ -2,6 +2,12 @@ require 'sidekiq/web'
 require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
+  namespace :api do
+    namespace :institutions do
+      resources :guids, only: [:index]
+    end
+  end
+
   namespace :admin do
     resources :institutions do
       resources :transcription_conventions
