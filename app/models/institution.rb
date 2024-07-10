@@ -61,6 +61,7 @@ class Institution < ApplicationRecord
     self.max_line_edits = min_lines_for_consensus
     self.min_lines_for_consensus_no_edits = min_lines_for_consensus
     self.min_percent_consensus = min_lines_for_consensus.to_f / (max_line_edits + 1).to_f
+    self.guid = SecureRandom.uuid unless guid.present?
   end
 
   def self.all_institution_disk_usage
