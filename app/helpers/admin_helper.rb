@@ -6,7 +6,7 @@ module AdminHelper
       OpenStruct.new(path: admin_users_path, icon: "users", text: "User", type: 2),
       OpenStruct.new(path: admin_cms_path, icon: "list-ul", text: "CMS", type: 2),
       OpenStruct.new(path: admin_summary_index_path, icon: "pie-chart", text: "Analytics", type: 1),
-      OpenStruct.new(path: admin_analytics_path, icon: "pie-chart", text: "Google Analytics", type: 4),
+      OpenStruct.new(path: admin_analytics_path, icon: "pie-chart", text: "Google Analytics", type: 4, hide: current_user&.institution.nil?),
       OpenStruct.new(path: admin_institutions_path, icon: "university", text: "Institutions", type: 2),
       OpenStruct.new(path: admin_pages_path, icon: "file", text: "Pages", type: 4),
       OpenStruct.new(path: admin_themes_path, icon: "paint-brush", text: "Themes", type: 4),
@@ -15,7 +15,7 @@ module AdminHelper
       OpenStruct.new(path: "/page/user_guide", icon: "question-circle", text: "User Guide", type: 2),
       OpenStruct.new(path: "/sidekiq", icon: "tasks", text: "Background queue", type: 4),
     ]
-    list.reject { |i| i.type > user_type }
+    list.reject { |i| i.type > user_type || i.hide }
   end
   # rubocop:enable Metrics/LineLength, Metrics/MethodLength, Metrics/AbcSize
 
