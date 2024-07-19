@@ -1,12 +1,13 @@
 module AdminHelper
   # rubocop:disable Metrics/LineLength, Metrics/MethodLength, Metrics/AbcSize
   def side_menu
+    feature_flag_ga = ENV['FEATURE_FLAG_GA'] || false
     list = [
       OpenStruct.new(path: "/admin", icon: "line-chart", text: "Dashboard", type: 1),
       OpenStruct.new(path: admin_users_path, icon: "users", text: "User", type: 2),
       OpenStruct.new(path: admin_cms_path, icon: "list-ul", text: "CMS", type: 2),
       OpenStruct.new(path: admin_summary_index_path, icon: "pie-chart", text: "Analytics", type: 1),
-      OpenStruct.new(path: admin_analytics_path, icon: "pie-chart", text: "Google Analytics", type: 2, hide: current_user&.institution.nil?),
+      OpenStruct.new(path: admin_analytics_path, icon: "pie-chart", text: "Google Analytics", type: 2, hide: !feature_flag_ga || current_user&.institution.nil?),
       OpenStruct.new(path: admin_institutions_path, icon: "university", text: "Institutions", type: 2),
       OpenStruct.new(path: admin_pages_path, icon: "file", text: "Pages", type: 4),
       OpenStruct.new(path: admin_themes_path, icon: "paint-brush", text: "Themes", type: 4),
