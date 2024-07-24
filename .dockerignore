@@ -1,0 +1,4 @@
+*.sql
+*.mp3
+*.wav
+.pgpass

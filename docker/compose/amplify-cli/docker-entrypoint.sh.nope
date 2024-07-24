@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Add local user
+# Either use the LOCAL_USER_ID if passed in at runtime or
+# fallback
+
+USER_ID=${LOCAL_USER_ID:-9001}
+
+echo "Starting with UID : $USER_ID"
+addgroup --gid $USER_ID amplify
+adduser --gecos "" \
+    --no-create-home --disabled-password \
+    --ingroup amplify \
+    --shell /bin/false --uid $USER_ID amplify
+export HOME=/app
+
+# echo 'eval "$(rbenv init -)"' >> ${HOME}/.bashrc
+
+# mkdir ${HOME}/git
+
+# exec /bin/bash
+sleep infinity

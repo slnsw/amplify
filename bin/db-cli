@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+psql -h $DBHOST -p $DBPORT -U $DBUSER amplify_development

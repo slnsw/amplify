@@ -23,7 +23,7 @@ services:
   amplify:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: docker/compose/amplify/Dockerfile.dev
     restart: always
     ports:
       - "9090:3000"
@@ -34,6 +34,22 @@ services:
     env_file:
       - .env
     command: bundle exec rails s -b 0.0.0.0
+    environment:
+      DBUSER: postgres
+      DBHOST: postgres
+      DBPORT: 5432
+
+  amplify-cli:
+    build:
+      context: .
+      dockerfile: docker/compose/amplify-cli/Dockerfile.dev
+    restart: always
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+    env_file:
+      - .env
     environment:
       DBUSER: postgres
       DBHOST: postgres

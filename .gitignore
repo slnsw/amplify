@@ -88,3 +88,9 @@ app/files/uploads/*
 /scratch/*
 !/scratch/.keep
 .vscode
+
+# SSL certs.
+/*.pem
+
+# pgpass.
+/.pgpass
