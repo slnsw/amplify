@@ -9,6 +9,8 @@
 # Ignore bundler config.
 /.bundle
 .env
+.env.test
+.env.production
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -86,3 +88,9 @@ app/files/uploads/*
 /scratch/*
 !/scratch/.keep
 .vscode
+
+# SSL certs.
+/*.pem
+
+# pgpass.
+/.pgpass

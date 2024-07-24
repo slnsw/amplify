@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+DB_DUMP=$1
+DOCKER_COMPOSE_FILE=${2:-docker-compose.yml}
+AMPLIFY_SERVICE="amplify"
+AMPLIFY_DB="amplify_development"
+
+if [ ! -f "$DB_DUMP" ]; then
+    echo "Database dump file $DB_DUMP does not exist."
+    exit 1
+fi
+
+docker_exec() {
+    CONTAINER=$1
+    COMMAND=$2
+    ENV_VARIABLES=${3:-}
+
+    echo "$COMMAND"
+    if [ -x docker-compose ]; then
+        docker-compose -f $DOCKER_COMPOSE_FILE exec -T $CONTAINER $COMMAND -e "$ENV_VARIABLES"
+    else
+        docker compose -f $DOCKER_COMPOSE_FILE exec -T $CONTAINER $COMMAND -e "$ENV_VARIABLES"
+    fi
+}
+
+if [[ $DB_DUMP == *.sql ]]; then
+    docker_exec $AMPLIFY_SERVICE "bundle exec rake db:drop db:create"
+    echo "Dropped db, importing dump..."
+    cat $DB_DUMP | docker_exec $AMPLIFY_SERVICE "bin/db-cli"
+else
+    echo "Don't know how to open database dump file $DB_DUMP"
+    exit 1
+fi

@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: amplify-development
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    restart: always
+    volumes:
+      - amplify_pgdata:/var/lib/postgresql/data
+      - ../dump:/dump
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
+  amplify:
+    build:
+      context: .
+      dockerfile: docker/compose/amplify/Dockerfile.dev
+    restart: always
+    ports:
+      - "9090:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    command: bundle exec rails s -b 0.0.0.0
+    environment:
+      DBUSER: postgres
+      DBHOST: postgres
+      DBPORT: 5432
+
+  amplify-cli:
+    build:
+      context: .
+      dockerfile: docker/compose/amplify-cli/Dockerfile.dev
+    restart: always
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    environment:
+      DBUSER: postgres
+      DBHOST: postgres
+      DBPORT: 5432
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: always
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+    command: bundle exec sidekiq -c 2 -C config/sidekiq.yml
+    environment:
+      DBUSER: postgres
+      DBHOST: postgres
+      DBPORT: 5432
+      REDIS_URL: "redis://redis:6379/1"
+volumes:
+  amplify_pgdata:

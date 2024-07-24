@@ -23,3 +23,9 @@ test:
 #   port: 5432
 #   pool: 5
 #   timeout: 5000
+
+
+# uncomment this if you run production with docker
+# production:
+#   <<: *default
+#   database: <%= ENV.fetch('DBNAME', 'amplify_production') %>

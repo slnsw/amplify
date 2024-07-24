@@ -482,6 +482,7 @@ GEM
     mime-types-data (3.2023.0218.1)
     mini_magick (4.12.0)
     mini_mime (1.1.2)
+    mini_portile2 (2.6.1)
     minitest (5.18.0)
     msgpack (1.7.1)
     multi_json (1.15.0)
@@ -501,6 +502,9 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (9.2.2)
     nio4r (2.5.9)
+    nokogiri (1.12.5)
+      mini_portile2 (~> 2.6.1)
+      racc (~> 1.4)
     nokogiri (1.12.5-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.12.5-x86_64-linux)
@@ -556,7 +560,7 @@ GEM
     pundit-matchers (1.6.0)
       rspec-rails (>= 3.0.0)
     raabro (1.4.0)
-    racc (1.6.2)
+    racc (1.7.3)
     rack (2.2.7)
     rack-attack (6.0.0)
       rack (>= 1.0, < 3)
@@ -636,7 +640,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.1.2)
-    rexml (3.2.5)
+    rexml (3.2.6)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.3)
@@ -685,7 +689,7 @@ GEM
       tilt (>= 1.1, < 3)
     seed_migration (1.2.3)
     select2-rails (4.0.13)
-    selenium-webdriver (4.9.1)
+    selenium-webdriver (4.10.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -721,7 +725,6 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.6.3-x86_64-linux)
     sshkit (1.21.4)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
@@ -759,12 +762,12 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webdrivers (5.2.0)
+    webdrivers (5.3.1)
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
-      selenium-webdriver (~> 4.0)
+      selenium-webdriver (~> 4.0, < 4.11)
     webrick (1.8.1)
-    websocket (1.2.9)
+    websocket (1.2.10)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -779,6 +782,8 @@ GEM
     zeitwerk (2.6.8)
 
 PLATFORMS
+  aarch64-linux
+  arm64-darwin-22
   x86_64-linux
 
 DEPENDENCIES
@@ -868,7 +873,6 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   sprockets-rails
-  sqlite3 (~> 1.4)
   stimulus-rails
   summernote-rails (= 0.8.10)
   turbo-rails
