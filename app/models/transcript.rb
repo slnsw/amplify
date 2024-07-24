@@ -147,7 +147,8 @@ class Transcript < ApplicationRecord
       select('transcripts.*, COALESCE(collections.title, \'\') as collection_title').
       joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id').
       joins('LEFT OUTER JOIN institutions ON institutions.id = collections.institution_id').
-      where("transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.published_at is NOT NULL and collections.published_at is NOT NULL", {project_uid: ENV['PROJECT_ID']})
+      where("transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.published_at is NOT NULL and collections.published_at is NOT NULL", {project_uid: ENV['PROJECT_ID']}).
+      where("institutions.hidden = ?", false)
 
     # scope by collection
     query = query.where("collections.title in (?)", params[:collections]) if params[:collections].present?

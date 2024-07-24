@@ -70,7 +70,7 @@ class Admin::InstitutionsController < AdminController
   def institution_params
     params.require(:institution).permit(
       :name, :url, :image, :slug, :hero_image,
-      :introductory_text, :min_lines_for_consensus
+      :introductory_text, :hidden, :min_lines_for_consensus
     )
   end
 

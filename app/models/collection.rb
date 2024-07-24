@@ -23,6 +23,7 @@ class Collection < ApplicationRecord
   attribute :collection_url_title, :string, default: ' View in Library catalogue'
 
   scope :by_institution, ->(institution_id) { where(institution_id: institution_id) }
+  scope :with_published_institution, -> { joins(:institution).where("institutions.hidden = false") }
 
   before_save :save_consensus_params, if: -> { min_lines_for_consensus.present? }
 

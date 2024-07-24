@@ -26,21 +26,22 @@ module HomeSearch
 
   def load_institutions
     @institutions = if sort_params[:collections].blank?
-                      Institution.all.joins(:collections).order(name: :asc).uniq
+                      Institution.published.joins(:collections).order(name: :asc).uniq
                     else
-                      Institution.order(name: :asc).joins(:collections).
+                      Institution.published.order(name: :asc).joins(:collections).
                         where("collections.title in (?)", sort_params[:collections])
                     end
   end
 
   def load_collections
-    collection = Collection.published.order(title: :asc)
+    collection = Collection.published.with_published_institution.order(title: :asc)
 
     @collection = if sort_params[:institution].blank?
                     collection
                   else
                     collection.joins(:institution).
-                      where("institutions.slug in (?)", sort_params[:institution])
+                      where("institutions.slug in (?)", sort_params[:institution]).
+                      where("institutions.hidden = false")
                   end
   end
 end
