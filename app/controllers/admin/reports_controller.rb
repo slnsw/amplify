@@ -55,6 +55,10 @@ class Admin::ReportsController < AdminController
       @page = params['page'].to_i unless params['page'].blank?
       @per_page = params['per_page'].to_i unless params['per_page'].blank?
 
+      @no_time = params['no_time'] || false
+      @no_institutions = params['no_institutions'] || false
+      @no_collections = params['no_collections'] || false
+
       @per_page_options = [
         [20, 20],
         [50, 50],

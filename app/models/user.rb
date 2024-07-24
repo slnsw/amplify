@@ -132,9 +132,12 @@ class User < ApplicationRecord
     edits = edits.where("transcript_edits.updated_at <= ?", params[:end_date]) if (params[:end_date])
     lines = edits.map { |e| e.transcript_line }.compact.uniq
     transcripts = lines.map { |l| l.transcript }.compact.uniq
-    collections = transcripts.map { |t| t.collection }.compact.uniq
-    institutions = collections.map { |c| c.institution }.compact.uniq
-    time = edits.count * Transcript.seconds_per_line
+    collections = []
+    collections = transcripts.map { |t| t.collection }.compact.uniq unless (params[:no_collections])
+    institutions = []
+    institutions = collections.map { |c| c.institution }.compact.uniq unless (params[:no_collections] || params[:no_institutions])
+    time = 0
+    time = edits.count * Transcript.seconds_per_line unless params[:no_time]
     {
       name: name,
       lines: lines.count,

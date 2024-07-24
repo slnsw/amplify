@@ -22,6 +22,25 @@
             <%= select_tag :per_page, options_for_select(@per_page_options) %>
         </div>
     </div>
+    <div class="col">
+        <div class="form-group">
+            <label for="no_time">Disable time:</label>
+            <%= checkbox_tag :no_time %>
+        </div>
+    </div>
+    <div class="col">
+        <div class="form-group">
+            <label for="no_institutions">Disable institutions:</label>
+            <%= checkbox_tag :no_institutions %>
+        </div>
+    </div>
+    <div class="col">
+        <div class="form-group">
+            <label for="no_collections">Disable no_collections:</label>
+            <%= checkbox_tag :no_collections %>
+        </div>
+    </div>
+
     <%= submit_tag 'Filter' %>
 <% end %>
 
