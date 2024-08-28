@@ -97,7 +97,7 @@ class Institution < ApplicationRecord
   def self.default_links
     [
       InstitutionLink.new(title: "Disclaimer", url: "https://www.sl.nsw.gov.au/disclaimer", position: 0),
-      InstitutionLink.new(title: "Privacy", url: " https://www.sl.nsw.gov.au/privacy", position: 1),
+      InstitutionLink.new(title: "Privacy", url: "https://www.sl.nsw.gov.au/privacy", position: 1),
       InstitutionLink.new(title: "Copyright", url: "https://www.sl.nsw.gov.au/copyright", position: 2),
       InstitutionLink.new(title: "Right to Information", url: "https://www.sl.nsw.gov.au/right-to-information", position: 3),
       InstitutionLink.new(title: "Website Accessibility", url: "https://www.sl.nsw.gov.au/website-accessibility", position: 4),
