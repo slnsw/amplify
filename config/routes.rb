@@ -2,6 +2,8 @@ require 'sidekiq/web'
 require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
+  post "/csp-violation-report-endpoint", to: "api/csp_reports#create"
+
   namespace :api do
     namespace :institutions do
       resources :guids, only: [:index]
