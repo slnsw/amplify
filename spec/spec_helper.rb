@@ -1,5 +1,8 @@
 require 'simplecov'
 require 'pundit/matchers'
+require 'dotenv'
+
+Dotenv.load('.env.test')
 
 SimpleCov.start
 SimpleCov.start 'rails'
