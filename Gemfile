@@ -161,6 +161,7 @@ group :development do
   gem "dotenv-rails", "~> 2.7.1"
   gem "letter_opener", "~> 1.7.0"
   gem "reinteractive-style", "~> 0.2.8"
+  gem "brakeman"
 end
 
 group :test do

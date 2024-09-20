@@ -1,0 +1,370 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "051162aab0db546c3b87124f0410bc25d8ec270f34606660f4bf40029e95d05e",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "app/views/home/_hero_content.html.erb",
+      "line": 22,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to(Institution.friendly.find(params_list[:institution_id]).url, :target => :_blank)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "InstitutionsController",
+          "method": "index",
+          "line": 21,
+          "file": "app/controllers/institutions_controller.rb",
+          "rendered": {
+            "name": "institutions/index",
+            "file": "app/views/institutions/index.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "institutions/index",
+          "line": 16,
+          "file": "app/views/institutions/index.html.erb",
+          "rendered": {
+            "name": "home/_hero_content",
+            "file": "app/views/home/_hero_content.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "home/_hero_content"
+      },
+      "user_input": "Institution.friendly.find(params_list[:institution_id]).url",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "this is   false positive"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "07890e885a3c5d10a0471d162d647c629de1b8bdaa5deab9f616f75635c0bea5",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/home/_hero_content.html.erb",
+      "line": 30,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "AppConfig.instance.main_title",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "HomeController",
+          "method": "index",
+          "line": 16,
+          "file": "app/controllers/home_controller.rb",
+          "rendered": {
+            "name": "home/index",
+            "file": "app/views/home/index.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "home/index",
+          "line": 16,
+          "file": "app/views/home/index.html.erb",
+          "rendered": {
+            "name": "home/_hero_content",
+            "file": "app/views/home/_hero_content.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "home/_hero_content"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "this is a false positive"
+    },
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "07ce493dae8c013b2a80e1ab6bead48fd9b8be6525b4e7c7462bdc3d0081315b",
+      "check_name": "FileAccess",
+      "message": "Model attribute used in file name",
+      "file": "app/jobs/azure/speech_to_text_job.rb",
+      "line": 23,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.open(Azure::SpeechToTextService.new(:file => download(Transcript.find(transcript_id).audio)).recognize.wav_file_path)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Azure::SpeechToTextJob",
+        "method": "perform"
+      },
+      "user_input": "Transcript.find(transcript_id).audio",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": "this is a false positive"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "1348142a619862e2005f2247d8dfaad3243a8afd343e95d5dfd90a30558c860d",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/admin/cms/collections/show.html.erb",
+      "line": 29,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Collection.find_by(:uid => params[:id]).description",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::Cms::CollectionsController",
+          "method": "show",
+          "line": 9,
+          "file": "app/controllers/admin/cms/collections_controller.rb",
+          "rendered": {
+            "name": "admin/cms/collections/show",
+            "file": "app/views/admin/cms/collections/show.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/cms/collections/show"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "this is a false positive"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "2f69dffe1d381869b952a07fe26d8960d986bb57fbc461842118ef40db514551",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/dashboard/_transcript_edits.html.erb",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "edited_info(TranscriptEdit.getByUser(current_user.id).joins(:transcript))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "DashboardController",
+          "method": "index",
+          "line": 7,
+          "file": "app/controllers/dashboard_controller.rb",
+          "rendered": {
+            "name": "dashboard/index",
+            "file": "app/views/dashboard/index.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "dashboard/index",
+          "line": 8,
+          "file": "app/views/dashboard/index.html.erb",
+          "rendered": {
+            "name": "dashboard/_transcript_edits",
+            "file": "app/views/dashboard/_transcript_edits.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "dashboard/_transcript_edits"
+      },
+      "user_input": "TranscriptEdit.getByUser(current_user.id).joins(:transcript)",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "this is a false positive"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "68ea688afd3527590ad1b69b687a26888ce660d7cb32835ab3395f0a3c3b2772",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/page/show.html.erb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Page.where(\"lower(page_type) = ?\", key.downcase).first.public_page.decorate.display_content",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PageController",
+          "method": "load_page",
+          "line": 37,
+          "file": "app/controllers/page_controller.rb",
+          "rendered": {
+            "name": "page/show",
+            "file": "app/views/page/show.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "page/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": "this is a false positive"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "c03c4a5e6f4a0476b7a58db260ba6e204d9fb66dd9acfa1e3f10844252c3b74f",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/shared/_footer.html.erb",
+      "line": 14,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Site.new.footer_content",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::CmsController",
+          "method": "show",
+          "line": 13,
+          "file": "app/controllers/admin/cms_controller.rb",
+          "rendered": {
+            "name": "layouts/cms",
+            "file": "app/views/layouts/cms.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "layouts/cms",
+          "line": 82,
+          "file": "app/views/layouts/cms.html.erb",
+          "rendered": {
+            "name": "shared/_footer",
+            "file": "app/views/shared/_footer.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "shared/_footer"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": "this is a false positrive"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "d75a00801bf64d3f5a3680f08973aa5dee40eb6b4ee0cee4f1ab8680a698a8f6",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/collections/index.html.erb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Page.find_by(:page_type => \"collections\").public_page.decorate.display_content",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "CollectionsController",
+          "method": "index",
+          "line": 15,
+          "file": "app/controllers/collections_controller.rb",
+          "rendered": {
+            "name": "collections/index",
+            "file": "app/views/collections/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "collections/index"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "this is a false positive"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "dcb264888ea7e909ea99ea328aa37c4b77193c7570e4c15fb2085a702f1b216b",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/home/_sub_hero_content.html.erb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "AppConfig.instance.intro_text",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "HomeController",
+          "method": "index",
+          "line": 16,
+          "file": "app/controllers/home_controller.rb",
+          "rendered": {
+            "name": "home/index",
+            "file": "app/views/home/index.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "home/index",
+          "line": 17,
+          "file": "app/views/home/index.html.erb",
+          "rendered": {
+            "name": "home/_sub_hero_content",
+            "file": "app/views/home/_sub_hero_content.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "home/_sub_hero_content"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "this is a false positive"
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 121,
+      "fingerprint": "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
+      "check_name": "EOLRuby",
+      "message": "Support for Ruby 3.0.0 ended on 2024-03-31",
+      "file": ".ruby-version",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        1104
+      ],
+      "note": ""
+    }
+  ],
+  "updated": "2024-04-03 03:53:58 +0800",
+  "brakeman_version": "6.1.2"
+}
