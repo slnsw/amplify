@@ -2,7 +2,7 @@ require 'capybara/rails'
 require 'capybara/rspec'
 require 'selenium/webdriver'
 
-Selenium::WebDriver::Chrome::Service.driver_path = '/usr/bin/chromedriver'
+Selenium::WebDriver::Chrome::Service.driver_path = ENV.fetch('CHROME_DRIVER_PATH', '/usr/bin/chromedriver')
 
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new app,

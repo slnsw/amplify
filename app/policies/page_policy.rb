@@ -14,6 +14,14 @@ class PagePolicy < ApplicationPolicy
     @user.isAdmin?
   end
 
+  def show?
+    @user.isAdmin?
+  end
+
+  def destroy?
+    @user.isAdmin?
+  end
+
   class Scope < Scope
     def resolve
       if @user.isAdmin?

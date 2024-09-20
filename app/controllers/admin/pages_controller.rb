@@ -1,19 +1,19 @@
 class Admin::PagesController < AdminController
+  include Authentication
+  
+  before_action :authenticate_admin!
   before_action :set_page, only: [:edit, :update, :destroy, :show]
+  before_action -> { authorize Page }
 
   def index
-    authorize Page
     @pages = policy_scope(Page).order(page_type: :asc)
   end
 
   def new
-    authorize Page
     @page = Page.new
   end
 
   def create
-    authorize Page
-
     @page = Page.new(page_params)
 
     if @page.save
