@@ -7,7 +7,7 @@ Rails.application.config.content_security_policy do |policy|
                       'https://*.googletagmanager.com',
                       'https://*.g.doubleclick.net',
                       'https://*.google.com',
-                      'https://*.google.au',
+                      'https://*.google.com.au',
                       :https,
                       :data
 
@@ -21,7 +21,7 @@ Rails.application.config.content_security_policy do |policy|
                       'https://*.googletagmanager.com',
                       'https://*.g.doubleclick.net',
                       'https://*.google.com',
-                      'https://*.google.au',
+                      'https://*.google.com.au',
                       :unsafe_inline,
                       :unsafe_eval
 
