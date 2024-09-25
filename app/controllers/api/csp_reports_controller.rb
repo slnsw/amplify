@@ -2,7 +2,7 @@ class Api::CspReportsController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   def create
-    CspLogger.info("CSP Violation: #{request.body.read}")
+    CSP_LOGGER.info("CSP Violation: #{request.body.read}")
     head :ok
   end
 
