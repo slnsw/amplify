@@ -1,5 +1,5 @@
 class TranscriptLinesController < ApplicationController
-
+  include LoggedInUserHelper
   skip_before_action :verify_authenticity_token, only: [:resolve]
 
   before_action :set_transcript_line, only: [:resolve]
@@ -16,10 +16,6 @@ class TranscriptLinesController < ApplicationController
   end
 
   private
-    def logged_in_user
-      warden.user
-    end
-
     def set_transcript_line
       @transcript_line = TranscriptLine.find(params[:id])
     end

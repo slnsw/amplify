@@ -91,3 +91,4 @@ class ApplicationController < ActionController::Base
     params[:per_page] ||= 50
   end
 end
+

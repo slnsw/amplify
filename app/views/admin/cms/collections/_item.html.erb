@@ -44,7 +44,7 @@
   <td class="text-center">
     <% if item.respond_to? :decorate %>
       <% if item.decorate.respond_to? :absolute_url %>
-        <button onclick="window.copyLink('<%= item.decorate.absolute_url %>')">
+        <button onclick="window.copyLink('<%= item.decorate.absolute_url %>?share_token=<%= share_token %>')">
           <%= fa_icon "copy" %>
         </button>
       <% end %>
