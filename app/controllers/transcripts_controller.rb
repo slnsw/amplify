@@ -1,4 +1,5 @@
 class TranscriptsController < ApplicationController
+  include LoggedInUserHelper
   layout "application_v2"
 
   skip_before_action :verify_authenticity_token, only: [:index, :search, :show]
@@ -102,7 +103,7 @@ class TranscriptsController < ApplicationController
   private
 
   def set_transcript
-    @transcript = TranscriptService.find_by_uid(params[:id])
+    @transcript = TranscriptService.find_by_uid(params[:id], true)
   end
 
   def set_transcript_for_show
@@ -115,13 +116,6 @@ class TranscriptsController < ApplicationController
 
   def search_params
     params.permit(:sort_by, :order, :collection_id, :q, :page, :deep)
-  end
-
-  # since we we using a combination of devise + rails and
-  # API authenticatoin (with backbone in transcript edits page)
-  # we need to check warden session here
-  def logged_in_user
-    warden.user
   end
 
   def collection
