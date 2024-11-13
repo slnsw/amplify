@@ -4,6 +4,7 @@ class Admin::UsersController < AdminController
 
   def index
     authorize User
+    params[:active_tab] ||= "registered"
   end
 
   # PATCH/PUT /admin/users/{id}.json
@@ -31,8 +32,11 @@ class Admin::UsersController < AdminController
   def load_collections
     @users = policy_scope(User).
       only_public_users.order("lines_edited DESC").
-      paginate(page: params[:page], per_page: params[:per_page])
-    @staff = policy_scope(User).only_staff_users.orderByInstitution.decorate
+      paginate(page: params[:user_page], per_page: params[:per_page])
+
+    @staff = policy_scope(User).only_staff_users.orderByInstitution.
+      paginate(page: params[:admin_page], per_page: params[:per_page])
+    @decorated_staff = @staff.decorate
     @user_roles = policy_scope(UserRole).getAll
     @institutions = policy_scope(Institution).all
   end
