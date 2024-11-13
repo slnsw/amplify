@@ -2,22 +2,23 @@
 
 <ul class="nav nav-tabs" id="users-tab" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" id="registered-tab" data-toggle="tab" href="#registered" role="tab" aria-controls="registered" aria-selected="true">
+    <a class="nav-link <%= params[:active_tab] == 'registered' ? 'active' : nil %>" id="registered-tab" data-toggle="tab" href="#registered" role="tab" aria-controls="registered" aria-selected="true">
       Registered Users
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="administrative-tab" data-toggle="tab" href="#administrative" role="tab" aria-controls="administrative" aria-selected="false">
+    <a class="nav-link <%= params[:active_tab] == 'administrative' ? 'active' : nil %>" id="administrative-tab" data-toggle="tab" href="#administrative" role="tab" aria-controls="administrative" aria-selected="false">
       Administrative Users
     </a>
   </li>
 </ul>
 <div class="tab-content" id="users-content">
-  <div class="tab-pane fade show active" id="registered" role="tabpanel" aria-labelledby="registered-tab">
+  <div class="tab-pane fade <%= params[:active_tab] == 'registered' ? 'show active' : nil %>" id="registered" role="tabpanel" aria-labelledby="registered-tab">
     <%= render "users", users: @users.map(&:decorate), user_roles: @user_roles, institutions: @institutions, can_delete: true %>
-    <%= will_paginate @users %>
+    <%= will_paginate @users, param_name: :user_page, params: { active_tab: 'registered' } %>
   </div>
-  <div class="tab-pane fade" id="administrative" role="tabpanel" aria-labelledby="administrative-tab">
-    <%= render "users", users: @staff, user_roles: @user_roles, institutions: @institutions, can_delete: false %>
+  <div class="tab-pane fade <%= params[:active_tab] == 'administrative' ? 'show active' : nil %>" id="administrative" role="tabpanel" aria-labelledby="administrative-tab">
+    <%= render "users", users: @decorated_staff, user_roles: @user_roles, institutions: @institutions, can_delete: false %>
+    <%= will_paginate @staff, param_name: :admin_page, params: { active_tab: 'administrative' } %>
   </div>
 </div>
