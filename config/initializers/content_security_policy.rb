@@ -1,13 +1,14 @@
 Rails.application.config.content_security_policy do |policy|
   policy.default_src  :self, :https
   policy.font_src     :self, :https, :data
-  policy.img_src      :self,
+  policy.img_src      :self, 'blob:', 'data:',
                       'https://*.google-analytics.com',
                       'https://*.analytics.google.com',
                       'https://*.googletagmanager.com',
                       'https://*.g.doubleclick.net',
                       'https://*.google.com',
                       'https://*.google.com.au',
+                      'https://graph.facebook.com',
                       :https,
                       :data
 
@@ -18,10 +19,11 @@ Rails.application.config.content_security_policy do |policy|
                       'https://*.googletagmanager.com',
                       'https://*.google-analytics.com',
                       'https://*.analytics.google.com',
-                      'https://*.googletagmanager.com',
                       'https://*.g.doubleclick.net',
                       'https://*.google.com',
                       'https://*.google.com.au',
+                      'https://connect.facebook.net',
+                      'https://platform.twitter.com',
                       :unsafe_inline,
                       :unsafe_eval
 
@@ -38,8 +40,8 @@ Rails.application.config.content_security_policy do |policy|
                       :https,
                       'https://td.doubleclick.net'
 
-  # Specify URI for violation reports
   policy.report_uri "/csp-violation-report-endpoint"
 end
 
+# Toggle report-only mode
 Rails.application.config.content_security_policy_report_only = true
