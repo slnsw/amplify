@@ -13,6 +13,8 @@ class TokenService
 
   # Method to decode the token
   def self.decode(token)
+    return if token.nil? || token == "null"
+
     decoded_token = JWT.decode(token, SECRET_KEY)[0] # Decode the payload
     HashWithIndifferentAccess.new(decoded_token) # Return decoded token with indifferent access
   rescue JWT::ExpiredSignature, JWT::VerificationError => e

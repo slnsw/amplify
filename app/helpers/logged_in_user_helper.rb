@@ -9,7 +9,7 @@ module LoggedInUserHelper
   def logged_in_user
     @logged_in_user ||= if params[:share_token].present?
                           decoded_token = TokenService.decode(params[:share_token])
-                          User.find(decoded_token[:user_id])
+                          User.find(decoded_token[:user_id]) if decoded_token
                         else
                           warden.user
                         end
