@@ -41,20 +41,15 @@ $(document).ready(function(){
   }
 
   function scrollDown() {
-    var results = $('#transcript-results');
-    if (results.length > 0) {
-      console.log('starting scroll to');
+    var results = document.querySelector('#transcript-results');
+    if (results) {
       setTimeout(function () {
-        document.querySelector('#transcript-results').scrollIntoView({
+        results.scrollIntoView({
           block: 'start',
           inline: 'start',
           behavior: 'smooth',
         });
       }, 0);
-      // var target  = results.offset().top;
-      // $('html, body').animate({
-      //   scrollTop: (target - 200)
-      // }, 1000);
     }
   }
 
