@@ -222,6 +222,11 @@ docker container logs <id of the container> --follow
 If everything is done and working you are able to visit
 http://localhost:9090
 
+#### Troubleshooting
+
+* `A server is already running. Check /app/tmp/pids/server.pid`  
+  Shut down the Docker container, empty out the `tmp/` directory, and restart.
+
 ## Generating your transcripts
 
 Amplify is integrated with Azure Cognitive Speech-to-Text service. And the process will be kicked off after user uploads an audio file.

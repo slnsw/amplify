@@ -94,3 +94,6 @@ app/files/uploads/*
 
 # pgpass.
 /.pgpass
+
+# Database,
+*.sql.gz

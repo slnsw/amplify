@@ -40,13 +40,21 @@ $(document).ready(function() {
     });
   }
 
-  function scrollDown(){
+  function scrollDown() {
     var results = $('#transcript-results');
-    if (results[0]) {
-      var target  = results.offset().top;
-      $('html, body').animate({
-        scrollTop: (target - 200)
-      }, 1000);
+    if (results.length > 0) {
+      console.log('starting scroll to');
+      setTimeout(function () {
+        document.querySelector('#transcript-results').scrollIntoView({
+          block: 'start',
+          inline: 'start',
+          behavior: 'smooth',
+        });
+      }, 0);
+      // var target  = results.offset().top;
+      // $('html, body').animate({
+      //   scrollTop: (target - 200)
+      // }, 1000);
     }
   }
 
