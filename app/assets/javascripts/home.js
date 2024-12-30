@@ -40,13 +40,16 @@ $(document).ready(function() {
     });
   }
 
-  function scrollDown(){
-    var results = $('#transcript-results');
-    if (results[0]) {
-      var target  = results.offset().top;
-      $('html, body').animate({
-        scrollTop: (target - 200)
-      }, 1000);
+  function scrollDown() {
+    var results = document.querySelector('#transcript-results');
+    if (results) {
+      setTimeout(function () {
+        results.scrollIntoView({
+          block: 'start',
+          inline: 'start',
+          behavior: 'smooth',
+        });
+      }, 0);
     }
   }
 

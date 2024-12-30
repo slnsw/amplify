@@ -2,6 +2,8 @@
 @import "../../base/editor_variables";
 
 .transcript-results {
+  scroll-margin-top: 200px;
+
   > p:first-child {
     text-align: center;
     font-style: italic;

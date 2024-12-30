@@ -32,3 +32,7 @@
 
 @import 'base/trumps';
 @import 'select2';
+
+// Kiosk CSS only.
+// .main_header, .site-alert, .main_hero, .sub_hero, .filter_bar__themes_filter, #institution_search, #collection_search, .main_footer, .sub_footer, .conventions-page, .text .text-input.desktop-only, .transcript-lines .line .speaker, .transcript-lines .line .status, .transcript-page > .page > *:not(p:last-child) { display: none }
+// .text .mobile-only.mobile-text { display: block }
