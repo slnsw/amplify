@@ -17487,7 +17487,11 @@ app.models.Transcript = Backbone.Model.extend({
     const shareToken = shareTokenMeta ? shareTokenMeta.getAttribute('content') : null;
 
     var id = this.get('uid') || this.id;
-    return API_URL + '/transcripts/'+id+'.json?share_token='+shareToken;
+    const urlObj = new URL('/transcripts/'+id+'.json', API_URL);
+    if (typeof shareToken === 'string' && shareToken.length > 0) {
+      urlObj.searchParams.set('share_token', shareToken);
+    }
+    return urlObj.toString();
   }
 
 });
