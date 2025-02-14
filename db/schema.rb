@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_09_023226) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_trgm"
@@ -345,8 +345,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_09_023226) do
     t.string "name", default: "", null: false
     t.integer "hiearchy", default: 0, null: false
     t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "transcribing_role", default: "registered_user"
     t.index ["name"], name: "index_user_roles_on_name", unique: true
   end
 
