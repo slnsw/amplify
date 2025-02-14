@@ -89,7 +89,19 @@ class TranscriptLine < ApplicationRecord
     # Filter out blank text or text that is the original text unless they are submitted by super users
     edits_filtered = []
     if edits.length > 0
-      edits_filtered = edits.select { |edit| !edit[:text].blank? && edit[:text] != original_text || edit[:user_hiearchy] >= consensus["superUserHiearchy"] }
+      edits_filtered = edits.select do |edit|
+        next unless edit[:text].present?
+
+        # only check for hierarchy if the
+        # user role has transcribing role of registered user
+        is_super_hierarchy = if edit[:transcribing_role] == "admin"
+                                true
+                              else
+                                edit[:user_hiearchy] >= consensus["superUserHiearchy"]
+                              end
+
+        edit[:text] != original_text || is_super_hierarchy
+      end
     end
 
     # Only original or blank text was found; use all edits
@@ -104,7 +116,15 @@ class TranscriptLine < ApplicationRecord
     end
 
     # Super users override all others
-    if status_id <= 1 && !best_edit.nil? && !best_edit[:edit].nil? && best_edit[:edit][:user_hiearchy] >= consensus["superUserHiearchy"]
+    # only check for hierarchy if the
+    # user role has transcribing role of registered user
+    is_super_hierarchy = if edit[:transcribing_role] == "admin"
+      true
+    else
+      best_edit[:edit][:user_hiearchy] >= consensus["superUserHiearchy"]
+    end
+
+    if best_edit.present? && status_id <= 1 && is_super_hierarchy
       completed_status = statuses.find { |s| s[:name] == "completed" }
       status_id = completed_status[:id]
       final_text = best_guess_text
