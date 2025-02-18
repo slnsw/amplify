@@ -1,0 +1,24 @@
+<%= form_for @user_role, url: admin_profile_path(id: current_user), html: { method: :patch } do |f| %>
+  <p>Active role for transcribing:</p>
+
+  <div>
+    <%= f.radio_button :transcribing_role, "admin" %>
+    <%= f.label :transcribing_role, "Admin user", value: "admin" %>
+  </div>
+
+  <div>
+    <%= f.radio_button :transcribing_role, "registered_user" %>
+    <%= f.label :transcribing_role, "Registered user", value: "registered" %>
+  </div>
+
+  <p>
+    As an Admin user, any updates you make to transcripts are immediately approved and do not go through the usual consensus workflow.
+    If you choose to change your role to Registered user, all content updates will use the consensus workflow.
+  </p>
+
+  <div>
+    <%= f.hidden_field :commit, value: "update_transcribing_role" %>
+    <%= f.submit "Save Profile", class: "btn btn-primary" %>
+    <%= link_to "Cancel", admin_profiles_path, class: "btn" %>
+  </div>
+<% end %>
