@@ -14,6 +14,14 @@ FactoryBot.define do
       association :user_role, factory: [:user_role, :admin]
     end
 
+    trait :admin_with_admin_transcribing_role do
+      association :user_role, factory: [:user_role, :admin_with_admin_transcribing_role]
+    end
+
+    trait :admin_with_registed_user_transcribing_role do
+      association :user_role, factory: [:user_role, :admin_with_registed_user_transcribing_role]
+    end
+
     trait :moderator do
       association :user_role, factory: [:user_role, :moderator]
     end

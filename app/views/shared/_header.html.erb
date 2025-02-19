@@ -48,6 +48,7 @@
             <%= link_to "Dashboard", "/dashboard", class: "dropdown-link", 'data-menu-level': 2 %>
             <% if current_user.staff? %>
               <%= link_to "Admin Portal", "/admin", class: "dropdown-link", 'data-menu-level': 2 %>
+              <%= link_to "Edit My Profiles", admin_profiles_path, class: "dropdown-link", 'data-menu-level': 2 %>
             <% end %>
             <%= link_to 'Sign out', destroy_user_session_path, class: "dropdown-link", 'data-menu-level': 2 %>
           <% else %>

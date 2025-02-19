@@ -104,10 +104,15 @@ class TranscriptLine < ApplicationRecord
     end
 
     # Super users override all others
-    if status_id <= 1 && !best_edit.nil? && !best_edit[:edit].nil? && best_edit[:edit][:user_hiearchy] >= consensus["superUserHiearchy"]
-      completed_status = statuses.find { |s| s[:name] == "completed" }
-      status_id = completed_status[:id]
-      final_text = best_guess_text
+    if status_id <= 1 && best_edit&.dig(:edit)
+      transcript_edit = best_edit[:edit]
+      is_admin_transcribing_role = transcript_edit[:transcribing_role] == "admin"
+
+      if is_admin_transcribing_role
+        completed_status = statuses.find { |s| s[:name] == "completed" }
+        status_id = completed_status[:id] if completed_status
+        final_text = best_guess_text
+      end
     end
 
     # Candidate for consensus

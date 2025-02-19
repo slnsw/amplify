@@ -108,6 +108,7 @@ class TranscriptsController < ApplicationController
 
   def set_transcript_for_show
     @transcript = TranscriptService.find_by_uid_for_admin(params[:id], logged_in_user)
+    raise ActiveRecord::RecordNotFound unless @transcript.present?
   end
 
   def transcript_params

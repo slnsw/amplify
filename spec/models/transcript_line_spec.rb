@@ -53,8 +53,31 @@ RSpec.describe TranscriptLine, type: :model do
       end
     end
 
+    context "when with admin with admin transcribing role" do
+      let!(:min_lines_for_consensus) { 2 }
+      let(:admin) { create(:user, :admin_with_admin_transcribing_role) }
+
+      it "bypass concensus, status is set to completed" do
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: "first", user_id: admin.id
+        re_calculate
+        expect(transcript_line.transcript_line_status.name).to eq("completed")
+      end
+    end
+
+    context "when with admin with registed user transcribing role" do
+      let!(:min_lines_for_consensus) { 2 }
+      let(:admin) { create(:user, :admin_with_registed_user_transcribing_role) }
+
+      it "bypass concensus, status is set to completed" do
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: "first", user_id: admin.id
+        re_calculate
+        expect(transcript_line.transcript_line_status.name).to eq("editing")
+      end
+    end
+
     context "when verifying with 2 min_lines_for_consensus" do
       let!(:min_lines_for_consensus) { 2 }
+      let(:admin) { create(:user, :admin_with_admin_transcribing_role) }
 
       it "third selection should make the line as completed" do
         create_edit_and_recalculate("first")
@@ -67,7 +90,7 @@ RSpec.describe TranscriptLine, type: :model do
         expect(transcript_line.transcript_line_status.name).to eq("completed")
 
         create_edit_and_recalculate("second")
-        expect(transcript_line.text).to eq("first")
+        expect(transcript_line.text).to eq("second")
 
         FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: "third", user_id: admin.id
         re_calculate

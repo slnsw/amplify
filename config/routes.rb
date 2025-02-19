@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resources :profiles, only: [:index, :update]
+
     resources :institutions do
       resources :transcription_conventions
     end
