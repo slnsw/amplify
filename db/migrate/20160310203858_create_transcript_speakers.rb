@@ -1,4 +1,4 @@
-class CreateTranscriptSpeakers < ActiveRecord::Migration
+class CreateTranscriptSpeakers < ActiveRecord::Migration[7.0]
   def change
     create_table :transcript_speakers do |t|
       t.integer :speaker_id, :null => false, :default => 0

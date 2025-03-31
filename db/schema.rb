@@ -28,11 +28,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
 
   create_table "cms_image_uploads", force: :cascade do |t|
     t.string "image"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "collections", id: :serial, force: :cascade do |t|
+  create_table "collections", force: :cascade do |t|
     t.string "uid", default: "", null: false
     t.string "title"
     t.text "description"
@@ -58,7 +58,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.index ["vendor_id"], name: "index_collections_on_vendor_id"
   end
 
-  create_table "flag_types", id: :serial, force: :cascade do |t|
+  create_table "flag_types", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "label", default: "", null: false
     t.string "description", default: "", null: false
@@ -67,7 +67,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.index ["name"], name: "index_flag_types_on_name", unique: true
   end
 
-  create_table "flags", id: :serial, force: :cascade do |t|
+  create_table "flags", force: :cascade do |t|
     t.integer "transcript_id", default: 0, null: false
     t.integer "transcript_line_id", default: 0, null: false
     t.integer "user_id", default: 0, null: false
@@ -88,15 +88,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.string "title"
     t.string "url"
     t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["institution_id"], name: "index_institution_links_on_institution_id"
   end
 
   create_table "institutions", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "slug"
     t.string "url"
     t.string "image"
@@ -116,29 +116,29 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
   create_table "pages", force: :cascade do |t|
     t.text "content"
     t.string "page_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "published", default: false
     t.boolean "admin_access", default: false
   end
 
-  create_table "pg_search_documents", id: :serial, force: :cascade do |t|
+  create_table "pg_search_documents", force: :cascade do |t|
     t.text "content"
-    t.integer "searchable_id"
     t.string "searchable_type"
+    t.bigint "searchable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
   create_table "public_pages", force: :cascade do |t|
     t.integer "page_id"
     t.string "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "seed_migration_data_migrations", id: :serial, force: :cascade do |t|
+  create_table "seed_migration_data_migrations", force: :cascade do |t|
     t.string "version"
     t.integer "runtime"
     t.datetime "migrated_on"
@@ -152,14 +152,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.boolean "published", default: false
     t.boolean "admin_access", default: false
     t.boolean "scheduled", default: false
-    t.datetime "publish_at"
-    t.datetime "unpublish_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "publish_at", precision: nil
+    t.datetime "unpublish_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["machine_name"], name: "index_site_alerts_on_machine_name", unique: true
   end
 
-  create_table "speakers", id: :serial, force: :cascade do |t|
+  create_table "speakers", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -172,7 +172,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.string "tagger_type"
     t.integer "tagger_id"
     t.string "context", limit: 128
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -192,12 +192,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
 
   create_table "themes", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_themes_on_name"
   end
 
-  create_table "transcript_edits", id: :serial, force: :cascade do |t|
+  create_table "transcript_edits", force: :cascade do |t|
     t.integer "transcript_id", default: 0, null: false
     t.integer "transcript_line_id", default: 0, null: false
     t.integer "user_id", default: 0, null: false
@@ -214,14 +214,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.index ["user_id"], name: "index_transcript_edits_on_user_id"
   end
 
-  create_table "transcript_line_statuses", id: :serial, force: :cascade do |t|
+  create_table "transcript_line_statuses", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "progress", default: 0, null: false
     t.string "description"
     t.index ["name"], name: "index_transcript_line_statuses_on_name", unique: true
   end
 
-  create_table "transcript_lines", id: :serial, force: :cascade do |t|
+  create_table "transcript_lines", force: :cascade do |t|
     t.integer "transcript_id", default: 0, null: false
     t.integer "start_time", default: 0, null: false
     t.integer "end_time", default: 0, null: false
@@ -241,7 +241,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.index ["transcript_line_status_id"], name: "index_transcript_lines_on_transcript_line_status_id"
   end
 
-  create_table "transcript_speaker_edits", id: :serial, force: :cascade do |t|
+  create_table "transcript_speaker_edits", force: :cascade do |t|
     t.integer "transcript_id", default: 0, null: false
     t.integer "transcript_line_id", default: 0, null: false
     t.integer "user_id", default: 0, null: false
@@ -254,7 +254,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.index ["user_id"], name: "index_transcript_speaker_edits_on_user_id"
   end
 
-  create_table "transcript_speakers", id: :serial, force: :cascade do |t|
+  create_table "transcript_speakers", force: :cascade do |t|
     t.integer "speaker_id", default: 0, null: false
     t.integer "transcript_id", default: 0, null: false
     t.integer "collection_id", default: 0, null: false
@@ -264,7 +264,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.index ["speaker_id", "transcript_id"], name: "index_transcript_speakers_on_speaker_id_and_transcript_id", unique: true
   end
 
-  create_table "transcript_statuses", id: :serial, force: :cascade do |t|
+  create_table "transcript_statuses", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "progress", default: 0, null: false
     t.string "description"
@@ -278,11 +278,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.string "convention_text"
     t.string "example"
     t.integer "institution_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "transcripts", id: :serial, force: :cascade do |t|
+  create_table "transcripts", force: :cascade do |t|
     t.string "uid", default: "", null: false
     t.string "title"
     t.text "description"
@@ -303,7 +303,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.datetime "transcript_processed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "vendor_audio_urls", default: [], null: false
+    t.jsonb "vendor_audio_urls", default: "[]", null: false
     t.string "project_uid", default: "", null: false
     t.integer "percent_completed", default: 0, null: false
     t.integer "lines_completed", default: 0, null: false
@@ -319,15 +319,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.string "script"
     t.string "image_caption", default: ""
     t.string "image_catalogue_url", default: ""
-    t.datetime "published_at"
+    t.datetime "published_at", precision: nil
     t.string "audio_item_url_title", default: "View audio in Library catalogue"
     t.string "image_item_url_title", default: "View image in Library catalogue"
     t.boolean "publish", default: false
     t.integer "transcript_type", default: 0
     t.string "voicebase_media_id"
     t.string "process_status"
-    t.datetime "process_completed_at"
-    t.datetime "process_started_at"
+    t.datetime "process_completed_at", precision: nil
+    t.datetime "process_started_at", precision: nil
     t.integer "crop_x"
     t.integer "crop_y"
     t.integer "crop_w"
@@ -341,7 +341,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.index ["vendor_id"], name: "index_transcripts_on_vendor_id"
   end
 
-  create_table "user_roles", id: :serial, force: :cascade do |t|
+  create_table "user_roles", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "hiearchy", default: 0, null: false
     t.string "description"
@@ -351,7 +351,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.index ["name"], name: "index_user_roles_on_name", unique: true
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -372,8 +372,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.string "image"
     t.string "email"
     t.json "tokens"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "user_role_id", default: 0, null: false
     t.integer "lines_edited", default: 0, null: false
     t.integer "institution_id"
@@ -381,7 +381,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "vendors", id: :serial, force: :cascade do |t|
+  create_table "vendors", force: :cascade do |t|
     t.string "uid", default: "", null: false
     t.string "name"
     t.string "description"
@@ -398,7 +398,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_14_073213) do
     t.string "event", null: false
     t.string "whodunnit"
     t.text "object"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 

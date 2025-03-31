@@ -2,7 +2,7 @@
 if ActiveRecord.gem_version >= Gem::Version.new('5.0')
   class AddMissingTaggableIndex < ActiveRecord::Migration[4.2]; end
 else
-  class AddMissingTaggableIndex < ActiveRecord::Migration; end
+  class AddMissingTaggableIndex < ActiveRecord::Migration[7.0]; end
 end
 AddMissingTaggableIndex.class_eval do
   def self.up

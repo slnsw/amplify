@@ -1,4 +1,4 @@
-class CreateTranscriptLines < ActiveRecord::Migration
+class CreateTranscriptLines < ActiveRecord::Migration[7.0]
   def change
     create_table :transcript_lines do |t|
       t.integer :transcript_id, :null => false, :default => 0
