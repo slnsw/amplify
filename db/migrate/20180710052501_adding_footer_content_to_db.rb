@@ -14,6 +14,9 @@ class AddingFooterContentToDb < ActiveRecord::Migration[5.2]
     # saving as published will create a public_page record too
     page = Page.new(content: str, page_type: 'footer', published: true)
     page.ignore_callbacks = true
-    page.save
+    # move_out_of_migration
+    PaperTrail.request.disable_model(Page) do
+      page.save
+    end
   end
 end

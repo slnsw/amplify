@@ -63,7 +63,10 @@ If you would like to know more about Amplify or find information about other dig
     HEREDOC
     page = Page.new(content: str, page_type: 'faq')
     page.ignore_callbacks = true
-    page.save
+    # move_out_of_migration
+    PaperTrail.request.disable_model(Page) do
+      page.save
+    end
   end
 
   def self.down

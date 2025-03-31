@@ -2,7 +2,7 @@
 if ActiveRecord.gem_version >= Gem::Version.new('5.0')
   class AddTaggingsCounterCacheToTags < ActiveRecord::Migration[4.2]; end
 else
-  class AddTaggingsCounterCacheToTags < ActiveRecord::Migration; end
+  class AddTaggingsCounterCacheToTags < ActiveRecord::Migration[7.0]; end
 end
 AddTaggingsCounterCacheToTags.class_eval do
   def self.up

@@ -1,4 +1,4 @@
-class CreateTranscripts < ActiveRecord::Migration
+class CreateTranscripts < ActiveRecord::Migration[7.0]
   def change
     create_table :transcripts do |t|
       t.string :uid, :null => false, :default => ""

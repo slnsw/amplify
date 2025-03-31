@@ -50,6 +50,7 @@ Technical/development enquiries: [web.development@sl.nsw.gov.au](mailto:web.deve
    HEREDOC
     page = Page.new(content: str, page_type: 'about')
     page.ignore_callbacks = true
+    # move_out_of_migration
     page.save
   end
 

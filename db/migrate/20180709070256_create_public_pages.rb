@@ -10,7 +10,9 @@ class CreatePublicPages < ActiveRecord::Migration[5.2]
     # populate with existing pages for the
     # first time
     Page.all.each do |page|
-      PublicPage.new(page_id: page.id, content: page.content).save!
+      PaperTrail.request.disable_model(PublicPage) do
+        PublicPage.new(page_id: page.id, content: page.content).save!
+      end
     end
   end
 end
