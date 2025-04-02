@@ -19,6 +19,9 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: /bin/sh -c 'redis-server --appendonly yes --requirepass $${REDIS_PASSWORD}'
 
   amplify:
     build:
@@ -72,6 +75,5 @@ services:
       DBUSER: postgres
       DBHOST: postgres
       DBPORT: 5432
-      REDIS_URL: "redis://redis:6379/1"
 volumes:
   amplify_pgdata:
