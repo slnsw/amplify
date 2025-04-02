@@ -179,15 +179,22 @@ docker compose -f docker-compose.dev.yml up --build -d
 
 ##### create and populate the database
 
-```bash
-docker compose -f docker-compose.dev.yml exec amplify rake db:create
-docker compose -f docker-compose.dev.yml exec -T postgres psql -U postgres amplify-development < /dump/dump.sql
+The example below assumes that you are using a data-only snapshot.
 
+```bash
+# initialise the database
+docker compose -f docker-compose.dev.yml exec amplify rake db:create
 # make sure you are in the latest schema
 docker compose -f docker-compose.dev.yml exec amplify rake db:migrate
+# Run twice, we currently have an issue with the published flag
+docker compose -f docker-compose.dev.yml exec amplify rake db:migrate
+# Import the data-only snapshot.
+docker compose -f docker-compose.dev.yml exec -T postgres psql -U postgres amplify-development < /dump/dump.sql
 ```
 
-If you are using a data-only snapshot, run the db:migrate command before importing the snapshot.
+If your snapshot contains a full dump including the schema, run the import before `rake db:migrate`.
+
+Importing will take some time, so grab a coffee and watch the logs.
 
 Or, run this script (on your local dev):
 
@@ -195,11 +202,13 @@ Or, run this script (on your local dev):
 ./bin/import-db dump/dump.sql
 ```
 
-To purge up the Postgres data directory, run:
+To purge the Postgres data directory, run:
 
 ```bash
 docker compose -f docker-compose.dev.yml down --volumes
 ```
+
+When you spin up the Docker Compose environment again, you will have a clean database ready to be initialised and populated.
 
 #### setup test environment
 
