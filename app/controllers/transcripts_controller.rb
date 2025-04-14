@@ -35,6 +35,10 @@ class TranscriptsController < ApplicationController
   # GET /transcripts/the-uid
   # GET /transcripts/the-uid.json
   def show
+    if @expired_token
+      return render :regenerate_token_form
+    end
+
     if @institution && @collection && (!params[:institution] || !params[:collection]) && !params[:format]
       transcript_params = [@institution&.slug, @collection.uid, params[:id]]
       transcript_params.push({t: params[:t]}) if params[:t]
@@ -107,8 +111,10 @@ class TranscriptsController < ApplicationController
   end
 
   def set_transcript_for_show
-    @transcript = TranscriptService.find_by_uid_for_admin(params[:id], logged_in_user)
-    raise ActiveRecord::RecordNotFound unless @transcript.present?
+      @transcript = TranscriptService.find_by_uid_for_admin(params[:id], logged_in_user)
+      raise ActiveRecord::RecordNotFound unless @transcript.present?
+  rescue TokenService::InvalidTokenError => e
+    @expired_token = true
   end
 
   def transcript_params

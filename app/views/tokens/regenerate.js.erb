@@ -1,0 +1,17 @@
+<% if @error_message %>
+  $("#error-message").html("<span style='color: red;'><%= j @error_message %></span>");
+<% end %>
+
+<% if @new_token %>
+  $("#token-refresh-form").hide();
+
+  // Add a copyable token display
+  const tokenContainer = `
+    <h2>Your new share_token is:</h2>
+    <div style="display: flex; align-items: center;">
+      <input type="text" id="new-token" value="<%= @new_token %>" readonly style="flex: 1; margin-right: 10px;" onclick="window.copyLink('<%= @new_token %>')" />
+      <button id="copy-token-btn" class="button cyan">Copy</button>
+    </div>
+  `;
+  $("#token-refresh-form").parent().append(tokenContainer);
+<% end %>
