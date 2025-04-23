@@ -13376,7 +13376,7 @@ app.views.Account = app.views.Base.extend({
 
     // user submitted new edit; increment
     PubSub.subscribe('transcript.edit.submit', function(ev, data){
-      if (data.is_new && _this.data.user.signedIn) {
+      if (data.is_new && _this.data.signedIn) {
         _this.data.score += 1;
         _this.updateScore();
       }
