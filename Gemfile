@@ -49,7 +49,7 @@ gem "bootsnap", require: false
 gem "marcel", "~> 1.0.2"
 
 # Use PostgreSQL as the database for Active Record
-gem "pg", "~> 1.1.4"
+gem 'pg', '1.5.9'
 gem "pg_search", "~> 2.1.4"
 gem "will_paginate", "~> 3.3.0"
 
