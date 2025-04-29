@@ -41,6 +41,18 @@ SSHKit.config.command_map[:sidekiqctl] = "bundle exec sidekiqctl"
 set :whenever_path, ->{ release_path }
 
 namespace :deploy do
+  before :updated, :ensure_node_version do
+    on roles(:web) do
+      within release_path do
+        # Ensure nvm is installed
+        execute :bash, "-c 'if ! command -v nvm &> /dev/null; then curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash; fi'"
+
+        # Load nvm and ensure Node.js version 20.19.1 is installed
+        execute :bash, "-c 'source ~/.nvm/nvm.sh && nvm install 20.19.1 && nvm use 20.19.1'"
+      end
+    end
+  end
+
   after :updated, :update_config do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       within release_path do
