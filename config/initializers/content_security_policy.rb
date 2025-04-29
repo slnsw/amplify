@@ -1,6 +1,6 @@
 Rails.application.config.content_security_policy do |policy|
   policy.default_src  :self, :https
-  policy.font_src     :self, :https, :data
+  policy.font_src     :self, :https, :data, 'chrome-extension:'
   policy.img_src      :self, 'blob:', 'data:',
                       'https://*.google-analytics.com',
                       'https://*.analytics.google.com',
@@ -9,6 +9,7 @@ Rails.application.config.content_security_policy do |policy|
                       'https://*.google.com',
                       'https://*.google.com.au',
                       'https://graph.facebook.com',
+                      'http://graph.facebook.com', # Allow http for Facebook images
                       :https,
                       :data
 
