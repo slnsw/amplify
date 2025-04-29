@@ -52,7 +52,7 @@ gem "bootsnap", require: false
 gem "marcel", "~> 1.0.2"
 
 # Use PostgreSQL as the database for Active Record
-gem "pg", "~> 1.1.4"
+gem "pg", "~> 1.4"
 gem "pg_search", "~> 2.1.4"
 gem "will_paginate", "~> 3.1.6"
 
@@ -201,4 +201,4 @@ gem "sidekiq", "< 6"
 gem "sidekiq-cron", "~> 1.2.0"
 
 # Track object changes
-gem "paper_trail", "~> 10.3.1"
+gem "paper_trail", "~> 12.0"
