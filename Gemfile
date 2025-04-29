@@ -129,7 +129,7 @@ group :development, :test do
   gem "byebug", "~> 11.0.0", platforms: [:mri, :mingw, :x64_mingw]
   gem "factory_bot_rails", "~> 5.0.2"
   gem "faker"
-  gem "pry", "~> 0.12.2"
+  gem "pry", "~> 0.14.1"
   gem 'rspec-rails', '~> 6.0.0'
 end
 
