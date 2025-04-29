@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.0.0"
+ruby "3.2.0"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.4", ">= 7.0.4.3"
@@ -185,8 +185,8 @@ end
 # tracking errors
 gem "bugsnag", "~> 6.11.1"
 gem "draper", "~> 4.0.2"
-gem 'nokogiri', '1.12.5'
-gem "sanitize", "~> 5.2.0"
+gem 'nokogiri'
+gem 'sanitize', '~> 7.0'
 
 gem "acts_as_singleton", "~> 0.0.8"
 gem "acts-as-taggable-on", "~> 9.0.1"
