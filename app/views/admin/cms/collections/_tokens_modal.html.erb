@@ -1,0 +1,28 @@
+<div class="modal fade" id="tokenRefreshModal" tabindex="-1" aria-labelledby="tokenRefreshModalLabel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tokenRefreshModalLabel">Tokens</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <strong>Share Token:</strong>
+        <p><em>Append the provided Share Token to the transcript URL in the format <code>?share_token=TOKEN</code>. Token is valid for 24 hours. Example:</em></p>
+        <p><em><code>https://amplify.gov.au/transcripts/statelibrarynsw/australian_dance/MartinPortus_KateChampion_1006086?share_token=TOKEN</code></em></p>
+        <div class="d-flex mb-3">
+          <input type="text" class="form-control flex-grow-1 mr-2" id="accessToken" value="<%= share_token %>" readonly>
+          <button class="btn btn-secondary flex-shrink-0" onclick="window.copyLink('<%= share_token %>')">Copy</button>
+        </div>
+        
+        <strong>Refresh Token:</strong>
+        <p><em>Use this token to generate new share token when expired. Token is valid for 30 days.</em></p>
+        <div class="d-flex mb-3">
+          <input type="text" class="form-control flex-grow-1 mr-2" id="accessToken" value="<%= refresh_token %>" readonly>
+          <button class="btn btn-secondary flex-shrink-0" onclick="window.copyLink('<%= refresh_token %>')">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

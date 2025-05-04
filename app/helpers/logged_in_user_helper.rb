@@ -3,6 +3,10 @@ module LoggedInUserHelper
     @share_token ||= TokenService.encode(logged_in_user.id)
   end
 
+  def refresh_token
+    @refresh_token ||= TokenService.encode(logged_in_user.id, 30.days.from_now)
+  end
+
   # since we we using a combination of devise + rails and
   # API authenticatoin (with backbone in transcript edits page)
   # we need to check warden session here

@@ -1,0 +1,22 @@
+<section class="search_results">
+  <div class="search_results__list">
+    <div id="token-refresh-form">
+      <h3>Share Token Expired</h3>
+      <p><em>Your share_token has expired. Please enter your Refresh Token to generate a new share token. If you don't have Refresh Token, please contact person who provided the share_token.</em></p>
+
+      <div id="error-message"></div>
+
+      <%= form_with url: regenerate_tokens_path, method: :post, local: false do |form| %>
+        <div class="form-group">
+          <%= form.label :refresh_token, "Refresh Token" %>
+          <%= form.text_field :refresh_token, class: "form-control", required: true %>
+        </div>
+        <br/>
+        <div class="form-group">
+          <%= form.submit "Regenerate Share Token", class: "button cyan" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+

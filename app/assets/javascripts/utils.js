@@ -1,9 +1,11 @@
-window.copyLink = function (link) {
-  const tempInput = document.createElement('input');
-  document.body.appendChild(tempInput);
-  tempInput.value = link;
-  tempInput.select();
-  document.execCommand('copy');
-  document.body.removeChild(tempInput);
-  alert('Link copied to clipboard!');
+window.copyLink = async function (link) {
+  try {
+    // Using the Clipboard API to copy text to the clipboard
+    await navigator.clipboard.writeText(link);
+    
+    alert('Link copied to clipboard!');
+  } catch (err) {
+    console.error('Failed to copy: ', err);
+    alert('Failed to copy the link!');
+  }
 }

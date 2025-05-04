@@ -1,6 +1,7 @@
 # app/services/token_service.rb
 class TokenService
   SECRET_KEY = Rails.application.secret_key_base
+  class InvalidTokenError < StandardError; end
 
   # Method to encode a token with user information and expiration
   def self.encode(user_id, exp = 24.hours.from_now)
@@ -17,6 +18,13 @@ class TokenService
     HashWithIndifferentAccess.new(decoded_token) # Return decoded token with indifferent access
   rescue JWT::ExpiredSignature, JWT::VerificationError => e
     # Handle expired token or verification error
-    raise StandardError.new("Invalid or expired token: #{e.message}")
+    raise InvalidTokenError, "Invalid or expired share token: #{e.message}"
+  end
+
+  def self.regenerate_token(refresh_token)
+    refresh_payload = decode(refresh_token)
+    new_share_token = encode(refresh_payload[:user_id])
+
+    new_share_token
   end
 end
