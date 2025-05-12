@@ -31,10 +31,11 @@ Rails.application.config.content_security_policy do |policy|
                       :https,
                       :unsafe_inline
 
-  policy.connect_src  :self,
-                      :https,
-                      'http://localhost:3000',
-                      'ws://localhost:3000'
+  if Rails.env.development?
+    policy.connect_src :self, :https, 'http://localhost:3000', 'ws://localhost:3000'
+  else
+    policy.connect_src :self, :https
+  end
 
   policy.frame_src    :self,
                       :https,
@@ -44,4 +45,4 @@ Rails.application.config.content_security_policy do |policy|
 end
 
 # Toggle report-only mode
-Rails.application.config.content_security_policy_report_only = true
+Rails.application.config.content_security_policy_report_only = false
