@@ -38,6 +38,15 @@ ActiveSupport::Deprecation.silenced = true
 Rails.logger.level = Logger::ERROR
 
 RSpec.configure do |config|
+  if ENV["DEPRECATION_TRACKER"]
+    DeprecationTracker.track_rspec(
+      config,
+      shitlist_path: "spec/support/deprecation_warning.shitlist.json",
+      mode: ENV["DEPRECATION_TRACKER"],
+      transform_message: -> (message) { message.gsub("#{Rails.root}/", "") }
+    )
+  end
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

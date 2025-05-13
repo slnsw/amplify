@@ -28,8 +28,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
 
   create_table "cms_image_uploads", force: :cascade do |t|
     t.string "image"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "collections", id: :serial, force: :cascade do |t|
@@ -40,10 +40,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "image_url"
     t.integer "vendor_id", default: 0, null: false
     t.string "vendor_identifier", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "project_uid", default: "", null: false
-    t.datetime "published_at"
+    t.datetime "published_at", precision: nil
     t.string "image"
     t.string "library_catalogue_title", default: ""
     t.integer "institution_id"
@@ -75,8 +75,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.integer "flag_type_id", default: 0, null: false
     t.string "text", default: "", null: false
     t.integer "is_deleted", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "is_resolved", default: 0, null: false
     t.index ["transcript_id"], name: "index_flags_on_transcript_id"
     t.index ["transcript_line_id"], name: "index_flags_on_transcript_line_id"
@@ -88,15 +88,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "title"
     t.string "url"
     t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["institution_id"], name: "index_institution_links_on_institution_id"
   end
 
   create_table "institutions", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "slug"
     t.string "url"
     t.string "image"
@@ -114,8 +114,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
   create_table "pages", force: :cascade do |t|
     t.text "content"
     t.string "page_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "published", default: false
     t.boolean "admin_access", default: false
   end
@@ -124,22 +124,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.text "content"
     t.integer "searchable_id"
     t.string "searchable_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
   end
 
   create_table "public_pages", force: :cascade do |t|
     t.integer "page_id"
     t.string "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "seed_migration_data_migrations", id: :serial, force: :cascade do |t|
     t.string "version"
     t.integer "runtime"
-    t.datetime "migrated_on"
+    t.datetime "migrated_on", precision: nil
   end
 
   create_table "site_alerts", force: :cascade do |t|
@@ -150,17 +150,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.boolean "published", default: false
     t.boolean "admin_access", default: false
     t.boolean "scheduled", default: false
-    t.datetime "publish_at"
-    t.datetime "unpublish_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "publish_at", precision: nil
+    t.datetime "unpublish_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["machine_name"], name: "index_site_alerts_on_machine_name", unique: true
   end
 
   create_table "speakers", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -170,7 +170,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "tagger_type"
     t.integer "tagger_id"
     t.string "context", limit: 128
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -190,8 +190,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
 
   create_table "themes", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_themes_on_name"
   end
 
@@ -202,8 +202,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "session_id", default: "", null: false
     t.string "text"
     t.integer "weight", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "is_deleted", default: 0, null: false
     t.index ["session_id", "transcript_line_id"], name: "index_transcript_edits_on_session_id_and_transcript_line_id", unique: true
     t.index ["session_id"], name: "index_transcript_edits_on_session_id"
@@ -229,8 +229,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.integer "sequence", default: 0, null: false
     t.integer "transcript_line_status_id", default: 1, null: false
     t.string "notes"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "guess_text", default: "", null: false
     t.integer "flag_count", default: 0, null: false
     t.index ["speaker_id"], name: "index_transcript_lines_on_speaker_id"
@@ -245,8 +245,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.integer "user_id", default: 0, null: false
     t.string "session_id", default: "", null: false
     t.integer "speaker_id", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["session_id", "transcript_line_id"], name: "index_transcript_speaker_edits_on_session_id_and_line_id", unique: true
     t.index ["transcript_line_id"], name: "index_transcript_speaker_edits_on_transcript_line_id"
     t.index ["user_id"], name: "index_transcript_speaker_edits_on_user_id"
@@ -257,8 +257,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.integer "transcript_id", default: 0, null: false
     t.integer "collection_id", default: 0, null: false
     t.string "project_uid", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["speaker_id", "transcript_id"], name: "index_transcript_speakers_on_speaker_id_and_transcript_id", unique: true
   end
 
@@ -266,8 +266,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "name", default: "", null: false
     t.integer "progress", default: 0, null: false
     t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_transcript_statuses_on_name", unique: true
   end
 
@@ -276,8 +276,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "convention_text"
     t.string "example"
     t.integer "institution_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "transcripts", id: :serial, force: :cascade do |t|
@@ -297,10 +297,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.integer "order", default: 0, null: false
     t.integer "created_by", default: 0, null: false
     t.string "batch_id", default: "unknown", null: false
-    t.datetime "transcript_retrieved_at"
-    t.datetime "transcript_processed_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "transcript_retrieved_at", precision: nil
+    t.datetime "transcript_processed_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.jsonb "vendor_audio_urls", default: [], null: false
     t.string "project_uid", default: "", null: false
     t.integer "percent_completed", default: 0, null: false
@@ -317,15 +317,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "script"
     t.string "image_caption", default: ""
     t.string "image_catalogue_url", default: ""
-    t.datetime "published_at"
+    t.datetime "published_at", precision: nil
     t.string "audio_item_url_title", default: "View audio in Library catalogue"
     t.string "image_item_url_title", default: "View image in Library catalogue"
     t.boolean "publish", default: false
     t.integer "transcript_type", default: 0
     t.string "voicebase_media_id"
     t.string "process_status"
-    t.datetime "process_completed_at"
-    t.datetime "process_started_at"
+    t.datetime "process_completed_at", precision: nil
+    t.datetime "process_started_at", precision: nil
     t.integer "crop_x"
     t.integer "crop_y"
     t.integer "crop_w"
@@ -343,8 +343,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "name", default: "", null: false
     t.integer "hiearchy", default: 0, null: false
     t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_user_roles_on_name", unique: true
   end
 
@@ -353,24 +353,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "uid", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
     t.string "name"
     t.string "nickname"
     t.string "image"
     t.string "email"
     t.json "tokens"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "user_role_id", default: 0, null: false
     t.integer "lines_edited", default: 0, null: false
     t.integer "institution_id"
@@ -384,8 +384,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "description"
     t.string "url"
     t.string "image_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["uid"], name: "index_vendors_on_uid", unique: true
   end
 
@@ -395,7 +395,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_04_013631) do
     t.string "event", null: false
     t.string "whodunnit"
     t.text "object"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
