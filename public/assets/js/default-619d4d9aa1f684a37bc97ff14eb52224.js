@@ -17259,7 +17259,7 @@ window.app.socialIntegration = function() {
     }
     js = d.createElement(s);
     js.id = id;
-    js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8&appId=" + fbAppId;
+    js.src = "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8&appId=" + fbAppId;
     fjs.parentNode.insertBefore(js, fjs);
     return true;
   };
