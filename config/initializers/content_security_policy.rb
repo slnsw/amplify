@@ -17,10 +17,16 @@ Rails.application.config.content_security_policy do |policy|
                       'https://slnsw-amplify.s3.amazonaws.com',
                       'https://slnsw-amplify-staging.s3.amazonaws.com',
                       'https://s3.amazonaws.com',
-                      'https://*.googleusercontent.com'
+                      'https://*.googleusercontent.com',
+                      'http://graph.facebook.com',
+                      'https://scontent.fcbr1-1.fna.fbcdn.net'
 
   policy.object_src   :none
-  policy.media_src    :self, 'https://s3.amazonaws.com'
+  policy.media_src    :self, 
+                      'https://s3.amazonaws.com',
+                      'https://slnsw-amplify-staging.s3.amazonaws.com',
+                      'https://slnsw-amplify.s3.amazonaws.com',
+                      'https://scontent.fcbr1-1.fna.fbcdn.net'
   policy.script_src   :self,
                       'https://*.googletagmanager.com',
                       'https://*.google-analytics.com',
