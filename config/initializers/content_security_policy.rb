@@ -30,7 +30,8 @@ Rails.application.config.content_security_policy do |policy|
                       'https://*.google.com.hk',
                       'https://*.google.co.uk',
                       'https://*.google.com.my',
-                      'https://*.google.ru'
+                      'https://*.google.ru',
+                      'https://www.google.fr'
 
   policy.object_src   :none
   policy.media_src    :self, 
