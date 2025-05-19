@@ -6,12 +6,14 @@ Rails.application.config.content_security_policy do |policy|
                       'https://fonts.gstatic.com',
                       'https://maxcdn.bootstrapcdn.com'
   policy.img_src      :self,
+                      :data,
                       'https://*.google-analytics.com',
                       'https://*.analytics.google.com',
                       'https://*.googletagmanager.com',
                       'https://*.g.doubleclick.net',
                       'https://*.google.com',
                       'https://*.google.com.au',
+                      'https://fonts.gstatic.com',
                       'https://graph.facebook.com',
                       'https://*.twitter.com',
                       'https://slnsw-amplify.s3.amazonaws.com',
@@ -19,7 +21,17 @@ Rails.application.config.content_security_policy do |policy|
                       'https://s3.amazonaws.com',
                       'https://*.googleusercontent.com',
                       'http://graph.facebook.com',
-                      'https://scontent.fcbr1-1.fna.fbcdn.net'
+                      'https://scontent.fcbr1-1.fna.fbcdn.net',
+                      'https://*.google.de',
+                      'https://*.google.com.mt',
+                      'https://*.google.com.co',
+                      'https://*.google.co.nz',
+                      'https://*.google.co.kr',
+                      'https://*.google.com.hk',
+                      'https://*.google.co.uk',
+                      'https://*.google.com.my',
+                      'https://*.google.ru',
+                      'https://www.google.fr'
 
   policy.object_src   :none
   policy.media_src    :self, 
@@ -55,7 +67,8 @@ Rails.application.config.content_security_policy do |policy|
   policy.frame_src    :self,
                       'https://td.doubleclick.net',
                       'https://platform.twitter.com',
-                      'https://www.facebook.com'
+                      'https://*.facebook.com',
+                      'https://*.googletagmanager.com'
 
 
   policy.report_uri "/csp-violation-report-endpoint"
