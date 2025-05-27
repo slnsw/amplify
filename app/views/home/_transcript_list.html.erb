@@ -11,10 +11,11 @@
               title: transcript.title,
               role: "listitem" do
         %>
-          <% if transcript.image_url.present? %>
+          <% image_url = transcript.image_url(:medium) || transcript.collection&.image_url(:medium) %>
+          <% if image_url.present? %>
             <img
               class="transcript_item__image"
-              src="<%= transcript.image_url(:medium) %>"
+              src="<%= image_url %>"
               loading="lazy"
               alt=""
             />
