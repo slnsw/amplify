@@ -24,7 +24,7 @@ class Admin::TranscriptionConventionsController < AdminController
   end
 
   def update
-    if  @transcription_convention.update(transcription_convention_params)
+    if @transcription_convention.update(transcription_convention_params)
       redirect_to admin_institution_transcription_conventions_path(@institution)
     else
       render :edit

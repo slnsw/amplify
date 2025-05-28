@@ -33,12 +33,13 @@ class TranscriptEditsController < ApplicationController
     params[:transcript_edit][:session_id] = session.id.to_s
     t = params[:transcript_edit]
     line = TranscriptLine.find t[:transcript_line_id]
-    project = Project.getActive(line.transcript.collection_id)
 
     unless line
       head :no_content
       return
     end
+
+    project = Project.getActive(line.transcript.collection_id)
 
     # If line is completed, reviewing, flagged, or archived
     # And user not signed in or doesn't have the right permissions

@@ -6,14 +6,14 @@ class TranscriptDecorator < Draper::Decorator
   end
 
   def absolute_url
-    Rails.application.routes.url_helpers.url_for(
-      host: Rails.application.config.action_controller.default_url_options[:host],
-      controller: "transcripts",  
-      action: "show", 
+    return unless institution&.slug && collection&.uid && object&.uid
+
+    url_options = Rails.application.config.action_controller.default_url_options || {}
+    h.transcript_url(
       institution: institution.slug,
       collection: collection.uid,
       id: object.uid,
-      only_path: false,
+      **url_options
     )
   end
 
