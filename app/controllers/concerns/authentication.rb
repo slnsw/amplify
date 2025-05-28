@@ -25,7 +25,7 @@ module Authentication
   def authentication_failed
     respond_to do |format|
       format.html {
-        redirect_to root_url(show_alert: 'You must log in as admin to access this section.')
+        redirect_to root_url(show_alert: 'You must log in as admin to access this section.'), allow_other_host: true
       }
       format.json {
         render json: {
