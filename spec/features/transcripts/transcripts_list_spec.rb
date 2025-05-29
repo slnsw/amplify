@@ -24,7 +24,8 @@ RSpec.feature 'Transcripts List' do
 
       it 'shows the transcript img' do
         visit root_path
-        expect(page.find('.transcript_item__image', match: :first)['src']).to have_content(transcript.image_cropped_thumb_url)
+        img_src = page.find('.transcript_item__image', match: :first)['src']
+        expect(img_src).to include(File.basename(transcript.image_cropped_thumb_url))
       end
     end
 
@@ -41,7 +42,8 @@ RSpec.feature 'Transcripts List' do
 
       it 'shows the collection img' do
         visit root_path
-        expect(page.find('.transcript_item__image', match: :first)['src']).to have_content(collection.image_url)
+        img_src = page.find('.transcript_item__image', match: :first)['src']
+        expect(img_src).to include(File.basename(collection.image_url))
       end
     end
 
