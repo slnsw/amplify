@@ -120,4 +120,8 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   match '*path' => "institutions#index", via: [:get], as: :institution
+
+  resources :tokens, only: [] do
+    post :regenerate, on: :collection
+  end
 end
