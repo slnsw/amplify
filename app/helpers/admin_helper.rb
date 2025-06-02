@@ -9,6 +9,7 @@ module AdminHelper
       OpenStruct.new(path: admin_summary_index_path, icon: "pie-chart", text: "Analytics", type: 1),
       OpenStruct.new(path: admin_analytics_path, icon: "pie-chart", text: "Google Analytics", type: 2, hide: !feature_flag_ga || current_user&.institution.nil?),
       OpenStruct.new(path: admin_institutions_path, icon: "university", text: "Institutions", type: 2),
+      OpenStruct.new(path: admin_reports_path, icon: "bar-chart", text: "Reports", type: 2, hide: !current_user.admin?),
       OpenStruct.new(path: admin_pages_path, icon: "file", text: "Pages", type: 4),
       OpenStruct.new(path: admin_themes_path, icon: "paint-brush", text: "Themes", type: 4),
       OpenStruct.new(path: admin_site_alerts_path, icon: "paint-brush", text: "Site Alerts", type: 4),
