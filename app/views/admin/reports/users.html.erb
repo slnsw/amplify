@@ -67,7 +67,7 @@
 </div>
 
 <div class="full-width-inner d-flex justify-content-end mt-2">
-    <%= link_to 'Export to CSV', users_admin_reports_path(format: :csv), class: "button cyan" %>
+    <%= link_to 'Export to CSV', users_admin_reports_path(format: :csv, **params.to_unsafe_h.symbolize_keys), class: "button cyan" %>
 </div>
 
 <table class="report-table table">
