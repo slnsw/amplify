@@ -87,10 +87,10 @@ class Pua
   end
 
   def _getClient()
-    PopUpArchive::Client.new(
-      :id     => ENV['PUA_CLIENT_ID'],
-      :secret => ENV['PUA_CLIENT_SECRET'],
-      :debug  => false
+    ::Popuparchive::Client.new(
+      id:     ENV['PUA_CLIENT_ID'],
+      secret: ENV['PUA_CLIENT_SECRET'],
+      debug:  false
     )
   end
 end

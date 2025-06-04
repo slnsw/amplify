@@ -6,7 +6,7 @@ FactoryBot.define do
     url { Faker::Internet.url }
     image_url { "https://slnsw-amplify.s3.amazonaws.com/image.jpg" }
     project_uid { "nsw-state-library-amplify" }
-    vendor_identifier { 1 }
+    vendor_identifier { "col_vendor_id" }
     institution
     vendor
     publish { 1 }

@@ -48,7 +48,7 @@ RSpec.feature "Institution Page" do
           fill_in("institution[institution_links][][url]", with: "http://www.mylink.com")
         end
         click_button("Save")
-        expect(current_path).to eq(admin_institutions_path)
+        expect(page).to have_current_path(admin_institutions_path, wait: 5)
         institution1.reload
         expect(institution1.slug).to eq('firstinstitution')
         expect(institution1.institution_links.first.title).to eq('My Link')
