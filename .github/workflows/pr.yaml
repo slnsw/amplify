@@ -26,15 +26,28 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Install packages
+        run: |
+          sudo apt-get update && \
+          sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 \
+          libvips postgresql-client libpq-dev libcurl4-openssl-dev
+
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # NOTE: This should work against slnsw/amplify but not its upstream repo.
-      - name: RuboCop Linter Action
-        uses: andrewmcodes/rubocop-linter-action@v3.3.0
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Run Rubocop
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RAILS_ENV: development
+        run: |
+          bundle install
+          bundle exec rubocop --format github
 
   # Derived from https://thoughtbot.com/blog/rspec-rails-github-actions-configuration
   rspec:
