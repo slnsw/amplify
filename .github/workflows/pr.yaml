@@ -71,7 +71,8 @@ jobs:
         run: |
           sudo apt-get update && \
           sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 \
-          libvips postgresql-client libpq-dev libcurl4-openssl-dev
+          libvips postgresql-client libpq-dev libcurl4-openssl-dev libpng-dev libjpeg-dev \
+          libtiff-dev imagemagick
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -90,6 +91,7 @@ jobs:
           AWS_S3_SECRET_ACCESS_KEY: xxx
           AWS_S3_REGION: ap-southeast-2
           AWS_S3_BUCKET: slnsw-amplify-testonly-xxx
+          PROJECT_ID: nsw-state-library-amplify
         run: |
           bundle exec rails db:setup
           bundle exec rspec -f j -o tmp/rspec_results.json -f p
