@@ -91,7 +91,7 @@ jobs:
           AWS_S3_REGION: ap-southeast-2
           AWS_S3_BUCKET: slnsw-amplify-testonly-xxx
         run: |
-          bundle exec rails db:setup postgres
+          bundle exec rails db:setup
           bundle exec rspec
 
       - name: Keep screenshots from failed system tests
