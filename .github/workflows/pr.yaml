@@ -46,7 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RAILS_ENV: development
         run: |
-          gem install ruby_executable_hooks
+          gem install executable-hooks
           bundle exec rubocop --format github
 
   # Derived from https://thoughtbot.com/blog/rspec-rails-github-actions-configuration
