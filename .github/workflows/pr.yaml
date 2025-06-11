@@ -32,6 +32,9 @@ jobs:
       # NOTE: This should work against slnsw/amplify but not its upstream repo.
       - name: RuboCop Linter Action
         uses: andrewmcodes/rubocop-linter-action@v3.3.0
+        with:
+          base_branch: 'origin/develop'
+          bundle: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RAILS_ENV: development
