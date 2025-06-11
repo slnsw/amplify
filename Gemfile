@@ -130,6 +130,7 @@ group :development, :test do
   gem "faker"
   gem "pry", "~> 0.12.2"
   gem 'rspec-rails', '~> 6.0.0'
+  gem 'regexp_parser', '~> 2.10.0'
 end
 
 group :development do
@@ -154,14 +155,15 @@ group :development do
   gem "capistrano-rails", "~> 1.6", require: false
   gem "capistrano-rvm"
   gem "capistrano-sidekiq"
-  gem "rubocop", "~> 0.65.0"
+  gem "rubocop", "~> 1.76.1"
+  gem "rubocop-rspec"
+  gem "rubocop-rails"
 
   gem "bcrypt_pbkdf", "~> 1.1"
   gem "ed25519", "~> 1.2"
 
   gem "dotenv-rails", "~> 2.7.1"
   gem "letter_opener", "~> 1.7.0"
-  gem "reinteractive-style", "~> 0.2.8"
   gem "brakeman"
 end
 

@@ -1,0 +1,111 @@
+name: Trigger Build on PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/ruby@master
+        env:
+          SNYK_API: https://api.au.snyk.io
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --all-projects --exclude=project
+
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install packages
+        run: |
+          sudo apt-get update && \
+          sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 \
+          libvips postgresql-client libpq-dev libcurl4-openssl-dev
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Run Rubocop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAILS_ENV: development
+        run: |
+          gem install executable-hooks
+          bundle exec rubocop --format github
+
+  # Derived from https://thoughtbot.com/blog/rspec-rails-github-actions-configuration
+  rspec:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Install packages
+        run: |
+          sudo apt-get update && \
+          sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 \
+          libvips postgresql-client libpq-dev libcurl4-openssl-dev libpng-dev libjpeg-dev \
+          libtiff-dev imagemagick
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Run tests
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          AWS_S3_ACCESS_KEY_ID: xxx
+          AWS_S3_SECRET_ACCESS_KEY: xxx
+          AWS_S3_REGION: ap-southeast-2
+          AWS_S3_BUCKET: slnsw-amplify-testonly-xxx
+          PROJECT_ID: nsw-state-library-amplify
+        run: |
+          bundle exec rails db:setup
+          bundle exec rspec -f j -o tmp/rspec_results.json -f p
+
+      - name: Keep screenshots from failed system tests
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: screenshots
+          path: ${{ github.workspace }}/tmp/capybara
+          if-no-files-found: ignore
+
+      - name: RSpec Report
+        uses: SonicGarden/rspec-report-action@v6
+        with:
+          json-path: tmp/rspec_results.json
+        if: always()

@@ -226,6 +226,8 @@ http://localhost:9090
 
 * `A server is already running. Check /app/tmp/pids/server.pid`  
   Shut down the Docker container, empty out the `tmp/` directory, and restart.
+* **Can't update Gems**  
+  If you're in a Docker environment, you'll want to ensure the `/usr/local/bundle/cache` directory and everything in it is writable by the current user. This should be done in the CLI's Dockerfile, but you need to start the Docker environment up, then run a CLI session. Inside that, you can run `bundle update`. Rebuild and restart the Docker environment so the Rails environment gets all new packages.
 
 ## Generating your transcripts
 
