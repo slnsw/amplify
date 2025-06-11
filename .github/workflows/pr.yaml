@@ -86,7 +86,6 @@ jobs:
           AWS_S3_REGION: ap-southeast-2
           AWS_S3_BUCKET: slnsw-amplify-testonly-xxx
         run: |
-          cp .env.example .env.test
           bin/rails db:setup spec
 
       - name: Keep screenshots from failed system tests
