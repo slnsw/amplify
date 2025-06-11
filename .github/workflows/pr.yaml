@@ -81,6 +81,10 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          AWS_S3_ACCESS_KEY_ID: xxx
+          AWS_S3_SECRET_ACCESS_KEY: xxx
+          AWS_S3_REGION: ap-southeast-2
+          AWS_S3_BUCKET: slnsw-amplify-testonly-xxx
         run: |
           cp .env.example .env.test
           bin/rails db:setup spec
