@@ -34,6 +34,7 @@ jobs:
         uses: andrewmcodes/rubocop-linter-action@v3.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAILS_ENV: development
 
   # Derived from https://thoughtbot.com/blog/rspec-rails-github-actions-configuration
   rspec:
@@ -50,7 +51,7 @@ jobs:
 
     steps:
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client libpq-dev
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client libpq-dev libcurl-dev
 
       - name: Checkout code
         uses: actions/checkout@v4
