@@ -51,7 +51,10 @@ jobs:
 
     steps:
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client libpq-dev libcurl-dev
+        run: |
+          sudo apt-get update && \
+          sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 \
+          libvips postgresql-client libpq-dev libcurl4-openssl-dev
 
       - name: Checkout code
         uses: actions/checkout@v4
