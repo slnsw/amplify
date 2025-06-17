@@ -1,9 +1,30 @@
 inherit_gem:
   reinteractive-style:
     - default.yml
+
+plugins: rubocop-rails
+
 Rails/UnknownEnv:
   Environments:
     - production
     - development
     - test
     - staging
+
+AllCops:
+  TargetRubyVersion: 3.0.0
+  NewCops: enable
+  Exclude:
+    - 'db/schema.rb'
+    - 'bin/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+Style/FrozenStringLiteralComment:

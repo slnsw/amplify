@@ -154,7 +154,8 @@ group :development do
   gem "capistrano-rails", "~> 1.6", require: false
   gem "capistrano-rvm"
   gem "capistrano-sidekiq"
-  gem "rubocop", "~> 0.65.0"
+  gem "rubocop"
+  gem 'rubocop-rails', require: false
 
   gem "bcrypt_pbkdf", "~> 1.1"
   gem "ed25519", "~> 1.2"
