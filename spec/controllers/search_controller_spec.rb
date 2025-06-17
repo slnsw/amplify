@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SearchController, type: :controller do
-  describe "GET #index" do
+  describe 'GET #index' do
     before do
       allow(controller).to receive(:load_collections).and_return(true)
       allow(controller).to receive(:load_institutions).and_return(true)
@@ -10,10 +12,10 @@ RSpec.describe SearchController, type: :controller do
       allow(Theme).to receive_message_chain(:all, :order).and_return([])
     end
 
-    it "renders the index template" do
+    it 'renders the index template' do
       get :index
       expect(response).to render_template(:index)
-      expect(assigns(:page_title)).to eq("Search")
+      expect(assigns(:page_title)).to eq('Search')
       expect(assigns(:build_params)).to eq({ page: 1 })
       expect(assigns(:transcripts)).to eq([])
       expect(assigns(:themes)).to eq([])

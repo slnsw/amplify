@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class SitemapJob < ApplicationJob
   queue_as :default
 
   def perform
-    SitemapGenerator::Sitemap.default_host = ENV['SITEMAP_HOSTNAME'] || "https://amplify.gov.au"
+    SitemapGenerator::Sitemap.default_host = ENV['SITEMAP_HOSTNAME'] || 'https://amplify.gov.au'
 
     SitemapGenerator::Sitemap.create do
       add '/search', priority: 0.75
@@ -12,13 +14,13 @@ class SitemapJob < ApplicationJob
       add '/page/tutorial', priority: 0.3
 
       # All transcrips
-      Transcript.joins(collection: :institution).where("institutions.hidden = ?", false).find_each do |transcript|
+      Transcript.joins(collection: :institution).where(institutions: { hidden: false }).find_each do |transcript|
         next unless transcript.published?
 
         add transcript.decorate.path
       end
 
-      Collection.joins(:institution).where("institutions.hidden = ?", false).published.find_each do |collection|
+      Collection.joins(:institution).where(institutions: { hidden: false }).published.find_each do |collection|
         next unless collection.published?
 
         add collection.decorate.path

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Admin::AppConfigsController, type: :controller do
   let(:app_config) { double('AppConfig', id: 1) }
   let(:valid_params) do

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 namespace :aws do
   # Usage: rake aws:upload_files['nsw-state-library-amplify','ap-southeast-2','slnsw-amplify','collections/rainbow_archives/audio']
   desc 'Upload files in the specified directory to AWS S3'
-  task :upload_files, [:project_key, :region, :bucket, :key_path] => :environment do |task, args|
+  task :upload_files, %i[project_key region bucket key_path] => :environment do |_task, args|
     credentials = Aws::Credentials.new(ENV['AWS_S3_ACCESS_KEY_ID'], ENV['AWS_S3_SECRET_ACCESS_KEY'])
     s3 = Aws::S3::Resource.new(credentials: credentials, region: args[:region])
 

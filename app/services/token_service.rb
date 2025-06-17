@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/services/token_service.rb
 class TokenService
   SECRET_KEY = Rails.application.secret_key_base
@@ -17,6 +19,6 @@ class TokenService
     HashWithIndifferentAccess.new(decoded_token) # Return decoded token with indifferent access
   rescue JWT::ExpiredSignature, JWT::VerificationError => e
     # Handle expired token or verification error
-    raise StandardError.new("Invalid or expired token: #{e.message}")
+    raise StandardError, "Invalid or expired token: #{e.message}"
   end
 end

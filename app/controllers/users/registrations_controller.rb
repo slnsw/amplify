@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
-class Users::RegistrationsController < Devise::RegistrationsController
-  # rubocop:disable Rails/LexicallyScopedActionFilter
-  before_action :configure_sign_up_params, only: [:create]
-  # rubocop:enable Rails/LexicallyScopedActionFilter
-  #
+module Users
+  class RegistrationsController < Devise::RegistrationsController
+    # rubocop:disable Rails/LexicallyScopedActionFilter
+    before_action :configure_sign_up_params, only: [:create]
+    # rubocop:enable Rails/LexicallyScopedActionFilter
+    #
 
-  protected
+    protected
 
-  def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    def configure_sign_up_params
+      devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    end
   end
 end

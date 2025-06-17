@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TranscriptDecorator < Draper::Decorator
   delegate_all
 
@@ -17,9 +19,7 @@ class TranscriptDecorator < Draper::Decorator
     )
   end
 
-  def collection
-    object.collection
-  end
+  delegate :collection, to: :object
 
   def institution
     collection&.institution
@@ -51,15 +51,15 @@ class TranscriptDecorator < Draper::Decorator
   end
 
   def display_edited_percentage
-    h.content_tag(:div, '', class: "item-status-bar edited", style: "width: #{object.percent_edited}%")
+    h.tag.div('', class: 'item-status-bar edited', style: "width: #{object.percent_edited}%")
   end
 
   def display_completed_percentage
-    h.content_tag(:div, '', class: "item-status-bar completed", style: "width: #{object.percent_completed}%")
+    h.tag.div('', class: 'item-status-bar completed', style: "width: #{object.percent_completed}%")
   end
 
   def display_reviewing_percentage
-    h.content_tag(:div, '', class: "item-status-bar reviewing", style: "width: #{object.percent_reviewing}%; left: #{object.percent_completed}%;")
+    h.tag.div('', class: 'item-status-bar reviewing', style: "width: #{object.percent_reviewing}%; left: #{object.percent_completed}%;")
   end
 
   def display_status_consensus
@@ -75,12 +75,12 @@ class TranscriptDecorator < Draper::Decorator
   end
 
   def has_started?
-    object.percent_edited.to_i + object.percent_reviewing.to_i + object.percent_completed.to_i > 0
+    (object.percent_edited.to_i + object.percent_reviewing.to_i + object.percent_completed.to_i).positive?
   end
 
   def display_status(text, klass, percentage)
     if klass != 'completed' && object.percent_completed < 100
-      h.content_tag(:div, text, class: "transcript_item__status-text") if percentage > 0
+      h.tag.div(text, class: 'transcript_item__status-text') if percentage.positive?
     end
   end
 

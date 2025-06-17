@@ -1,24 +1,28 @@
-class Admin::ProfilesController < ApplicationController
-  include Pundit
-  layout "admin"
+# frozen_string_literal: true
 
-  def index
-    @user_role = current_user.user_role
-  end
+module Admin
+  class ProfilesController < ApplicationController
+    include Pundit
+    layout 'admin'
 
-  def update
-    update_transcribing_role if params.dig(:user_role, :commit) == "update_transcribing_role"
+    def index
+      @user_role = current_user.user_role
+    end
 
-    redirect_to admin_profiles_path
-  end
+    def update
+      update_transcribing_role if params.dig(:user_role, :commit) == 'update_transcribing_role'
 
-  private
+      redirect_to admin_profiles_path
+    end
 
-  def update_transcribing_role
-    return unless current_user.admin?
+    private
 
-    transcribing_role = params.dig(:user_role, :transcribing_role)
-    flash[:notice] = "Admin's transcribing role has been updated to #{transcribing_role}."
-    current_user.user_role.update(transcribing_role: params.dig(:user_role, :transcribing_role))
+    def update_transcribing_role
+      return unless current_user.admin?
+
+      transcribing_role = params.dig(:user_role, :transcribing_role)
+      flash[:notice] = "Admin's transcribing role has been updated to #{transcribing_role}."
+      current_user.user_role.update(transcribing_role: params.dig(:user_role, :transcribing_role))
+    end
   end
 end

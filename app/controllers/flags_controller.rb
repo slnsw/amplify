@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class FlagsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   before_action :authenticate_user, only: [:create]
 
-  before_action :set_flag, only: [:show, :update, :destroy]
+  before_action :set_flag, only: %i[show update destroy]
 
   # GET /flags.json
   def index
@@ -11,8 +13,7 @@ class FlagsController < ApplicationController
   end
 
   # GET /flags/1.json
-  def show
-  end
+  def show; end
 
   # POST /flags.json
   def create
@@ -34,7 +35,7 @@ class FlagsController < ApplicationController
       @flag = Flag.new(flag_params)
       if @flag.save
         line = TranscriptLine.find flag[:transcript_line_id]
-        line.incrementFlag()
+        line.incrementFlag
         render json: @flag, status: :created, location: @flag
         success = true
       end
@@ -48,9 +49,7 @@ class FlagsController < ApplicationController
     end
 
     # An error occurred
-    unless success
-      render json: @flag.errors, status: :unprocessable_entity
-    end
+    render json: @flag.errors, status: :unprocessable_entity unless success
   end
 
   # PATCH/PUT /flags/1.json
@@ -73,11 +72,11 @@ class FlagsController < ApplicationController
 
   private
 
-    def set_flag
-      @flag = Flag.find(params[:id])
-    end
+  def set_flag
+    @flag = Flag.find(params[:id])
+  end
 
-    def flag_params
-      params.require(:flag).permit(:transcript_id, :transcript_line_id, :flag_type_id, :session_id, :user_id, :text, :is_resolved)
-    end
+  def flag_params
+    params.require(:flag).permit(:transcript_id, :transcript_line_id, :flag_type_id, :session_id, :user_id, :text, :is_resolved)
+  end
 end

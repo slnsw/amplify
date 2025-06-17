@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :collection do
-    uid { Faker::Lorem.characters(number:10) }
+    uid { Faker::Lorem.characters(number: 10) }
     title { Faker::Lorem.sentence }
-    description { "Faith Bandler interviewed by Carol" }
+    description { 'Faith Bandler interviewed by Carol' }
     url { Faker::Internet.url }
-    image_url { "https://slnsw-amplify.s3.amazonaws.com/image.jpg" }
-    project_uid { "nsw-state-library-amplify" }
-    vendor_identifier { "col_vendor_id" }
+    image_url { 'https://slnsw-amplify.s3.amazonaws.com/image.jpg' }
+    project_uid { 'nsw-state-library-amplify' }
+    vendor_identifier { 'col_vendor_id' }
     institution
     vendor
     publish { 1 }

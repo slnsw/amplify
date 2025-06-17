@@ -1,65 +1,62 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   has_paper_trail
   # Include default devise modules.
   devise :database_authenticatable,
-          :recoverable, :confirmable, :registerable,
-          :rememberable, :trackable, :validatable, :omniauthable,
-          omniauth_providers: [:google_oauth2, :facebook]
+         :recoverable, :confirmable, :registerable,
+         :rememberable, :trackable, :validatable, :omniauthable,
+         omniauth_providers: %i[google_oauth2 facebook]
 
   belongs_to :user_role, optional: true
   belongs_to :institution, optional: true
 
   attr_accessor :total_edits
 
-  scope :only_public_users, -> { where("user_role_id < ?", UserRole::MIN_STAFF_LEVEL) }
-  scope :only_staff_users, -> { where("user_role_id >= ?", UserRole::MIN_STAFF_LEVEL) }
+  scope :only_public_users, -> { where('user_role_id < ?', UserRole::MIN_STAFF_LEVEL) }
+  scope :only_staff_users, -> { where('user_role_id >= ?', UserRole::MIN_STAFF_LEVEL) }
 
-  def incrementLinesEdited(amount=1)
+  def incrementLinesEdited(amount = 1)
     update(lines_edited: lines_edited + amount)
   end
 
-  def recalculate(edits=nil)
+  def recalculate(edits = nil)
     edits ||= TranscriptEdit.getByUser(id)
-    if edits
-      update(lines_edited: edits.length)
-    end
+    update(lines_edited: edits.length) if edits
   end
 
   def setRole(role_name)
     user_role = UserRole.find_by name: role_name
-    if user_role && user_role.id != user_role_id
-      update(user_role_id: user_role.id)
-    end
+    update(user_role_id: user_role.id) if user_role && user_role.id != user_role_id
   end
 
   # depriciated method
   def isAdmin?
     role = user_role
-    role = UserRole.find user_role_id if !role && user_role_id > 0
-    role && role.name == "admin"
+    role = UserRole.find user_role_id if !role && user_role_id.positive?
+    role && role.name == 'admin'
   end
 
   # new admin check
   def admin?
-    user_role.try(:name) == "admin"
+    user_role.try(:name) == 'admin'
   end
 
   # depriciated method
   def isModerator?
     role = user_role
-    role = UserRole.find user_role_id if !role && user_role_id > 0
-    role && (role.name == "moderator" || role.name == "admin")
+    role = UserRole.find user_role_id if !role && user_role_id.positive?
+    role && (role.name == 'moderator' || role.name == 'admin')
   end
 
   # new method
   def moderator?
-    user_role.try(:name) == "moderator"
+    user_role.try(:name) == 'moderator'
   end
 
   def content_editor?
-    user_role.try(:name) == "content_editor"
+    user_role.try(:name) == 'content_editor'
   end
-
 
   # can be either,
   # admin, moderator, content_editor
@@ -71,13 +68,12 @@ class User < ApplicationRecord
     admin? || content_editor?
   end
 
-
   def admin_or_moderator?
     admin? || moderator?
   end
 
   def self.orderByInstitution
-    self.includes(:institution).order("institutions.name ASC NULLS FIRST").limit(1000)
+    includes(:institution).order('institutions.name ASC NULLS FIRST').limit(1000)
   end
 
   def self.getStatsByDay
@@ -96,9 +92,8 @@ class User < ApplicationRecord
 
     unless user
       user = User.new(name: data['name'],
-                         email: data['email'],
-                         password: Devise.friendly_token[0,20]
-                        )
+                      email: data['email'],
+                      password: Devise.friendly_token[0, 20])
       user.skip_confirmation!
       user.skip_confirmation_notification!
       user.save
@@ -108,7 +103,7 @@ class User < ApplicationRecord
 
   def self.getReport(params)
     users = User.all
-    if (params[:page])
+    if params[:page]
       params[:per_page] ||= 20
       users = users.paginate(page: params[:page], per_page: params[:per_page])
     end
@@ -117,23 +112,23 @@ class User < ApplicationRecord
       page_count: users.count,
       total_items: User.all.count,
       total_pages: (User.all.count / (params[:per_page] || 1)).ceil,
-      results: users.map { |u|
+      results: users.map do |u|
         u.getUserReport({
-          start_date: params[:start_date],
-          end_date: params[:end_date]
-        })
-      }
+                          start_date: params[:start_date],
+                          end_date: params[:end_date]
+                        })
+      end
     }
   end
 
   def getUserReport(params)
     edits = TranscriptEdit.where(user_id: id)
-    edits = edits.where("transcript_edits.updated_at >= ?", params[:start_date]) if (params[:start_date])
-    edits = edits.where("transcript_edits.updated_at <= ?", params[:end_date]) if (params[:end_date])
-    lines = edits.map { |e| e.transcript_line }.compact.uniq
-    transcripts = lines.map { |l| l.transcript }.compact.uniq
-    collections = transcripts.map { |t| t.collection }.compact.uniq
-    institutions = collections.map { |c| c.institution }.compact.uniq
+    edits = edits.where('transcript_edits.updated_at >= ?', params[:start_date]) if params[:start_date]
+    edits = edits.where('transcript_edits.updated_at <= ?', params[:end_date]) if params[:end_date]
+    lines = edits.map(&:transcript_line).compact.uniq
+    transcripts = lines.map(&:transcript).compact.uniq
+    collections = transcripts.map(&:collection).compact.uniq
+    institutions = collections.map(&:institution).compact.uniq
     time = edits.count * Transcript.seconds_per_line
     {
       name: name,
@@ -142,7 +137,7 @@ class User < ApplicationRecord
       transcripts: transcripts.count,
       collections: collections.count,
       institutions: institutions.count,
-      time: time,
+      time: time
     }
   end
 end

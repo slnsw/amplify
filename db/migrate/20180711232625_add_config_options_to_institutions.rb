@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddConfigOptionsToInstitutions < ActiveRecord::Migration[5.2]
   def change
     add_column :institutions, :max_line_edits, :integer, default: 3

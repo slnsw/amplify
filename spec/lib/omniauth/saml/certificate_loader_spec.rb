@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require Rails.root.join('lib/omniauth/saml/certificate_loader.rb')
 

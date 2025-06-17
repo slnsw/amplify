@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module IndexTemplate
   extend ActiveSupport::Concern
 
@@ -7,7 +9,7 @@ module IndexTemplate
   def environment_index_file
     tpl_file = "public/#{ENV['PROJECT_ID']}/index.html"
     env_tpl_file = "public/#{ENV['PROJECT_ID']}/index.#{Rails.env.downcase}.html"
-    tpl_file = env_tpl_file if File.exists?(env_tpl_file)
+    tpl_file = env_tpl_file if File.exist?(env_tpl_file)
     environment_app_config
     tpl_file
   end
@@ -15,7 +17,7 @@ module IndexTemplate
   def environment_admin_file
     tpl_file = "public/#{ENV['PROJECT_ID']}/admin.html"
     env_tpl_file = "public/#{ENV['PROJECT_ID']}/admin.#{Rails.env.downcase}.html"
-    tpl_file = env_tpl_file if File.exists?(env_tpl_file)
+    tpl_file = env_tpl_file if File.exist?(env_tpl_file)
     tpl_file
   end
 

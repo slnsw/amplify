@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module HomeSearch
   extend ActiveSupport::Concern
 
@@ -18,9 +20,7 @@ module HomeSearch
     sort_params.reject do |_key, value|
       return true if value.blank?
 
-      if value.is_a?(Array)
-        value.first.blank? || value.first == '0'
-      end
+      value.first.blank? || value.first == '0' if value.is_a?(Array)
     end
   end
 
@@ -28,8 +28,8 @@ module HomeSearch
     @institutions = if sort_params[:collections].blank?
                       Institution.published.joins(:collections).order(name: :asc).uniq
                     else
-                      Institution.published.order(name: :asc).joins(:collections).
-                        where("collections.title in (?)", sort_params[:collections])
+                      Institution.published.order(name: :asc).joins(:collections)
+                                 .where(collections: { title: sort_params[:collections] })
                     end
   end
 
@@ -39,9 +39,9 @@ module HomeSearch
     @collection = if sort_params[:institution].blank?
                     collection
                   else
-                    collection.joins(:institution).
-                      where("institutions.slug in (?)", sort_params[:institution]).
-                      where("institutions.hidden = false")
+                    collection.joins(:institution)
+                              .where(institutions: { slug: sort_params[:institution] })
+                              .where('institutions.hidden = false')
                   end
   end
 end

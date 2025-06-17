@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # public institutions controller
 class InstitutionsController < ApplicationController
   skip_before_action :verify_authenticity_token
@@ -6,7 +8,7 @@ class InstitutionsController < ApplicationController
   before_action :load_collections
   before_action :load_institutions
   before_action :filter_requests, only: [:index]
-  layout "application_v2"
+  layout 'application_v2'
 
   include HomeSearch
 
@@ -38,9 +40,9 @@ class InstitutionsController < ApplicationController
       @collection = [collection.find_by(uid: params_list[:collection_id])]
       @build_params[:collections] = [@collection.first.title]
     else
-      @collection = collection.
-        joins(:institution).
-        where("institutions.slug in (?)", params_list[:institution_id])
+      @collection = collection
+                    .joins(:institution)
+                    .where(institutions: { slug: params_list[:institution_id] })
     end
   end
 
@@ -57,7 +59,7 @@ class InstitutionsController < ApplicationController
   # end
 
   def params_list
-    list = params[:path].to_s.split("/")
+    list = params[:path].to_s.split('/')
     {
       institution_id: list.shift,
       collection_id: list.shift
@@ -65,6 +67,6 @@ class InstitutionsController < ApplicationController
   end
 
   def filter_requests
-    return head :not_found if (params[:format] && params[:format] != "html")
+    return head :not_found if params[:format] && params[:format] != 'html'
   end
 end

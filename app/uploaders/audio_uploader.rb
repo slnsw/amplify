@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AudioUploader < CarrierWave::Uploader::Base
   include S3Identifier
 
@@ -8,6 +10,6 @@ class AudioUploader < CarrierWave::Uploader::Base
   end
 
   def cache_dir
-    "/tmp/carrierwave/"
+    '/tmp/carrierwave/'
   end
 end

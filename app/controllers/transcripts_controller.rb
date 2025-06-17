@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 class TranscriptsController < ApplicationController
   include LoggedInUserHelper
-  layout "application_v2"
+  layout 'application_v2'
 
-  skip_before_action :verify_authenticity_token, only: [:index, :search, :show]
+  skip_before_action :verify_authenticity_token, only: %i[index search show]
 
   include ActionController::MimeResponds
   include IndexTemplate
 
-  before_action :set_transcript, only: [:update, :destroy]
+  before_action :set_transcript, only: %i[update destroy]
   before_action :set_transcript_for_show, only: [:show]
   before_action :load_institution_footer, only: [:show]
   before_action :load_institution, only: [:show]
@@ -16,7 +18,7 @@ class TranscriptsController < ApplicationController
   def index
     project = Project.getActive
     @project_settings = project[:data]
-    @transcripts = Transcript.getForHomepage(params[:page], order: "id")
+    @transcripts = Transcript.getForHomepage(params[:page], order: 'id')
   end
 
   # GET /search?sort_by=completeness&order=desc&collection_id=1&q=amy&page=1
@@ -37,27 +39,27 @@ class TranscriptsController < ApplicationController
   def show
     if @institution && @collection && (!params[:institution] || !params[:collection]) && !params[:format]
       transcript_params = [@institution&.slug, @collection.uid, params[:id]]
-      transcript_params.push({t: params[:t]}) if params[:t]
-      transcript_params.push({preview: true}) if params[:preview]
+      transcript_params.push({ t: params[:t] }) if params[:t]
+      transcript_params.push({ preview: true }) if params[:preview]
 
       return redirect_to institution_transcript_path(*transcript_params)
     end
 
     respond_to do |format|
       format.html do
-        @body_class = "body--transcript-edit"
+        @body_class = 'body--transcript-edit'
         @page_subtitle = @transcript.title
-        @secondary_navigation = "secondary_navigation"
+        @secondary_navigation = 'secondary_navigation'
       end
       format.json do
         @user_role = nil
         @user_edits = []
         @transcript_line_statuses = TranscriptLineStatus.allCached
         @transcript_speakers = TranscriptSpeaker.getByTranscriptId(@transcript.id)
-        @flag_types = FlagType.byCategory("error")
+        @flag_types = FlagType.byCategory('error')
         @user_flags = []
         @transcription_conventions = @transcript.transcription_conventions
-        @instructions = Page.find_by(page_type: "instructions").public_page.decorate
+        @instructions = Page.find_by(page_type: 'instructions').public_page.decorate
 
         user = logged_in_user
 
@@ -108,7 +110,7 @@ class TranscriptsController < ApplicationController
 
   def set_transcript_for_show
     @transcript = TranscriptService.find_by_uid_for_admin(params[:id], logged_in_user)
-    raise ActiveRecord::RecordNotFound unless @transcript.present?
+    raise ActiveRecord::RecordNotFound if @transcript.blank?
   end
 
   def transcript_params

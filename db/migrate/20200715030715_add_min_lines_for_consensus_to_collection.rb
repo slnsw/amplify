@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMinLinesForConsensusToCollection < ActiveRecord::Migration[5.2]
   def change
     add_column :collections, :max_line_edits, :integer

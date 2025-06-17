@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddInstitutionsToUsers < ActiveRecord::Migration[5.2]
   def change
     # admins will not have an institute

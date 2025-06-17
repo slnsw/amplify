@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TranscriptService
   attr_accessor :transcript
 
@@ -25,17 +27,17 @@ class TranscriptService
 
   # always return a record
   def self.find_by_uid(uid)
-    Transcript.published.
-      joins(:collection).
-      where("collections.published_at is not null").
-      find_by(uid: uid) || Transcript.new
+    Transcript.published
+              .joins(:collection)
+              .where.not('collections.published_at' => nil)
+              .find_by(uid: uid) || Transcript.new
   end
 
   def self.find_by_uid_for_admin(uid, user)
     if user && (user.admin? || user.content_editor?)
       Transcript.find_by(uid: uid)
     else
-      self.find_by_uid(uid)
+      find_by(uid: uid)
     end
   end
 
@@ -79,7 +81,7 @@ class TranscriptService
 
   def handle_transcript
     yield
-  rescue StandardError => error
-    raise error
+  rescue StandardError => e
+    raise e
   end
 end

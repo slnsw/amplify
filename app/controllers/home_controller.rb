@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class HomeController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!, except: [:index]
   before_action :load_collections
   before_action :load_institutions
-  layout "application_v2"
+  layout 'application_v2'
 
   include HomeSearch
 

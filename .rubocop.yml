@@ -1,8 +1,5 @@
-inherit_gem:
-  reinteractive-style:
-    - default.yml
-
-plugins: rubocop-rails
+require:
+  - rubocop-rails
 
 Rails/UnknownEnv:
   Environments:
@@ -27,4 +24,3 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
 
-Style/FrozenStringLiteralComment:

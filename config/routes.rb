@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'sidekiq/web'
 require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
-  post "/csp-violation-report-endpoint", to: "api/csp_reports#create"
+  post '/csp-violation-report-endpoint', to: 'api/csp_reports#create'
 
   namespace :api do
     namespace :institutions do
@@ -11,7 +13,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :profiles, only: [:index, :update]
+    resources :profiles, only: %i[index update]
 
     resources :institutions do
       resources :transcription_conventions
@@ -23,7 +25,7 @@ Rails.application.routes.draw do
       end
     end
     resources :themes, except: [:show]
-    resources :app_configs, only: [:edit, :update]
+    resources :app_configs, only: %i[edit update]
     resources :stats, only: [:index] do
       member do
         get :institution
@@ -44,14 +46,14 @@ Rails.application.routes.draw do
     resources :analytics, only: [:index] do
     end
   end
-  resources :flags, only: [:index, :show, :create, :update, :destroy]
-  resources :transcript_speaker_edits, only: [:index, :show, :create, :update, :destroy]
-  resources :transcript_edits, only: [:index, :show, :create]
-  resources :transcript_files, only: [:index, :show]
-  resources :transcripts, only: [:index, :show]
+  resources :flags, only: %i[index show create update destroy]
+  resources :transcript_speaker_edits, only: %i[index show create update destroy]
+  resources :transcript_edits, only: %i[index show create]
+  resources :transcript_files, only: %i[index show]
+  resources :transcripts, only: %i[index show]
   get 'transcripts/:institution/:collection/:id', to: 'transcripts#show', as: 'institution_transcript'
 
-  resources :collections, only: [:index, :show] do
+  resources :collections, only: %i[index show] do
     collection do
       post :list
     end
@@ -60,28 +62,28 @@ Rails.application.routes.draw do
   devise_for(
     :users,
     controllers: {
-      sessions: "users/sessions",
+      sessions: 'users/sessions',
       omniauth_callbacks: 'users/omniauth_callbacks',
-      registrations: "users/registrations",
-      passwords: "users/passwords"
+      registrations: 'users/registrations',
+      passwords: 'users/passwords'
     }
   )
 
-  authenticate :user, lambda { |u| u.admin? } do
+  authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  match 'page/faq' => 'page#faq', :via => [:get]
-  match 'page/about' => 'page#about', :via => [:get]
-  match 'page/tutorial' => 'page#tutotial', :via => [:get]
-  match 'page/preview/:id' => 'page#preview', :via => [:get]
-  match 'page/:id' => 'page#show', :via => [:get]
+  get 'page/faq' => 'page#faq'
+  get 'page/about' => 'page#about'
+  get 'page/tutorial' => 'page#tutotial'
+  get 'page/preview/:id' => 'page#preview'
+  get 'page/:id' => 'page#show'
 
-  match 'transcript_lines/:id/resolve' => 'transcript_lines#resolve', :via => [:post]
+  post 'transcript_lines/:id/resolve' => 'transcript_lines#resolve'
 
   # admin
   namespace :admin do
-    resources :users, only: [:index, :update, :destroy]
+    resources :users, only: %i[index update destroy]
     resources :transcripts, only: [:index]
     resources :flags, only: [:index]
     resources :site_alerts
@@ -89,28 +91,28 @@ Rails.application.routes.draw do
     get 'cms', to: 'cms#show'
     namespace :cms do
       resources :collections, except: [:index]
-      resources :transcripts, except: [:show, :index] do
+      resources :transcripts, except: %i[show index] do
         put :update_multiple, on: :collection
-        get "speaker_search", on: :collection
-        get "sync", on: :member
-        post "process_transcript", on: :member
-        delete "reset_transcript", on: :member
+        get 'speaker_search', on: :collection
+        get 'sync', on: :member
+        post 'process_transcript', on: :member
+        delete 'reset_transcript', on: :member
       end
     end
   end
-  match 'admin' => 'admin/stats#index', :via => [:get], :as => :admin
+  get 'admin' => 'admin/stats#index', :as => :admin
 
   # moderator
   namespace :moderator do
     resources :flags, only: [:index]
   end
-  match 'moderator' => 'admin/flags#index', :via => [:get], :as => :moderator
+  get 'moderator' => 'admin/flags#index', :as => :moderator
 
   resources :home, only: [:index]
   resources :search, only: [:index]
   resources :dashboard, only: [:index]
 
-  match 'authenticate' => "authentication#authenticate", :via => [:post]
+  post 'authenticate' => 'authentication#authenticate'
 
   # temp routes for testing new UI
   get 'v2/home',   to: 'v2#home'
@@ -119,5 +121,5 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
-  match '*path' => "institutions#index", via: [:get], as: :institution
+  get '*path' => 'institutions#index', as: :institution
 end

@@ -1,4 +1,5 @@
-# encoding: UTF-8
+# frozen_string_literal: true
+
 # This file is auto-generated from the current content of the database. Instead
 # of editing this file, please use the migrations feature of Seed Migration to
 # incrementally modify your database, and then regenerate this seed file.
@@ -13,4 +14,4 @@
 ActiveRecord::Base.transaction do
 end
 
-SeedMigration::Migrator.bootstrap(20180917020054)
+SeedMigration::Migrator.bootstrap(20_180_917_020_054)

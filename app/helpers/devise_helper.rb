@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 module DeviseHelper
   def devise_error_messages!
-    return "" unless devise_error_messages?
-    messages = resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join
+    return '' unless devise_error_messages?
+
+    messages = resource.errors.full_messages.map { |msg| tag.li(msg) }.join
     html = <<-HTML
     <div id="error_explanation">
       <ul>#{messages}</ul>

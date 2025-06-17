@@ -1,54 +1,58 @@
-class Admin::ThemesController < AdminController
-  before_action :set_theme, only: [:edit, :update, :destroy]
+# frozen_string_literal: true
 
-  def index
-    @themes = policy_scope(Theme).order("LOWER(name)")
-  end
+module Admin
+  class ThemesController < AdminController
+    before_action :set_theme, only: %i[edit update destroy]
 
-  def new
-    authorize Theme
-
-    @theme = Theme.new
-  end
-
-  def edit; end
-
-  def create
-    authorize Theme
-
-    @theme = Theme.new(theme_params)
-
-    if @theme.save
-      redirect_to admin_themes_path
-    else
-      render :new
+    def index
+      @themes = policy_scope(Theme).order('LOWER(name)')
     end
-  end
 
-  def update
-    if @theme.update(theme_params)
-      redirect_to admin_themes_path
-    else
-      render :edit
+    def new
+      authorize Theme
+
+      @theme = Theme.new
     end
-  end
 
-  def destroy
-    authorize Theme
+    def edit; end
 
-    @theme.destroy
-    redirect_to admin_themes_path
-  end
+    def create
+      authorize Theme
 
-  private
+      @theme = Theme.new(theme_params)
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_theme
-    @theme = Theme.find(params[:id])
-    authorize @theme
-  end
+      if @theme.save
+        redirect_to admin_themes_path
+      else
+        render :new
+      end
+    end
 
-  def theme_params
-    params.require(:theme).permit(:name)
+    def update
+      if @theme.update(theme_params)
+        redirect_to admin_themes_path
+      else
+        render :edit
+      end
+    end
+
+    def destroy
+      authorize Theme
+
+      @theme.destroy
+      redirect_to admin_themes_path
+    end
+
+    private
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_theme
+      @theme = Theme.find(params[:id])
+      authorize @theme
+    end
+
+    def theme_params
+      params.require(:theme).permit(:name)
+    end
   end
 end

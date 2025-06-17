@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :page do
     page_type { 'faq' }
-    content { "some string" }
+    content { 'some string' }
   end
 end

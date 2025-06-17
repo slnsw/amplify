@@ -22,7 +22,6 @@ module VoiceBase
       update_records(transcript, contents.lines)
     end
 
-
     private
 
     def call
@@ -75,7 +74,7 @@ module VoiceBase
 
     # Ingest processed lines into the transcript.
     def ingest_transcript_lines(transcript, transcript_lines)
-      return nil if transcript_lines.nil? or transcript_lines.empty?
+      return nil if transcript_lines.blank?
 
       TranscriptLine.where(transcript_id: transcript.id).destroy_all
       TranscriptLine.create!(transcript_lines)
@@ -100,7 +99,7 @@ module VoiceBase
 
     # Convert a timestamp to milliseconds.
     def convert_time_to_milliseconds(time)
-      ((Time.strptime(time, '%H:%M:%S,%L') - Time.now.at_midnight) * 1000).to_i
+      ((Time.strptime(time, '%H:%M:%S,%L') - Time.zone.now.at_midnight) * 1000).to_i
     end
   end
 end

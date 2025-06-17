@@ -1,14 +1,18 @@
-class Api::CspReportsController < ActionController::Base
-  skip_before_action :verify_authenticity_token
+# frozen_string_literal: true
 
-  def create
-    CSP_LOGGER.info("CSP Violation: #{request.body.read}")
-    head :ok
-  end
+module Api
+  class CspReportsController < ApplicationController
+    skip_before_action :verify_authenticity_token
 
-  private
+    def create
+      CSP_LOGGER.info("CSP Violation: #{request.body.read}")
+      head :ok
+    end
 
-  def report_params
-    params.permit!
+    private
+
+    def report_params
+      params.permit!
+    end
   end
 end

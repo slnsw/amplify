@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TranscriptEdit < ApplicationRecord
   has_paper_trail
   belongs_to :transcript
@@ -59,6 +61,6 @@ class TranscriptEdit < ApplicationRecord
     edits.update_all(user_id: user_id)
 
     user = User.find(user_id)
-    user.incrementLinesEdited(edits.length) if user && edits.length > 0
+    user.incrementLinesEdited(edits.length) if user && edits.length.positive?
   end
 end

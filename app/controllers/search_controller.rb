@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 class SearchController < ApplicationController
   before_action :load_collections
   before_action :load_institutions
-  layout "application_v2"
+  layout 'application_v2'
 
   include HomeSearch
 
   def index
-    @page_title = "Search"
+    @page_title = 'Search'
     build_params[:page] ||= 1
     @build_params = build_params
     @transcripts = TranscriptSearch.new(build_params).transcripts

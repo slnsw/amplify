@@ -1,53 +1,57 @@
-class Admin::UsersController < AdminController
-  before_action :set_user, only: [:update, :destroy]
-  before_action :load_collections, only: [:index, :destroy]
+# frozen_string_literal: true
 
-  def index
-    authorize User
-    params[:active_tab] ||= "registered"
-  end
+module Admin
+  class UsersController < AdminController
+    before_action :set_user, only: %i[update destroy]
+    before_action :load_collections, only: %i[index destroy]
 
-  # PATCH/PUT /admin/users/{id}.json
-  def update
-    authorize User
-
-    if @user.update(user_params)
-      head :no_content
-    else
-      render json: @user.errors, status: :unprocessable_entity
+    def index
+      authorize User
+      params[:active_tab] ||= 'registered'
     end
-  end
 
-  # DELETE /admin/users/{id}.json
-  def destroy
-    authorize User
+    # PATCH/PUT /admin/users/{id}.json
+    def update
+      authorize User
 
-    if @user.delete
-      head :no_content
-    else
-      render json: @user.errors, status: :unprocessable_entity
+      if @user.update(user_params)
+        head :no_content
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
     end
-  end
 
-  private
+    # DELETE /admin/users/{id}.json
+    def destroy
+      authorize User
 
-  def load_collections
-    @users = policy_scope(User).
-      only_public_users.order("lines_edited DESC").
-      paginate(page: params[:user_page], per_page: params[:per_page])
+      if @user.delete
+        head :no_content
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
+    end
 
-    @staff = policy_scope(User).only_staff_users.orderByInstitution.
-      paginate(page: params[:admin_page], per_page: params[:per_page])
-    @decorated_staff = @staff.decorate
-    @user_roles = policy_scope(UserRole).getAll
-    @institutions = policy_scope(Institution).all
-  end
+    private
 
-  def set_user
-    @user = User.find(params[:id])
-  end
+    def load_collections
+      @users = policy_scope(User)
+               .only_public_users.order('lines_edited DESC')
+               .paginate(page: params[:user_page], per_page: params[:per_page])
 
-  def user_params
-    params.require(:user).permit(:user_role_id, :institution_id)
+      @staff = policy_scope(User).only_staff_users.orderByInstitution
+                                 .paginate(page: params[:admin_page], per_page: params[:per_page])
+      @decorated_staff = @staff.decorate
+      @user_roles = policy_scope(UserRole).getAll
+      @institutions = policy_scope(Institution).all
+    end
+
+    def set_user
+      @user = User.find(params[:id])
+    end
+
+    def user_params
+      params.require(:user).permit(:user_role_id, :institution_id)
+    end
   end
 end

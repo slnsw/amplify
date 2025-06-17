@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 # ruby
 
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe VoiceBase::VoicebaseApiService do
-  describe ".upload_media" do
-    let(:transcript) { create(:transcript, audio_url: "http://audio.url/file.mp3") }
+  describe '.upload_media' do
+    let(:transcript) { create(:transcript, audio_url: 'http://audio.url/file.mp3') }
     let(:client_double) { instance_double(Voicebase::Client) }
 
     before do
@@ -12,10 +14,10 @@ RSpec.describe VoiceBase::VoicebaseApiService do
       allow(Bugsnag).to receive(:notify)
     end
 
-    context "when upload returns errors" do
-      let(:error_response) { double("Response", body: { errors: "Some error" }.to_json) }
+    context 'when upload returns errors' do
+      let(:error_response) { double('Response', body: { errors: 'Some error' }.to_json) }
 
-      it "notifies Bugsnag and does not update voicebase_media_id" do
+      it 'notifies Bugsnag and does not update voicebase_media_id' do
         allow(client_double).to receive(:upload_media).and_return(error_response)
 
         described_class.upload_media(transcript.id)
@@ -25,11 +27,11 @@ RSpec.describe VoiceBase::VoicebaseApiService do
       end
     end
 
-    context "when upload is successful" do
-      let(:media_id) { "12345abc" }
-      let(:success_response) { double("Response", body: { mediaId: media_id }.to_json) }
+    context 'when upload is successful' do
+      let(:media_id) { '12345abc' }
+      let(:success_response) { double('Response', body: { mediaId: media_id }.to_json) }
 
-      it "updates the transcript with the media id" do
+      it 'updates the transcript with the media id' do
         allow(client_double).to receive(:upload_media).and_return(success_response)
 
         described_class.upload_media(transcript.id)

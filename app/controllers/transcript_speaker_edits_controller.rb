@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class TranscriptSpeakerEditsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   before_action :authenticate_user, only: [:create]
 
-  before_action :set_transcript_speaker_edit, only: [:show, :update, :destroy]
+  before_action :set_transcript_speaker_edit, only: %i[show update destroy]
 
   # GET /transcript_speaker_edits.json
   def index
@@ -59,9 +61,7 @@ class TranscriptSpeakerEditsController < ApplicationController
     end
 
     # An error occurred
-    unless success
-      render json: @transcript_speaker_edit.errors, status: :unprocessable_entity
-    end
+    render json: @transcript_speaker_edit.errors, status: :unprocessable_entity unless success
   end
 
   # PATCH/PUT /transcript_speaker_edits/1.json
@@ -84,11 +84,11 @@ class TranscriptSpeakerEditsController < ApplicationController
 
   private
 
-    def set_transcript_speaker_edit
-      @transcript_speaker_edit = TranscriptSpeakerEdit.find(params[:id])
-    end
+  def set_transcript_speaker_edit
+    @transcript_speaker_edit = TranscriptSpeakerEdit.find(params[:id])
+  end
 
-    def transcript_speaker_edit_params
-      params.require(:transcript_speaker_edit).permit(:transcript_id, :transcript_line_id, :user_id, :session_id, :speaker_id)
-    end
+  def transcript_speaker_edit_params
+    params.require(:transcript_speaker_edit).permit(:transcript_id, :transcript_line_id, :user_id, :session_id, :speaker_id)
+  end
 end

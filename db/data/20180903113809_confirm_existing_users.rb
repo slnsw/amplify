@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConfirmExistingUsers < SeedMigration::Migration
   def up
     User.where(confirmed_at: nil).find_each do |user|
@@ -7,7 +9,5 @@ class ConfirmExistingUsers < SeedMigration::Migration
     end
   end
 
-  def down
-
-  end
+  def down; end
 end

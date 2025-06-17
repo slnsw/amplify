@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 class CollectionsController < ApplicationController
   include ActionController::MimeResponds
   include IndexTemplate
 
-  layout "application_v2", only: [:index]
+  layout 'application_v2', only: [:index]
 
-  before_action :set_collection, only: [:show, :update, :destroy]
+  before_action :set_collection, only: %i[show update destroy]
 
   # GET /collections.json
   def index
-    @page_title = "Collections"
+    @page_title = 'Collections'
     @institutions = Institution.published.order(:name)
-    @page = Page.find_by(page_type: "collections")&.public_page&.decorate
+    @page = Page.find_by(page_type: 'collections')&.public_page&.decorate
     @build_params = params
   end
 

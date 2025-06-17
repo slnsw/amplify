@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CollectionPolicy < ApplicationPolicy
   attr_reader :user, :collection
 

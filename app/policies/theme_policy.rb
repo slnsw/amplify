@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemePolicy < ApplicationPolicy
   attr_reader :user, :scope
 

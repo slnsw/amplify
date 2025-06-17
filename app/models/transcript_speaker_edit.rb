@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TranscriptSpeakerEdit < ApplicationRecord
   has_paper_trail
   belongs_to :transcript_line

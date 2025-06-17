@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixPublishForCollectionsAndTranscripts < SeedMigration::Migration
   def up
     # updating `publish` column for both collections and transcripts tables

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTranscriptionConventions < ActiveRecord::Migration[5.2]
   def change
     create_table :transcription_conventions do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InstitutionPolicy < ApplicationPolicy
   attr_reader :user, :institution
 

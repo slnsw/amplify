@@ -1,19 +1,22 @@
-class Admin::TranscriptsController < ApplicationController
-  include ActionController::MimeResponds
+# frozen_string_literal: true
 
-  before_action :authenticate_admin!
+module Admin
+  class TranscriptsController < ApplicationController
+    include ActionController::MimeResponds
 
-  # GET /admin/transcripts
-  # GET /admin/transcripts.json
-  def index
-    respond_to do |format|
-      format.html {
-        render :file => environment_admin_file
-      }
-      format.json {
-        @transcripts = []
-      }
+    before_action :authenticate_admin!
+
+    # GET /admin/transcripts
+    # GET /admin/transcripts.json
+    def index
+      respond_to do |format|
+        format.html do
+          render file: environment_admin_file
+        end
+        format.json do
+          @transcripts = []
+        end
+      end
     end
   end
-
 end

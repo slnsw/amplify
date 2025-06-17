@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StatsService
   attr_accessor :user
 
@@ -18,7 +20,7 @@ class StatsService
     Rails.cache.fetch(cache_keys, expires_in: 24.hours) do
       {
         transcript_edits: transcript_edits,
-        user_registration_stats: user_registrations,
+        user_registration_stats: user_registrations
       }
     end
   end
@@ -28,7 +30,7 @@ class StatsService
       all: get_stats_by_day(institution_id).count,
       past_30_days: past_n_days(institution_id, 30).count,
       past_7_days: past_n_days(institution_id, 7).count,
-      past_24_hours: past_n_days(institution_id, 1).count,
+      past_24_hours: past_n_days(institution_id, 1).count
     }
   end
 
@@ -59,7 +61,7 @@ class StatsService
       all: user_get_stats_by_day.count,
       past_30_days: user_past_n_days(30).count,
       past_7_days: user_past_n_days(7).count,
-      past_24_hours: user_past_n_days(1).count,
+      past_24_hours: user_past_n_days(1).count
     }
   end
 
@@ -81,13 +83,13 @@ class StatsService
   private
 
   def stats_scope(institution_id, collection_id)
-    scope = Transcript.
-      joins("INNER JOIN collections ON
+    scope = Transcript
+            .joins("INNER JOIN collections ON
       transcripts.collection_id = collections.id")
-    scope = scope.where("collections.institution_id = ?", institution_id) if institution_id
-    scope = scope.where("collections.id = ?", collection_id) if collection_id
-    scope = scope.where("transcripts.updated_at >= ?", @start_date) if @start_date.present?
-    scope = scope.where("transcripts.updated_at <= ?", @end_date) if @end_date.present?
+    scope = scope.where(collections: { institution_id: institution_id }) if institution_id
+    scope = scope.where(collections: { id: collection_id }) if collection_id
+    scope = scope.where('transcripts.updated_at >= ?', @start_date) if @start_date.present?
+    scope = scope.where('transcripts.updated_at <= ?', @end_date) if @end_date.present?
     scope
   end
 

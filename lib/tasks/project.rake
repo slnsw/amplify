@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ejs'
 require 'execjs'
 require 'fileutils'
@@ -5,12 +7,11 @@ require 'json'
 require 'redcarpet'
 
 namespace :project do
-
   # Usage: rake project:load['oral-history']
   #        rake project:load['oral-history','ui']
   #        rake project:load['oral-history','assets']
-  desc "Load project by key: Builds main index.html and project.js which contains all project data (metadata, pages, templates)"
-  task :load, [:project_key, :scope] => :environment do |task, args|
+  desc 'Load project by key: Builds main index.html and project.js which contains all project data (metadata, pages, templates)'
+  task :load, %i[project_key scope] => :environment do |_task, args|
     args.with_defaults project_key: 'nsw-state-library-amplify'
     args.with_defaults scope: 'all'
 
@@ -26,18 +27,14 @@ namespace :project do
 
     # Ensure public project directory exists
     public_project_path = Rails.root.join('public', args[:project_key])
-    unless File.directory?(public_project_path)
-      FileUtils.mkdir_p(public_project_path)
-    end
+    FileUtils.mkdir_p(public_project_path) unless File.directory?(public_project_path)
 
     # Ensure assets folder exists
     public_assets_path = Rails.root.join('public', args[:project_key], 'assets')
-    unless File.directory?(public_assets_path)
-      FileUtils.mkdir_p(public_assets_path)
-    end
+    FileUtils.mkdir_p(public_assets_path) unless File.directory?(public_assets_path)
 
     # Updates html and config in public folder
-    if args[:scope] == "ui" || args[:scope] == "all"
+    if args[:scope] == 'ui' || args[:scope] == 'all'
 
       # Add pages (parse markdown -> html)
       pages = get_pages(args[:project_key])
@@ -51,7 +48,7 @@ namespace :project do
     end
 
     # Copies assets to public folder
-    if args[:scope] == "assets" || args[:scope] == "all"
+    if args[:scope] == 'assets' || args[:scope] == 'all'
 
       # Copy assets
       copy_assets(args[:project_key])
@@ -83,13 +80,13 @@ namespace :project do
       pages[File.basename(page_file)] = html
     end
 
-    return pages
+    pages
   end
 
   def get_project_json(project_key)
     # Validate project file
     project_file = Rails.root.join('project', project_key, 'project.json')
-    if !File.exist? project_file
+    unless File.exist? project_file
       puts "Project json file is required: #{project_file}"
       exit
     end
@@ -106,18 +103,16 @@ namespace :project do
     app_env = Rails.application.config_for(:application)
     layout_files = Rails.root.join('project', project_key, 'layouts', '*.html')
     frontend_config = Rails.application.config_for(:frontend)
-    if frontend_config.blank?
-      frontend_config = {}
-    end
+    frontend_config = {} if frontend_config.blank?
     Dir.glob(layout_files).each do |layout_file|
       content = File.read(layout_file)
       compiled = EJS.evaluate(
         content,
-        :project => project,
-        :project_key => project_key,
-        :env => app_env,
-        :frontend_config => frontend_config,
-        :last_update => Time.now.to_i,
+        project: project,
+        project_key: project_key,
+        env: app_env,
+        frontend_config: frontend_config,
+        last_update: Time.now.to_i
       )
       target_file = Rails.root.join('public', project_key, File.basename(layout_file))
       File.open(target_file, 'w') { |file| file.write(compiled) }
@@ -139,5 +134,4 @@ namespace :project do
     project_js_file = Rails.root.join('public', project_key, 'project.js')
     File.open(project_js_file, 'w') { |file| file.write(js_string) }
   end
-
 end

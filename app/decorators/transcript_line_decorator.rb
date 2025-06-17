@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TranscriptLineDecorator < Draper::Decorator
   delegate_all
 
@@ -10,6 +12,6 @@ class TranscriptLineDecorator < Draper::Decorator
   end
 
   def humanize_duration(duration)
-    "(#{h.display_time(duration)})" if duration.to_i > 0
+    "(#{h.display_time(duration)})" if duration.to_i.positive?
   end
 end

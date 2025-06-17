@@ -1,4 +1,6 @@
-server 'amplify.sl.nsw.gov.au', user: 'deploy', roles: %w{web app db}
+# frozen_string_literal: true
+
+server 'amplify.sl.nsw.gov.au', user: 'deploy', roles: %w[web app db]
 
 set :rails_env, 'production'
 set :branch, ENV['BRANCH'] || 'master'
@@ -61,7 +63,7 @@ set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-3.0.0@global/bundle'
 #   }
 
 ssh_keys = []
-ssh_keys = ssh_keys.push(ENV['DEPLOY_SSH_KEY']) if ENV['DEPLOY_SSH_KEY']
+ssh_keys.push(ENV['DEPLOY_SSH_KEY']) if ENV['DEPLOY_SSH_KEY']
 set :ssh_options, {
   keys: ssh_keys,
   forward_agent: false,

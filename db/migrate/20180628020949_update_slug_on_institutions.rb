@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateSlugOnInstitutions < ActiveRecord::Migration[5.2]
   def change
     # update the existing institutions to have the slug

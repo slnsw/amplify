@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TranscriptionConventionPolicy < ApplicationPolicy
   attr_reader :user, :csope
 
@@ -35,8 +37,8 @@ class TranscriptionConventionPolicy < ApplicationPolicy
       if @user.admin?
         TranscriptionConvention.all
       else
-        TranscriptionConvention.where(institution_id: @user.institution_id).
-          order_asc
+        TranscriptionConvention.where(institution_id: @user.institution_id)
+                               .order_asc
       end
     end
   end

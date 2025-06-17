@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VoiceBaseUploadJob < ApplicationJob
   queue_as :default
 

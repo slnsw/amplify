@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe VoiceBase::ImportSrtTranscripts, type: :service do
@@ -59,7 +61,7 @@ RSpec.describe VoiceBase::ImportSrtTranscripts, type: :service do
 
     subject do
       # Need to use a lambda as the subject in order to support the RSpec one-line expectation syntax.
-      lambda { VoiceBase::ImportSrtTranscripts.call(project_id: 'nsw-state-library-amplify') }
+      -> { VoiceBase::ImportSrtTranscripts.call(project_id: 'nsw-state-library-amplify') }
     end
 
     it { is_expected.to change { transcript.reload.transcript_lines.count }.from(0).to(432) }
@@ -79,7 +81,7 @@ RSpec.describe VoiceBase::ImportSrtTranscripts, type: :service do
       expect(transcript_line.sequence).to eq 0
       expect(transcript_line.speaker_id).to eq 0
       expect(transcript_line.start_time).to eq 7200
-      expect(transcript_line.end_time).to eq 17510
+      expect(transcript_line.end_time).to eq 17_510
       expect(transcript_line.original_text).to eq "I've never seen it before.\n"
     end
 

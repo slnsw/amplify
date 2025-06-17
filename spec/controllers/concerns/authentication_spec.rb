@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Authentication, type: :controller do
@@ -16,7 +18,7 @@ RSpec.describe Authentication, type: :controller do
       '/moderator'
     end
 
-    def root_url(options = {})
+    def root_url(_options = {})
       '/root'
     end
   end
@@ -164,9 +166,9 @@ RSpec.describe Authentication, type: :controller do
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)).to eq({
-        'error' => 1,
-        'message' => 'You must log in as admin to access this section.'
-      })
+                                                'error' => 1,
+                                                'message' => 'You must log in as admin to access this section.'
+                                              })
     end
   end
 end

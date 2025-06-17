@@ -1,15 +1,19 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SitemapJob, type: :job do
   before do
-    stub_const("SitemapGenerator::Sitemap", Class.new do
+    stub_const('SitemapGenerator::Sitemap', Class.new do
       class << self
         attr_accessor :default_host, :added_paths
+
         def create(&block)
           @added_paths = []
           @add_block = block
           instance_eval(&block)
         end
+
         def add(path, options = {})
           @added_paths ||= []
           @added_paths << [path, options]
@@ -18,7 +22,7 @@ RSpec.describe SitemapJob, type: :job do
     end)
   end
 
-  let(:institution) { create(:institution, hidden: false, slug: "inst") }
+  let(:institution) { create(:institution, hidden: false, slug: 'inst') }
   let(:collection) { create(:collection, institution: institution) }
   let(:transcript) { create(:transcript, collection: collection) }
 
@@ -37,15 +41,15 @@ RSpec.describe SitemapJob, type: :job do
     allow(Institution).to receive_message_chain(:published, :slugged, :find_each).and_yield(institution)
   end
 
-  it "adds static and dynamic paths to the sitemap" do
+  it 'adds static and dynamic paths to the sitemap' do
     described_class.new.perform
 
     expect(SitemapGenerator::Sitemap.added_paths).to include(
-      ["/search", { priority: 0.75 }],
-      ["/collections", { priority: 0.75 }],
-      ["/page/about", { priority: 0.3 }],
-      ["/page/faq", { priority: 0.3 }],
-      ["/page/tutorial", { priority: 0.3 }],
+      ['/search', { priority: 0.75 }],
+      ['/collections', { priority: 0.75 }],
+      ['/page/about', { priority: 0.3 }],
+      ['/page/faq', { priority: 0.3 }],
+      ['/page/tutorial', { priority: 0.3 }],
       ["/transcripts/#{transcript.id}", {}],
       ["/collections/#{collection.id}", {}],
       ["/institutions/#{institution.slug}", {}]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe VoiceBase::SrtParser, type: :service do
@@ -15,7 +17,7 @@ RSpec.describe VoiceBase::SrtParser, type: :service do
         '3',
         '00:00:03,000 --> 00:00:15,000',
         '<i>And it\'s going to happen',
-        'again and again --</i>',
+        'again and again --</i>'
       ]
 
       processed_lines = VoiceBase::SrtParser.new(1, lines).lines
@@ -35,7 +37,7 @@ RSpec.describe VoiceBase::SrtParser, type: :service do
       expect(processed_lines[2][:original_text]).to eq('<i>And it\'s going to happen again and again --</i>')
       expect(processed_lines[2][:sequence]).to eq(2)
       expect(processed_lines[2][:start_time]).to eq(3000)
-      expect(processed_lines[2][:end_time]).to eq(15000)
+      expect(processed_lines[2][:end_time]).to eq(15_000)
     end
   end
 end

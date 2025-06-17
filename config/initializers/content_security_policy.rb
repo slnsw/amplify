@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 Rails.application.config.content_security_policy do |policy|
   policy.default_src  :self
   policy.font_src     :self,
-                      'https://fonts.googleapis.com', 
+                      'https://fonts.googleapis.com',
                       'https://use.fontawesome.com',
                       'https://fonts.gstatic.com',
                       'https://maxcdn.bootstrapcdn.com'
@@ -34,7 +36,7 @@ Rails.application.config.content_security_policy do |policy|
                       'https://www.google.fr'
 
   policy.object_src   :none
-  policy.media_src    :self, 
+  policy.media_src    :self,
                       'https://s3.amazonaws.com',
                       'https://slnsw-amplify-staging.s3.amazonaws.com',
                       'https://slnsw-amplify.s3.amazonaws.com',
@@ -53,7 +55,7 @@ Rails.application.config.content_security_policy do |policy|
                       :unsafe_eval
 
   policy.style_src    :self,
-                      'https://fonts.googleapis.com', 
+                      'https://fonts.googleapis.com',
                       'https://use.fontawesome.com',
                       'https://maxcdn.bootstrapcdn.com',
                       :unsafe_inline
@@ -70,8 +72,7 @@ Rails.application.config.content_security_policy do |policy|
                       'https://*.facebook.com',
                       'https://*.googletagmanager.com'
 
-
-  policy.report_uri "/csp-violation-report-endpoint"
+  policy.report_uri '/csp-violation-report-endpoint'
 end
 
 # Toggle report-only mode

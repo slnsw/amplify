@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PagePolicy < ApplicationPolicy
   attr_reader :user, :page
 
@@ -24,10 +26,7 @@ class PagePolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if @user.isAdmin?
-        Page.all
-      end
+      Page.all if @user.isAdmin?
     end
   end
-
 end

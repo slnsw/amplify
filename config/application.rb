@@ -1,6 +1,8 @@
-require_relative "boot"
+# frozen_string_literal: true
 
-require "rails/all"
+require_relative 'boot'
+
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -33,7 +35,7 @@ module TranscriptEditor
     config.api_only = false
 
     config.to_prepare do
-      layout = "application_v2"
+      layout = 'application_v2'
       Devise::SessionsController.layout layout
       Devise::RegistrationsController.layout layout
       Devise::ConfirmationsController.layout layout
@@ -48,11 +50,11 @@ module TranscriptEditor
       exceptions: {
         all: {
           layout: 'application_v2',
-          notification: true,
+          notification: true
         },
-        :"4xx" => {
+        "4xx": {
           layout: 'application_v2',
-          notification: false,
+          notification: false
         }
       }
     }

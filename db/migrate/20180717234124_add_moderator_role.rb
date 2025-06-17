@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddModeratorRole < ActiveRecord::Migration[5.2]
   def change
     # move_out_of_migration

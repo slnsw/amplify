@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 lock '3.17.3'
 
 set :application, 'nsw-state-library-amplify'
@@ -6,8 +8,8 @@ set :repo_url, 'https://github.com/slnsw/amplify.git'
 set :branch, :develop
 set :deploy_to, '/home/deploy/nsw-state-library-amplify'
 set :pty, false
-set :linked_files, %w{config/database.yml config/application.yml config/frontend.yml config/initializers/bugsnag.rb}
-set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle node_modules config/certificates app/files/uploads }
+set :linked_files, %w[config/database.yml config/application.yml config/frontend.yml config/initializers/bugsnag.rb]
+set :linked_dirs, %w[log tmp/pids tmp/cache tmp/sockets vendor/bundle node_modules config/certificates app/files/uploads]
 set :keep_releases, 5
 set :rvm_type, :user
 set :rvm_ruby_version, 'ruby-3.0.0'
@@ -34,11 +36,11 @@ set :sidekiq_user, 'deploy'
 set :init_system, :systemd
 append :rvm1_map_bins, 'rake', 'gem', 'bundle', 'ruby', 'puma', 'pumactl', 'sidekiq', 'sidekiqctl'
 set :bundler_path, '/home/deploy/.rvm/wrappers/ruby-3.0.0@global/bundle'
-SSHKit.config.command_map[:sidekiq] = "bundle exec sidekiq"
-SSHKit.config.command_map[:sidekiqctl] = "bundle exec sidekiqctl"
+SSHKit.config.command_map[:sidekiq] = 'bundle exec sidekiq'
+SSHKit.config.command_map[:sidekiqctl] = 'bundle exec sidekiqctl'
 
 # Necessary for Whenever support.
-set :whenever_path, ->{ release_path }
+set :whenever_path, -> { release_path }
 
 namespace :deploy do
   after :updated, :update_config do

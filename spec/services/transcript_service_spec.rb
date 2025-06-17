@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 RSpec.describe TranscriptService, type: :service do
-  describe "#reset" do
+  describe '#reset' do
     let!(:user) { FactoryBot.create :user }
     let!(:transcript) do
       FactoryBot.create :transcript,
@@ -27,7 +29,7 @@ RSpec.describe TranscriptService, type: :service do
       FactoryBot.create :transcript_line,
                         transcript: transcript,
                         transcript_line_status_id: 2,
-                        guess_text: "Guess text",
+                        guess_text: 'Guess text',
                         flag_count: 1,
                         speaker_id: 1
     end
@@ -48,12 +50,11 @@ RSpec.describe TranscriptService, type: :service do
     end
 
     let(:speaker_edits_count) do
-      TranscriptSpeakerEdit.
-        where(transcript_id: transcript.id).count
+      TranscriptSpeakerEdit
+        .where(transcript_id: transcript.id).count
     end
 
-    # rubocop:disable RSpec/ExampleLength
-    it "has existing values" do
+    it 'has existing values' do
       # transcript
       expect(transcript.transcript_status_id).to eq(1)
       expect(transcript.percent_completed).to eq(10)
@@ -66,7 +67,7 @@ RSpec.describe TranscriptService, type: :service do
 
       # transcript line
       expect(transcript_line.transcript_line_status_id).to eq(2)
-      expect(transcript_line.guess_text).to eq("Guess text")
+      expect(transcript_line.guess_text).to eq('Guess text')
       expect(transcript_line.flag_count).to eq(1)
       expect(transcript_line.speaker_id).to eq(1)
 
@@ -76,15 +77,12 @@ RSpec.describe TranscriptService, type: :service do
       # speaker edits
       expect(speaker_edits_count).to eq(1)
     end
-    # rubocop:enable RSpec/ExampleLength
-
-    context "when reset the transcript" do
+    context 'when reset the transcript' do
       before do
         described_class.new(transcript).reset
       end
 
-      # rubocop:disable RSpec/ExampleLength
-      it "reset the transcript values" do
+      it 'reset the transcript values' do
         expect(transcript.transcript_status_id).to eq(1)
         expect(transcript.percent_completed).to eq(0)
         expect(transcript.lines_completed).to eq(0)
@@ -94,27 +92,25 @@ RSpec.describe TranscriptService, type: :service do
         expect(transcript.lines_reviewing).to eq(0)
         expect(transcript.users_contributed).to eq(0)
       end
-      # rubocop:enable RSpec/ExampleLength
-
-      it "reset all the transcript lines" do
+      it 'reset all the transcript lines' do
         transcript_line.reload
         expect(transcript_line.transcript_line_status_id).to eq(1)
-        expect(transcript_line.guess_text).to eq("")
+        expect(transcript_line.guess_text).to eq('')
         expect(transcript_line.flag_count).to eq(0)
         expect(transcript_line.speaker_id).to eq(0)
       end
 
-      it "deletes all the transcript edits" do
+      it 'deletes all the transcript edits' do
         expect(transcript.transcript_edits.count).to eq(0)
       end
 
-      it "deletes all the speaker edits" do
+      it 'deletes all the speaker edits' do
         expect(speaker_edits_count).to eq(0)
       end
     end
   end
 
-  describe ".find" do
+  describe '.find' do
     # rubocop:disable Rails/DynamicFindBy
     # This is the method in service
     subject(:searching_transcript) do
@@ -124,27 +120,27 @@ RSpec.describe TranscriptService, type: :service do
 
     let(:transcript) { FactoryBot.create :transcript, publish: publish }
 
-    context "when the transcript is published" do
+    context 'when the transcript is published' do
       let!(:publish) { 1 }
 
-      it "returns the transcript" do
+      it 'returns the transcript' do
         expect(searching_transcript.id).to eq(transcript.id)
       end
     end
 
-    context "when the transcript is published" do
+    context 'when the transcript is published' do
       let!(:publish) { 0 }
 
-      it "returns an empty transcript" do
+      it 'returns an empty transcript' do
         expect(searching_transcript.id).to eq(nil)
       end
     end
 
-    context "when the transcript is publish but the collection is unpublished" do
+    context 'when the transcript is publish but the collection is unpublished' do
       let(:unpublished_collection) { create :collection, :unpublished }
       let!(:transcript) { create :transcript, :published, collection: unpublished_collection }
 
-      it "returns an empty transcript" do
+      it 'returns an empty transcript' do
         expect(searching_transcript.id).to eq(nil)
       end
     end

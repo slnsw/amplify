@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class TranscriptFilesController < ApplicationController
   include ActionController::MimeResponds
 
-  before_action :set_transcript, only: [:show, :update, :destroy]
+  before_action :set_transcript, only: %i[show update destroy]
   before_action :set_updated_after, only: [:index]
 
   # GET /transcripts.json?updated_after=yyyy-mm-dd&page=1
@@ -21,7 +23,7 @@ class TranscriptFilesController < ApplicationController
     @transcript_edits = []
     @opt = transcript_file_params
 
-    if params[:format] == "json"
+    if params[:format] == 'json'
       @transcript_line_statuses = TranscriptLineStatus.allCached
       @transcript_speakers = TranscriptSpeaker.getByTranscriptId(@transcript.id)
       @transcript_edits = TranscriptEdit.getByTranscript(@transcript.id) if @opt[:edits]
@@ -36,19 +38,19 @@ class TranscriptFilesController < ApplicationController
 
   private
 
-    def set_updated_after
-      # default to all time
-      @updated_after = 10.years.ago
+  def set_updated_after
+    # default to all time
+    @updated_after = 10.years.ago
 
-      # look for parameters
-      @updated_after = params[:updated_after].to_datetime unless params[:updated_after].blank?
-    end
+    # look for parameters
+    @updated_after = params[:updated_after].to_datetime if params[:updated_after].present?
+  end
 
-    def set_transcript
-      @transcript = Transcript.find_by(uid: params[:id])
-    end
+  def set_transcript
+    @transcript = Transcript.find_by(uid: params[:id])
+  end
 
-    def transcript_file_params
-      params.permit(:original_text, :edits, :timestamps, :speakers)
-    end
+  def transcript_file_params
+    params.permit(:original_text, :edits, :timestamps, :speakers)
+  end
 end

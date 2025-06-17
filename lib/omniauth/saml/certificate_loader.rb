@@ -4,9 +4,7 @@ module Omniauth
   module Saml
     # Loads SAML certificates from app config.
     class CertificateLoader
-      attr_reader :cert_data
-      attr_reader :certificate
-      attr_reader :fingerprint
+      attr_reader :cert_data, :certificate, :fingerprint
 
       # Initialise.
       def initialize(env_params = {})
@@ -71,14 +69,17 @@ module Omniauth
 
       def load_string
         return unless @env_params.key?('SAML_IDP_CERT')
+
         @cert_data = @env_params['SAML_IDP_CERT']
       end
 
       # Loads a certificate file.
       def load_file
         return unless @env_params.key?('SAML_IDP_CERT_PATH')
+
         path = Rails.root.join(@env_params['SAML_IDP_CERT_PATH'])
         return unless File.exist?(path)
+
         @cert_data = File.read(path)
       end
     end

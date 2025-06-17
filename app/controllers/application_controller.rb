@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   include Authentication
 
@@ -42,12 +44,12 @@ class ApplicationController < ActionController::Base
     site = Site.new
     @global_content = {
       footer_content: site.footer_content,
-      footer_links: site.footer_links,
+      footer_links: site.footer_links
     }
   end
 
   def set_ie_headers
-    response.headers["X-UA-Compatible"] = "IE=edge"
+    response.headers['X-UA-Compatible'] = 'IE=edge'
   end
 
   def project_key
@@ -57,6 +59,7 @@ class ApplicationController < ActionController::Base
   def frontend_config
     frontend_config_obj = Rails.application.config_for(:frontend)
     return {} if frontend_config_obj.blank?
+
     frontend_config_obj
   end
 
@@ -67,7 +70,7 @@ class ApplicationController < ActionController::Base
   private
 
   # Overwriting the sign_out redirect path method
-  def after_sign_up_path_for(resource_or_scope)
+  def after_sign_up_path_for(_resource_or_scope)
     new_user_session_path
   end
 
@@ -91,4 +94,3 @@ class ApplicationController < ActionController::Base
     params[:per_page] ||= 50
   end
 end
-

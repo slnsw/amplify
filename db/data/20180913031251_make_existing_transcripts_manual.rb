@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MakeExistingTranscriptsManual < SeedMigration::Migration
   def up
     # update the existing transcripts to be manual uploads

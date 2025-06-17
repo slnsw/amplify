@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe FlagPolicy do
@@ -6,8 +8,8 @@ RSpec.describe FlagPolicy do
 
   subject { described_class }
 
-  describe "#initialize" do
-    it "assigns user and scope" do
+  describe '#initialize' do
+    it 'assigns user and scope' do
       policy = subject.new(user, scope)
       expect(policy.user).to eq(user)
       expect(policy.scope).to eq(scope)

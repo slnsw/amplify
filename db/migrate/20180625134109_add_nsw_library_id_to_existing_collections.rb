@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddNswLibraryIdToExistingCollections < ActiveRecord::Migration[5.2]
   def change
     # this code is moved to

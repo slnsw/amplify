@@ -113,7 +113,7 @@ module VoiceBase
 
     # Convert a timestamp to milliseconds.
     def convert_time_to_milliseconds(time)
-      ((Time.strptime(time, '%H:%M:%S,%L') - Time.now.at_midnight) * 1000).to_i
+      ((Time.strptime(time, '%H:%M:%S,%L') - Time.zone.now.at_midnight) * 1000).to_i
     end
   end
 end

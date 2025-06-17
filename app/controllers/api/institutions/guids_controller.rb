@@ -1,27 +1,27 @@
-class Api::Institutions::GuidsController < ActionController::Base
-  before_action :authenticate_request
+# frozen_string_literal: true
 
-  def index
-    data = Institution.all.select(:slug, :guid).map { |i| { UID: i.slug, GUID: i.guid } }
+module Api
+  module Institutions
+    class GuidsController < ApplicationController
+      before_action :authenticate_request
 
-    render json: data
-  end
+      def index
+        data = Institution.all.select(:slug, :guid).map { |i| { UID: i.slug, GUID: i.guid } }
 
-  private
+        render json: data
+      end
 
-  def authenticate_request
-    token = extract_bearer_token
-    if token != ENV['LOOKER_STUDIO_EXTERNAL_SECRET']
-      render json: { error: 'Unauthorized' }, status: :unauthorized
-    end
-  end
+      private
 
-  def extract_bearer_token
-    auth_header = request.headers['Authorization']
-    if auth_header && auth_header.start_with?('Bearer ')
-      auth_header.split(' ').last
-    else
-      nil
+      def authenticate_request
+        token = extract_bearer_token
+        render json: { error: 'Unauthorized' }, status: :unauthorized if token != ENV['LOOKER_STUDIO_EXTERNAL_SECRET']
+      end
+
+      def extract_bearer_token
+        auth_header = request.headers['Authorization']
+        auth_header.split(' ').last if auth_header&.start_with?('Bearer ')
+      end
     end
   end
 end

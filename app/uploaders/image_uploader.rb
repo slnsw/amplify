@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ImageUploader < CarrierWave::Uploader::Base
   include S3Identifier
 
@@ -14,9 +16,10 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This path will be appended to the S3 bucket url.
   def store_dir
-    if model.is_a?(Institution)
+    case model
+    when Institution
       "institutions/#{model.id}/images/"
-    elsif model.is_a?(AppConfig)
+    when AppConfig
       "app_configs/#{model.id}/images/"
     else
       "collections_v2/#{s3_collection_uid}/images/"
@@ -50,12 +53,12 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Add a white list of extensions which are allowed to be uploaded.
   def extension_whitelist
-    %w(jpg jpeg gif png)
+    %w[jpg jpeg gif png]
   end
 
   # Add a white list of mime types which are allowed to be uploaded.
   def content_type_whitelist
-    /image\//
+    %r{image/}
   end
 
   # check for images that are larger than you probably want
@@ -63,9 +66,8 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Read more: https://github.com/carrierwaveuploader/carrierwave/wiki/Denial-of-service-vulnerability-with-maliciously-crafted-JPEGs--(pixel-flood-attack)
   def validate_dimensions
     manipulate! do |img|
-      if img.dimensions.any?{|i| i > 8000 }
-        raise CarrierWave::ProcessingError, "dimensions too large"
-      end
+      raise CarrierWave::ProcessingError, 'dimensions too large' if img.dimensions.any? { |i| i > 8000 }
+
       img
     end
   end
@@ -102,12 +104,13 @@ class ImageUploader < CarrierWave::Uploader::Base
         y = model.crop_y.to_i
         w = model.crop_w.to_i
         h = model.crop_h.to_i
-        img.crop([[w, h].join('x'),[x, y].join('+')].join('+'))
+        img.crop([[w, h].join('x'), [x, y].join('+')].join('+'))
       end
     end
   end
 
   protected
+
   def secure_token
     var = :"@#{mounted_as}_secure_token"
     model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)

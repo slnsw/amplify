@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 require 'shellwords'
 
@@ -22,7 +24,7 @@ module Azure
       lines = speech_to_text.lines
       wav_file = File.open(speech_to_text.wav_file_path)
 
-      if transcript.transcript_lines.count == 0
+      if transcript.transcript_lines.count.zero?
         ActiveRecord::Base.transaction do
           transcript.transcript_lines.clear
           lines.each do |line_attrbitues|
@@ -30,7 +32,7 @@ module Azure
           end
           transcript.update_columns(
             lines: lines.length,
-            duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{Shellwords.escape(file.to_s)}`.to_i,
+            duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{Shellwords.escape(file.to_s)}`.to_i
           )
         end
       end
@@ -54,12 +56,12 @@ module Azure
 
     def download(audio)
       audio.cache_stored_file!
-      default_name = Rails.root.join("public", audio.cache_dir, audio.cached?, audio.sanitized_file.filename)
+      default_name = Rails.root.join('public', audio.cache_dir, audio.cached?, audio.sanitized_file.filename)
       return default_name if default_name.to_s.size <= 150
 
       extension = audio.sanitized_file.filename.split('.').last
       new_random_name = SecureRandom.hex
-      new_name = Rails.root.join("public", audio.cache_dir, audio.cached?, "#{new_random_name}.#{extension}")
+      new_name = Rails.root.join('public', audio.cache_dir, audio.cached?, "#{new_random_name}.#{extension}")
 
       File.rename(default_name, new_name)
 

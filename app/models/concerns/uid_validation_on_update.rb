@@ -1,7 +1,7 @@
+# frozen_string_literal: true
+
 module UidValidationOnUpdate
   def uid_not_changed
-    if persisted? && uid_changed?
-      errors.add(:uid, "cannot be updated")
-    end
+    errors.add(:uid, 'cannot be updated') if persisted? && uid_changed?
   end
 end

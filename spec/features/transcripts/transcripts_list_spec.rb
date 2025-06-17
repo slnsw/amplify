@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.feature 'Transcripts List' do
@@ -12,7 +14,7 @@ RSpec.feature 'Transcripts List' do
         create(
           :transcript,
           collection: collection, publish: true, lines: 1,
-          image: File.open(Rails.root.join("spec", "fixtures", "4k_example_image.jpg"))
+          image: File.open(Rails.root.join('spec', 'fixtures', '4k_example_image.jpg'))
         )
       end
       let!(:transcript_line) { create(:transcript_line, transcript: transcript) }
@@ -34,7 +36,7 @@ RSpec.feature 'Transcripts List' do
       let!(:collection) do
         create(
           :collection,
-          institution: institution, publish: true, image: File.open(Rails.root.join("spec", "fixtures", "4k_example_image.jpg"))
+          institution: institution, publish: true, image: File.open(Rails.root.join('spec', 'fixtures', '4k_example_image.jpg'))
         )
       end
       let!(:transcript) { create(:transcript, collection: collection, publish: true, lines: 1) }
