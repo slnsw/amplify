@@ -71,4 +71,55 @@ RSpec.describe Admin::ThemesController, type: :controller do
       expect(response).to redirect_to(admin_themes_path)
     end
   end
+
+  # Shared examples for admin-only access
+  RSpec.shared_examples "admin-only access" do |resource_factory|
+    let(:user) { create(:user) } # non-admin user
+    let!(:resource) { resource_factory ? create(resource_factory) : nil }
+
+    before do
+      allow(controller).to receive(:current_user).and_return(user)
+      allow(controller).to receive(:authorize).and_call_original
+      allow(controller).to receive(:policy_scope).and_call_original
+    end
+
+    describe "GET #new" do
+      it "denies access" do
+        expect { get :new }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
+
+    describe "GET #edit" do
+      it "denies access" do
+        expect { get :edit, params: { id: resource&.id } }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
+
+    describe "POST #create" do
+      it "denies access" do
+        expect { post :create, params: { theme: { name: "Test" } } }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
+
+    describe "PATCH #update" do
+      it "denies access" do
+        expect {
+          patch :update, params: { id: resource&.id, theme: { name: "Test" } }
+        }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
+
+    describe "DELETE #destroy" do
+      it "denies access" do
+        expect {
+          delete :destroy, params: { id: resource&.id }
+        }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
+  end
+
+  # Use shared_examples in this controller spec
+  describe "admin-only access" do
+    it_behaves_like "admin-only access", :theme
+  end
 end

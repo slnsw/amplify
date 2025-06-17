@@ -6,7 +6,6 @@ RSpec.describe Admin::UsersController, type: :controller do
 
   before do
     allow(controller).to receive(:current_user).and_return(admin)
-    allow(controller).to receive(:authorize).and_return(true)
   end
 
   describe "GET #index" do
@@ -29,6 +28,36 @@ RSpec.describe Admin::UsersController, type: :controller do
         delete :destroy, params: { id: user.id }, format: :json
       }.to change(User, :count).by(-1)
       expect(response).to have_http_status(:no_content)
+    end
+  end
+
+  describe "admin-only access" do
+    let!(:resource) { create(:user) }
+
+    before do
+      allow(controller).to receive(:current_user).and_return(user)
+    end
+
+    describe "GET #index" do
+      it "denies access" do
+        expect { get :index }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
+
+    describe "PATCH #update" do
+      it "denies access" do
+        expect {
+          patch :update, params: { id: resource&.id, user: { user_role_id: 1 } }, format: :json
+        }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
+
+    describe "DELETE #destroy" do
+      it "denies access" do
+        expect {
+          delete :destroy, params: { id: resource&.id }, format: :json
+        }.to raise_error(Pundit::NotAuthorizedError)
+      end
     end
   end
 end
