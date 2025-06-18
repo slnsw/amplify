@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe TranscriptFilesController, type: :controller do
   let(:transcript) { create(:transcript, uid: "the-uid") }

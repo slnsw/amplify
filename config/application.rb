@@ -20,8 +20,8 @@ module TranscriptEditor
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Load extra libraries.
-    config.autoload_paths << Rails.root.join('app', 'lib')
-    config.autoload_paths << Rails.root.join('lib', 'voicebase')
+    config.autoload_paths << Rails.root.join("app", "lib")
+    config.autoload_paths << Rails.root.join("lib", "voicebase")
 
     # Disable assets
     config.assets.enabled = false
@@ -47,14 +47,14 @@ module TranscriptEditor
       email: nil,
       exceptions: {
         all: {
-          layout: 'application_v2',
+          layout: "application_v2",
           notification: true,
         },
-        :"4xx" => {
-          layout: 'application_v2',
+        "4xx": {
+          layout: "application_v2",
           notification: false,
-        }
-      }
+        },
+      },
     }
 
     config.middleware.use Rack::Attack

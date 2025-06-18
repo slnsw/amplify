@@ -12,7 +12,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       set_flash_message(:notice, :success, kind: "Facebook") if is_navigational_format?
     else
       session["devise.facebook_data"] = request.env["omniauth.auth"]
-      redirect_to new_user_registration_url, allow_other_host: true and return
+      redirect_to(new_user_registration_url, allow_other_host: true) && return
     end
 
     redirect_to redirect_url
@@ -27,7 +27,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       set_flash_message(:notice, :success, kind: "Google") if is_navigational_format?
     else
       session["devise.google_data"] = request.env["omniauth.auth"]
-      redirect_to new_user_registration_url, allow_other_host: true and return
+      redirect_to(new_user_registration_url, allow_other_host: true) && return
     end
 
     redirect_to redirect_url

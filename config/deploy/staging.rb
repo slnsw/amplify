@@ -1,7 +1,7 @@
-server 'stage.amplify.gov.au', user: 'deploy', roles: %w{web app db}
+server "stage.amplify.gov.au", user: "deploy", roles: %w{web app db}
 
-set :rails_env, 'staging'
-set :branch, ENV['BRANCH'] || 'develop'
+set :rails_env, "staging"
+set :branch, ENV["BRANCH"] || "develop"
 
 # server-based syntax
 # ======================
@@ -60,9 +60,9 @@ set :branch, ENV['BRANCH'] || 'develop'
 #   }
 
 ssh_keys = []
-ssh_keys = ssh_keys.push(ENV['DEPLOY_SSH_KEY']) if ENV['DEPLOY_SSH_KEY']
+ssh_keys = ssh_keys.push(ENV["DEPLOY_SSH_KEY"]) if ENV["DEPLOY_SSH_KEY"]
 set :ssh_options, {
   keys: ssh_keys,
   forward_agent: false,
-  keys_only: true
+  keys_only: true,
 }

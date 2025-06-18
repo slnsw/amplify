@@ -22,12 +22,11 @@ module VoiceBase
       update_records(transcript, contents.lines)
     end
 
-
     private
 
     def call
       # Retrieve empty transcripts that have VoiceBase as their vendor.
-      transcripts = Transcript.getForDownloadByVendor('voice_base', @project_id)
+      transcripts = Transcript.getForDownloadByVendor("voice_base", @project_id)
       puts "Retrieved #{transcripts.count} empty transcripts from collections \
       with VoiceBase as their vendor."
 
@@ -35,7 +34,7 @@ module VoiceBase
     end
 
     def transcript_file_path(transcript)
-      Rails.root.join('project', @project_id, 'transcripts', 'voice_base',
+      Rails.root.join("project", @project_id, "transcripts", "voice_base",
                       "#{transcript.vendor_identifier}.srt")
     end
 
@@ -75,7 +74,7 @@ module VoiceBase
 
     # Ingest processed lines into the transcript.
     def ingest_transcript_lines(transcript, transcript_lines)
-      return nil if transcript_lines.nil? or transcript_lines.empty?
+      return nil if transcript_lines.blank?
 
       TranscriptLine.where(transcript_id: transcript.id).destroy_all
       TranscriptLine.create!(transcript_lines)
@@ -84,7 +83,7 @@ module VoiceBase
         transcript_status: downloaded_state,
         duration: transcript_lines.last[:end_time] / 1000,
         vendor_audio_urls: [],
-        transcript_retrieved_at: DateTime.now
+        transcript_retrieved_at: DateTime.now,
       )
     end
 
@@ -100,7 +99,7 @@ module VoiceBase
 
     # Convert a timestamp to milliseconds.
     def convert_time_to_milliseconds(time)
-      ((Time.strptime(time, '%H:%M:%S,%L') - Time.now.at_midnight) * 1000).to_i
+      ((Time.strptime(time, "%H:%M:%S,%L") - Time.now.at_midnight) * 1000).to_i
     end
   end
 end

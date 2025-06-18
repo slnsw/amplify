@@ -1,5 +1,5 @@
 Rails.application.configure do
- ENV["DEFAULT_MAILER_HOST"] # Settings specified here will take precedence over those in config/application.rb.
+  ENV["DEFAULT_MAILER_HOST"] # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
   config.cache_classes = true
@@ -26,7 +26,7 @@ Rails.application.configure do
 
   config.public_file_server.enabled = false
   config.public_file_server.headers = {
-    'Cache-Control' => "public, max-age=#{1.hour.to_i}"
+    "Cache-Control" => "public, max-age=#{1.hour.to_i}",
   }
 
   # Compress JavaScripts and CSS.
@@ -64,7 +64,6 @@ Rails.application.configure do
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
-
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

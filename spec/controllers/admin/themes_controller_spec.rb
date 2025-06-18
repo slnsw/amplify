@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::ThemesController, type: :controller do
   let(:admin) { create(:user, :admin) }
@@ -36,16 +36,16 @@ RSpec.describe Admin::ThemesController, type: :controller do
 
   describe "POST #create" do
     it "creates a theme and redirects on success" do
-      expect {
+      expect do
         post :create, params: { theme: { name: "Light" } }
-      }.to change(Theme, :count).by(1)
+      end.to change(Theme, :count).by(1)
       expect(response).to redirect_to(admin_themes_path)
     end
 
     it "renders new on failure" do
-      expect {
+      expect do
         post :create, params: { theme: { name: "" } }
-      }.not_to change(Theme, :count)
+      end.not_to change(Theme, :count)
       expect(response).to render_template(:new)
     end
   end
@@ -65,9 +65,9 @@ RSpec.describe Admin::ThemesController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the theme and redirects" do
-      expect {
+      expect do
         delete :destroy, params: { id: theme.id }
-      }.to change(Theme, :count).by(-1)
+      end.to change(Theme, :count).by(-1)
       expect(response).to redirect_to(admin_themes_path)
     end
   end
@@ -103,17 +103,17 @@ RSpec.describe Admin::ThemesController, type: :controller do
 
     describe "PATCH #update" do
       it "denies access" do
-        expect {
+        expect do
           patch :update, params: { id: resource&.id, theme: { name: "Test" } }
-        }.to raise_error(Pundit::NotAuthorizedError)
+        end.to raise_error(Pundit::NotAuthorizedError)
       end
     end
 
     describe "DELETE #destroy" do
       it "denies access" do
-        expect {
+        expect do
           delete :destroy, params: { id: resource&.id }
-        }.to raise_error(Pundit::NotAuthorizedError)
+        end.to raise_error(Pundit::NotAuthorizedError)
       end
     end
   end

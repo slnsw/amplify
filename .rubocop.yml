@@ -1,6 +1,5 @@
-inherit_gem:
-  reinteractive-style:
-    - default.yml
+inherit_from: default.yml
+
 Rails/UnknownEnv:
   Environments:
     - production

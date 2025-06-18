@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user do
-    provider { 'google_oauth2' }
-    uid { '12345678' }
+    provider { "google_oauth2" }
+    uid { "12345678" }
     name { Faker::Name.name }
     nickname { Faker::Name.initials }
     email { Faker::Internet.email }

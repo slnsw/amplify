@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class FlagsControllerTest < ActionController::TestCase
   setup do
@@ -12,7 +12,7 @@ class FlagsControllerTest < ActionController::TestCase
   end
 
   test "should create flag" do
-    assert_difference('Flag.count') do
+    assert_difference("Flag.count") do
       post :create, flag: { flag_type_id: @flag.flag_type_id, is_deleted: @flag.is_deleted, session_id: @flag.session_id, text: @flag.text, transcript_id: @flag.transcript_id, transcript_line_id: @flag.transcript_line_id, user_id: @flag.user_id }
     end
 
@@ -30,7 +30,7 @@ class FlagsControllerTest < ActionController::TestCase
   end
 
   test "should destroy flag" do
-    assert_difference('Flag.count', -1) do
+    assert_difference("Flag.count", -1) do
       delete :destroy, id: @flag
     end
 

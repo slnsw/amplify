@@ -19,7 +19,7 @@ module HomeSearch
       return true if value.blank?
 
       if value.is_a?(Array)
-        value.first.blank? || value.first == '0'
+        value.first.blank? || value.first == "0"
       end
     end
   end

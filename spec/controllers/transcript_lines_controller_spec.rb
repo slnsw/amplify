@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe TranscriptLinesController, type: :controller do
   let(:staff_user) { create(:user, :moderator) }

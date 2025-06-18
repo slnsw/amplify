@@ -1,4 +1,4 @@
-require 'sidekiq/testing'
+require "sidekiq/testing"
 
 RSpec.configure do |config|
   config.around(:each, sidekiq: true) do |example|

@@ -13,7 +13,7 @@ class TranscriptDecorator < Draper::Decorator
       institution: institution.slug,
       collection: collection.uid,
       id: object.uid,
-      **url_options
+      **url_options,
     )
   end
 
@@ -31,7 +31,7 @@ class TranscriptDecorator < Draper::Decorator
 
   def homepage_description
     text = Sanitize.fragment(object.description, parser_options: { max_tree_depth: -1 })
-    h.truncate(text, length: 50, separator: ' ', escape: false)
+    h.truncate(text, length: 50, separator: " ", escape: false)
   end
 
   def search_title
@@ -43,7 +43,7 @@ class TranscriptDecorator < Draper::Decorator
   end
 
   def humanize_contributors
-    h.pluralize(object.users_contributed, 'contributor')
+    h.pluralize(object.users_contributed, "contributor")
   end
 
   def display_percentage_edits
@@ -51,27 +51,27 @@ class TranscriptDecorator < Draper::Decorator
   end
 
   def display_edited_percentage
-    h.content_tag(:div, '', class: "item-status-bar edited", style: "width: #{object.percent_edited}%")
+    h.tag.div("", class: "item-status-bar edited", style: "width: #{object.percent_edited}%")
   end
 
   def display_completed_percentage
-    h.content_tag(:div, '', class: "item-status-bar completed", style: "width: #{object.percent_completed}%")
+    h.tag.div("", class: "item-status-bar completed", style: "width: #{object.percent_completed}%")
   end
 
   def display_reviewing_percentage
-    h.content_tag(:div, '', class: "item-status-bar reviewing", style: "width: #{object.percent_reviewing}%; left: #{object.percent_completed}%;")
+    h.tag.div("", class: "item-status-bar reviewing", style: "width: #{object.percent_reviewing}%; left: #{object.percent_completed}%;")
   end
 
   def display_status_consensus
-    display_status("#{object.percent_completed}% reached consensus", 'completed', object.percent_completed)
+    display_status("#{object.percent_completed}% reached consensus", "completed", object.percent_completed)
   end
 
   def display_status_reviewing
-    display_status("#{object.percent_reviewing}% awaiting review", 'reviewing', object.percent_reviewing)
+    display_status("#{object.percent_reviewing}% awaiting review", "reviewing", object.percent_reviewing)
   end
 
   def display_status_edited
-    display_status("#{object.percent_edited}% have edits", 'edited', object.percent_edited)
+    display_status("#{object.percent_edited}% have edits", "edited", object.percent_edited)
   end
 
   def has_started?
@@ -79,8 +79,8 @@ class TranscriptDecorator < Draper::Decorator
   end
 
   def display_status(text, klass, percentage)
-    if klass != 'completed' && object.percent_completed < 100
-      h.content_tag(:div, text, class: "transcript_item__status-text") if percentage > 0
+    if klass != "completed" && object.percent_completed < 100
+      h.tag.div(text, class: "transcript_item__status-text") if percentage > 0
     end
   end
 

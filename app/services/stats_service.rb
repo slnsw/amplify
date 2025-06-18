@@ -9,11 +9,11 @@ class StatsService
 
   def all_stats
     cache_keys = [
-      'stats_service',
-      'all_stats',
+      "stats_service",
+      "all_stats",
       @user.id,
       @start_date.to_i,
-      @end_date.to_i
+      @end_date.to_i,
     ]
     Rails.cache.fetch(cache_keys, expires_in: 24.hours) do
       {
@@ -49,7 +49,7 @@ class StatsService
       not_yet_started: (
         (1.0 - (total_lines_edited.to_f / total_lines_count)) * 100
       ).round(2),
-      duration: scope.sum(&:duration)
+      duration: scope.sum(&:duration),
     }
   end
   # rubocop:enable Metrics/AbcSize

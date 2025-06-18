@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::TranscriptsController, type: :routing do
   it "routes GET /admin/transcripts to admin/transcripts#index" do

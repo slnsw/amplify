@@ -6,7 +6,7 @@ class TokenService
   def self.encode(user_id, exp = 24.hours.from_now)
     payload = {
       user_id: user_id,
-      exp: exp.to_i # Set expiration as a UNIX timestamp
+      exp: exp.to_i, # Set expiration as a UNIX timestamp
     }
     JWT.encode(payload, SECRET_KEY)
   end

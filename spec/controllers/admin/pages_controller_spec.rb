@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::PagesController, type: :controller do
   let(:page) { create(:page) }
@@ -8,7 +8,7 @@ RSpec.describe Admin::PagesController, type: :controller do
 
     before do
       sign_in user
-    end  
+    end
 
     describe "#index" do
       it "is successful" do
@@ -26,7 +26,7 @@ RSpec.describe Admin::PagesController, type: :controller do
 
     describe "#create" do
       it "is successful" do
-        post :create, params: { page: {  page_type: 'faq', content: "some string" } }
+        post :create, params: { page: { page_type: "faq", content: "some string" } }
         expect(response).to have_http_status(:redirect)
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe Admin::PagesController, type: :controller do
 
     before do
       sign_in user
-    end  
+    end
 
     describe "#index" do
       it "is successful" do
@@ -69,7 +69,7 @@ RSpec.describe Admin::PagesController, type: :controller do
 
     describe "#create" do
       it "is successful" do
-        post :create, params: { page: {  page_type: 'faq', content: "some string" } }
+        post :create, params: { page: { page_type: "faq", content: "some string" } }
         expect(response).to have_http_status(:redirect)
       end
     end
@@ -106,7 +106,7 @@ RSpec.describe Admin::PagesController, type: :controller do
 
     describe "#create" do
       it "is successful" do
-        post :create, params: { page: {  page_type: 'faq', content: "some string" } }
+        post :create, params: { page: { page_type: "faq", content: "some string" } }
         expect(response).to have_http_status(:redirect)
       end
     end

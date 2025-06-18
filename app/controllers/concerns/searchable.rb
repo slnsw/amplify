@@ -19,10 +19,11 @@ module Searchable
   end
 
   def build_params
-    sort_params.reject { |_key, value|
+    sort_params.reject do |_key, value|
       value.blank? ||
-      value.to_s == "0" ||
-      (value&.first && (value.first.blank? || value.first == "0")) }
+        value.to_s == "0" ||
+        (value&.first && (value.first.blank? || value.first == "0"))
+    end
   end
 
   def select_institution_id
@@ -40,7 +41,7 @@ module Searchable
   def load_institutions
     new_institution = Institution.new(id: 0, name: "All Institutions")
     collection_ids = params[:data] && sort_params[:collection_id]
-    @institutions = if (collection_ids&.first).to_i == 0
+    @institutions = if collection_ids&.first.to_i == 0
                       Institution.all.order(name: :asc)
                     else
                       Institution.order(name: :asc).joins(:collections).

@@ -30,8 +30,8 @@ module VoiceBase
         transcript_id: @transcript_id,
         start_time: @line_temp[:from],
         end_time: @line_temp[:to],
-        original_text: @line_temp[:lines].join(' '),
-        sequence: (@line_number - 1)
+        original_text: @line_temp[:lines].join(" "),
+        sequence: (@line_number - 1),
       }
       @line_number += 1
     end
@@ -42,7 +42,7 @@ module VoiceBase
         reading: false,
         from: nil,
         to: nil,
-        lines: []
+        lines: [],
       }
     end
 
@@ -52,7 +52,7 @@ module VoiceBase
         reading: true,
         from: convert_time_to_milliseconds(from_text),
         to: convert_time_to_milliseconds(to_text),
-        lines: []
+        lines: [],
       }
     end
 
@@ -113,7 +113,7 @@ module VoiceBase
 
     # Convert a timestamp to milliseconds.
     def convert_time_to_milliseconds(time)
-      ((Time.strptime(time, '%H:%M:%S,%L') - Time.now.at_midnight) * 1000).to_i
+      ((Time.strptime(time, "%H:%M:%S,%L") - Time.now.at_midnight) * 1000).to_i
     end
   end
 end

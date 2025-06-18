@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::SiteAlertsController, type: :controller do
   let(:admin) { create(:user, :admin) }
@@ -8,7 +8,7 @@ RSpec.describe Admin::SiteAlertsController, type: :controller do
       message: "MyText",
       user_id: admin.id,
       publish_at: Time.zone.now,
-      unpublish_at: Time.zone.now + 1.day
+      unpublish_at: Time.zone.now + 1.day,
     )
   end
 
@@ -36,22 +36,22 @@ RSpec.describe Admin::SiteAlertsController, type: :controller do
 
   describe "POST #create" do
     it "creates a site_alert and redirects on success" do
-      expect {
+      expect do
         post :create, params: { site_alert: {
           machine_name: "alert_#{SecureRandom.hex(8)}",
           message: "MyText",
           user_id: admin.id,
           publish_at: Time.zone.now,
-          unpublish_at: Time.zone.now + 1.day
+          unpublish_at: Time.zone.now + 1.day,
         } }
-      }.to change(SiteAlert, :count).by(1)
+      end.to change(SiteAlert, :count).by(1)
       expect(response).to redirect_to(admin_site_alerts_path)
     end
 
     it "renders new on failure" do
-      expect {
+      expect do
         post :create, params: { site_alert: { machine_name: "alert_#{SecureRandom.hex(8)}", message: "" } }
-      }.not_to change(SiteAlert, :count)
+      end.not_to change(SiteAlert, :count)
       expect(response).to render_template(:new)
     end
   end
@@ -87,9 +87,9 @@ RSpec.describe Admin::SiteAlertsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the site_alert and redirects" do
-      expect {
+      expect do
         delete :destroy, params: { id: site_alert.id }
-      }.to change(SiteAlert, :count).by(-1)
+      end.to change(SiteAlert, :count).by(-1)
       expect(response).to redirect_to(admin_site_alerts_path)
     end
   end

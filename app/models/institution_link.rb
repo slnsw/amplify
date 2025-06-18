@@ -1,4 +1,4 @@
 class InstitutionLink < ApplicationRecord
   belongs_to :institution
-  validates_presence_of :position
+  validates :position, presence: true
 end

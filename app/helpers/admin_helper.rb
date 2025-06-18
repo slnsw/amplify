@@ -1,7 +1,7 @@
 module AdminHelper
   # rubocop:disable Metrics/LineLength, Metrics/MethodLength, Metrics/AbcSize
   def side_menu
-    feature_flag_ga = ENV['FEATURE_FLAG_GA'] || false
+    feature_flag_ga = ENV["FEATURE_FLAG_GA"] || false
     list = [
       OpenStruct.new(path: "/admin", icon: "line-chart", text: "Dashboard", type: 1),
       OpenStruct.new(path: admin_users_path, icon: "users", text: "User", type: 2),
@@ -26,7 +26,7 @@ module AdminHelper
   end
 
   def order_transcripts_asc(transcripts)
-    transcripts.sort_by {|e| e.title.gsub(/\d+/) {|num| "#{num.length} #{num}"}}
+    transcripts.sort_by { |e| e.title.gsub(/\d+/) { |num| "#{num.length} #{num}" } }
   end
 
   private

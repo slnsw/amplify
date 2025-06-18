@@ -2,7 +2,6 @@ class TranscriptEditsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   before_action :authenticate_user, only: [:create]
 
-
   before_action :set_transcript_edit, only: [:show, :update, :destroy]
 
   # GET /transcript_edits.json?transcript_line_id=1
@@ -24,8 +23,7 @@ class TranscriptEditsController < ApplicationController
   end
 
   # GET /transcript_edits/1.json
-  def show
-  end
+  def show; end
 
   # POST /transcript_edits.json
   def create
@@ -103,11 +101,11 @@ class TranscriptEditsController < ApplicationController
 
   private
 
-    def set_transcript_edit
-      @transcript_edit = TranscriptEdit.find(params[:id])
-    end
+  def set_transcript_edit
+    @transcript_edit = TranscriptEdit.find(params[:id])
+  end
 
-    def transcript_edit_params
-      params.require(:transcript_edit).permit(:transcript_id, :transcript_line_id, :user_id, :session_id, :text, :is_deleted)
-    end
+  def transcript_edit_params
+    params.require(:transcript_edit).permit(:transcript_id, :transcript_line_id, :user_id, :session_id, :text, :is_deleted)
+  end
 end

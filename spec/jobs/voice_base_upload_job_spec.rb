@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe VoiceBaseUploadJob, type: :job do
   let(:transcript_id) { 123 }

@@ -1,7 +1,7 @@
 class AppConfigPolicy < ApplicationPolicy
   attr_reader :user, :object
 
-  def initialize(user, institution)
+  def initialize(user, _institution)
     @user = user
     @object = object
   end

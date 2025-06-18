@@ -1,8 +1,8 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::ReportsController, type: :controller do
   let(:admin) { instance_double(User, admin?: true, id: 1) }
-  let(:users_report) { double('users_report') }
+  let(:users_report) { double("users_report") }
 
   before do
     allow(controller).to receive(:authenticate_admin!).and_return(true)
@@ -11,6 +11,11 @@ RSpec.describe Admin::ReportsController, type: :controller do
 
   before do
     controller.instance_variable_set(:@per_page, 20)
+  end
+
+  before do
+    allow(admin).to receive(:total_edits).and_return(nil)
+    allow(admin).to receive(:total_edits=)
   end
 
   describe "GET #users" do
@@ -35,8 +40,8 @@ RSpec.describe Admin::ReportsController, type: :controller do
           hash_including(
             page: 1,
             start_date: kind_of(ActiveSupport::TimeWithZone),
-            end_date: kind_of(ActiveSupport::TimeWithZone)
-          )
+            end_date: kind_of(ActiveSupport::TimeWithZone),
+          ),
         ).and_return(users_report)
         get :users, format: :html
       end
@@ -47,7 +52,7 @@ RSpec.describe Admin::ReportsController, type: :controller do
           page: 2,
           per_page: 50,
           start_date: "2022-01-01",
-          end_date: "2022-01-31"
+          end_date: "2022-01-31",
         }, format: :html
         expect(assigns(:users)).to eq(users_report)
         expect(assigns(:start_date_str)).to eq("2022-01-01")
@@ -80,10 +85,5 @@ RSpec.describe Admin::ReportsController, type: :controller do
       get :users, format: :html
       expect(response).to have_http_status(:redirect).or have_http_status(:found)
     end
-  end
-
-  before do
-    allow(admin).to receive(:total_edits).and_return(nil)
-    allow(admin).to receive(:total_edits=)
   end
 end

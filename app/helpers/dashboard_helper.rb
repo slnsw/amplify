@@ -13,7 +13,7 @@ module DashboardHelper
       else
         hash = {
           transcript: edit.transcript,
-          edits: [edit]
+          edits: [edit],
         }
         list[edit.transcript_id] = hash
       end

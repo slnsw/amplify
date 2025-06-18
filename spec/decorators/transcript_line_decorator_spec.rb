@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe TranscriptLineDecorator do
   let(:transcript) { create(:transcript, title: "Transcript Title") }

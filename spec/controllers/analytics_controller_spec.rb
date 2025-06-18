@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::AnalyticsController, type: :controller do
   let(:institution) { create(:institution, guid: "abc123") }

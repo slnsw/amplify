@@ -35,7 +35,7 @@ gem "redis", "~> 4.0"
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
+gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -49,7 +49,7 @@ gem "bootsnap", require: false
 gem "marcel", "~> 1.0.2"
 
 # Use PostgreSQL as the database for Active Record
-gem 'pg', '1.5.9'
+gem "pg", "1.5.9"
 gem "pg_search", "~> 2.1.4"
 gem "will_paginate", "~> 3.3.0"
 
@@ -77,8 +77,8 @@ gem "figaro"
 # We have to force the version of OAuth because omniauth-google-oauth2 v0.6
 # requires jwt v2.0 or better.
 # Facebook's gem is a bit behind.
-gem 'jwt'
 gem "devise", "~> 4.9.0"
+gem "jwt"
 # gem 'devise-security'
 gem "oauth2", github: "oauth-xx/oauth2", ref: "v2.0.1"
 gem "omniauth-facebook", "~> 9.0.0"
@@ -124,13 +124,13 @@ end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem "debug", platforms: %i[mri mingw x64_mingw]
 
   gem "byebug", ">= 11.1.3", platforms: [:mri, :mingw, :x64_mingw]
   gem "factory_bot_rails", "~> 5.0.2"
   gem "faker"
   gem "pry", "~> 0.12.2"
-  gem 'rspec-rails', '~> 6.0.0'
+  gem "rspec-rails", "~> 6.0.0"
 end
 
 group :development do
@@ -145,12 +145,12 @@ group :development do
 
   gem "foreman"
   gem "listen", ">= 3.0.5", "< 3.2"
-  gem 'spring'
-  gem 'spring-commands-rspec'
+  gem "spring"
+  gem "spring-commands-rspec"
 
   gem "capistrano", "~> 3.17", require: false
   gem "capistrano3-puma", github: "seuros/capistrano-puma"
-  gem "capistrano-bundler", '~> 2.0'
+  gem "capistrano-bundler", "~> 2.0"
   gem "capistrano-npm"
   gem "capistrano-rails", "~> 1.6", require: false
   gem "capistrano-rvm"
@@ -160,10 +160,10 @@ group :development do
   gem "bcrypt_pbkdf", "~> 1.1"
   gem "ed25519", "~> 1.2"
 
+  gem "brakeman"
   gem "dotenv-rails", "~> 2.7.1"
   gem "letter_opener", "~> 1.7.0"
   gem "reinteractive-style", "~> 0.2.8"
-  gem "brakeman"
 end
 
 group :test do
@@ -186,7 +186,7 @@ end
 # tracking errors
 gem "bugsnag"
 gem "draper", "~> 4.0.2"
-gem 'nokogiri', '1.12.5'
+gem "nokogiri", "1.12.5"
 gem "sanitize", "~> 5.2.0"
 
 gem "acts_as_singleton", "~> 0.0.8"
@@ -205,4 +205,4 @@ gem "sidekiq-cron", "~> 1.2.0"
 gem "paper_trail", "~> 10.3.1"
 
 # Sitemap generator'
-gem 'sitemap_generator'
+gem "sitemap_generator"

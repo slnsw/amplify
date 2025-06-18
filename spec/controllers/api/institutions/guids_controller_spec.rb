@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Api::Institutions::GuidsController, type: :controller do
   let!(:institution1) { create(:institution, slug: "inst1", guid: "guid-1") }
@@ -18,7 +18,7 @@ RSpec.describe Api::Institutions::GuidsController, type: :controller do
         json = JSON.parse(response.body)
         expect(json).to include(
           { "UID" => "inst1", "GUID" => "guid-1" },
-          { "UID" => "inst2", "GUID" => "guid-2" }
+          { "UID" => "inst2", "GUID" => "guid-2" },
         )
       end
     end

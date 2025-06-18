@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe InstitutionDecorator do
   let(:institution) { create(:institution, slug: "test-slug", url: "http://example.com") }

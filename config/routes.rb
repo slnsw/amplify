@@ -1,5 +1,5 @@
-require 'sidekiq/web'
-require 'sidekiq/cron/web'
+require "sidekiq/web"
+require "sidekiq/cron/web"
 
 Rails.application.routes.draw do
   post "/csp-violation-report-endpoint", to: "api/csp_reports#create"
@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   resources :transcript_edits, only: [:index, :show, :create]
   resources :transcript_files, only: [:index, :show]
   resources :transcripts, only: [:index, :show]
-  get 'transcripts/:institution/:collection/:id', to: 'transcripts#show', as: 'institution_transcript'
+  get "transcripts/:institution/:collection/:id", to: "transcripts#show", as: "institution_transcript"
 
   resources :collections, only: [:index, :show] do
     collection do
@@ -61,23 +61,23 @@ Rails.application.routes.draw do
     :users,
     controllers: {
       sessions: "users/sessions",
-      omniauth_callbacks: 'users/omniauth_callbacks',
+      omniauth_callbacks: "users/omniauth_callbacks",
       registrations: "users/registrations",
-      passwords: "users/passwords"
-    }
+      passwords: "users/passwords",
+    },
   )
 
   authenticate :user, lambda { |u| u.admin? } do
-    mount Sidekiq::Web => '/sidekiq'
+    mount Sidekiq::Web => "/sidekiq"
   end
 
-  match 'page/faq' => 'page#faq', :via => [:get]
-  match 'page/about' => 'page#about', :via => [:get]
-  match 'page/tutorial' => 'page#tutotial', :via => [:get]
-  match 'page/preview/:id' => 'page#preview', :via => [:get]
-  match 'page/:id' => 'page#show', :via => [:get]
+  match "page/faq" => "page#faq", :via => [:get]
+  match "page/about" => "page#about", :via => [:get]
+  match "page/tutorial" => "page#tutotial", :via => [:get]
+  match "page/preview/:id" => "page#preview", :via => [:get]
+  match "page/:id" => "page#show", :via => [:get]
 
-  match 'transcript_lines/:id/resolve' => 'transcript_lines#resolve', :via => [:post]
+  match "transcript_lines/:id/resolve" => "transcript_lines#resolve", :via => [:post]
 
   # admin
   namespace :admin do
@@ -86,7 +86,7 @@ Rails.application.routes.draw do
     resources :flags, only: [:index]
     resources :site_alerts
 
-    get 'cms', to: 'cms#show'
+    get "cms", to: "cms#show"
     namespace :cms do
       resources :collections, except: [:index]
       resources :transcripts, except: [:show, :index] do
@@ -98,26 +98,26 @@ Rails.application.routes.draw do
       end
     end
   end
-  match 'admin' => 'admin/stats#index', :via => [:get], :as => :admin
+  match "admin" => "admin/stats#index", :via => [:get], :as => :admin
 
   # moderator
   namespace :moderator do
     resources :flags, only: [:index]
   end
-  match 'moderator' => 'admin/flags#index', :via => [:get], :as => :moderator
+  match "moderator" => "admin/flags#index", :via => [:get], :as => :moderator
 
   resources :home, only: [:index]
   resources :search, only: [:index]
   resources :dashboard, only: [:index]
 
-  match 'authenticate' => "authentication#authenticate", :via => [:post]
+  match "authenticate" => "authentication#authenticate", :via => [:post]
 
   # temp routes for testing new UI
-  get 'v2/home',   to: 'v2#home'
-  get 'v2/edit',   to: 'v2#edit'
-  get 'v2/search', to: 'v2#search'
+  get "v2/home",   to: "v2#home"
+  get "v2/edit",   to: "v2#edit"
+  get "v2/search", to: "v2#search"
 
-  root to: 'home#index'
+  root to: "home#index"
 
-  match '*path' => "institutions#index", via: [:get], as: :institution
+  match "*path" => "institutions#index", via: [:get], as: :institution
 end

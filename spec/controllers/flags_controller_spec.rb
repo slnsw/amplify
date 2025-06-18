@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe FlagsController, type: :controller do
   let(:user) { create(:user) }
@@ -45,8 +45,8 @@ RSpec.describe FlagsController, type: :controller do
             transcript_id: transcript.id,
             transcript_line_id: transcript_line.id,
             flag_type_id: flag_type.id,
-            text: "Test flag"
-          }
+            text: "Test flag",
+          },
         }, format: :json
         expect(response).to have_http_status(:no_content)
       end
@@ -59,8 +59,8 @@ RSpec.describe FlagsController, type: :controller do
             transcript_id: transcript.id,
             transcript_line_id: transcript_line.id,
             flag_type_id: flag_type.id,
-            text: "Updated flag"
-          }
+            text: "Updated flag",
+          },
         }, format: :json
         expect(response).to have_http_status(:no_content)
       end
@@ -74,8 +74,8 @@ RSpec.describe FlagsController, type: :controller do
             transcript_id: nil,
             transcript_line_id: nil,
             flag_type_id: nil,
-            text: ""
-          }
+            text: "",
+          },
         }, format: :json
         expect(response).to have_http_status(:unprocessable_entity)
       end
@@ -97,9 +97,9 @@ RSpec.describe FlagsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the flag and returns no_content" do
-      expect {
+      expect do
         delete :destroy, params: { id: flag.id }, format: :json
-      }.to change(Flag, :count).by(-1)
+      end.to change(Flag, :count).by(-1)
       expect(response).to have_http_status(:no_content)
     end
   end

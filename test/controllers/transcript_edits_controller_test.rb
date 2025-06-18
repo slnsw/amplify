@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class TranscriptEditsControllerTest < ActionController::TestCase
   setup do
@@ -12,7 +12,7 @@ class TranscriptEditsControllerTest < ActionController::TestCase
   end
 
   test "should create transcript_edit" do
-    assert_difference('TranscriptEdit.count') do
+    assert_difference("TranscriptEdit.count") do
       post :create, transcript_edit: { session_id: @transcript_edit.session_id, text: @transcript_edit.text, transcript_id: @transcript_edit.transcript_id, transcript_line_id: @transcript_edit.transcript_line_id, user_id: @transcript_edit.user_id, weight: @transcript_edit.weight }
     end
 
@@ -30,7 +30,7 @@ class TranscriptEditsControllerTest < ActionController::TestCase
   end
 
   test "should destroy transcript_edit" do
-    assert_difference('TranscriptEdit.count', -1) do
+    assert_difference("TranscriptEdit.count", -1) do
       delete :destroy, id: @transcript_edit
     end
 

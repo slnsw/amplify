@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 class DummyController < ActionController::Base
   include Searchable
@@ -19,13 +19,13 @@ RSpec.describe Searchable, type: :controller do
     it "returns permitted params with array conversion" do
       controller.params = { data: { collection_id: "1", theme: ["foo"], sort_id: "2", text: "abc", q: "q", institution_id: "3" } }
       expect(controller.send(:sort_params)).to eq({
-        "collection_id" => ["1"],
-        "theme" => ["foo"],
-        "sort_id" => "2",
-        "text" => "abc",
-        "q" => "q",
-        "institution_id" => "3"
-      })
+                                                    "collection_id" => ["1"],
+                                                    "theme" => ["foo"],
+                                                    "sort_id" => "2",
+                                                    "text" => "abc",
+                                                    "q" => "q",
+                                                    "institution_id" => "3",
+                                                  })
     end
 
     it "returns empty hash if params[:data] is blank" do
@@ -43,13 +43,13 @@ RSpec.describe Searchable, type: :controller do
     it "keeps valid values" do
       controller.params = { data: { collection_id: ["1"], theme: ["foo"], sort_id: "2", text: "abc", q: "q", institution_id: "3" } }
       expect(controller.send(:build_params)).to eq({
-        "collection_id" => ["1"],
-        "theme" => ["foo"],
-        "sort_id" => "2",
-        "text" => "abc",
-        "q" => "q",
-        "institution_id" => "3"
-      })
+                                                     "collection_id" => ["1"],
+                                                     "theme" => ["foo"],
+                                                     "sort_id" => "2",
+                                                     "text" => "abc",
+                                                     "q" => "q",
+                                                     "institution_id" => "3",
+                                                   })
     end
   end
 

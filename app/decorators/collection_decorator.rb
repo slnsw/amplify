@@ -15,7 +15,7 @@ class CollectionDecorator < ApplicationDecorator
       controller: "collections",
       action: "show",
       id: uid,
-      only_path: false
+      only_path: false,
     )
   end
 end

@@ -1,4 +1,4 @@
-require 'open3'
+require "open3"
 
 module Azure
   class SpeechToTextService
@@ -34,7 +34,7 @@ module Azure
     def wav_file
       # store it in /tmp folder as it has much larger space
       @wav_file ||= Pathname.new("/tmp").join(
-        filename.gsub(extension, ".#{SecureRandom.uuid}.wav")
+        filename.gsub(extension, ".#{SecureRandom.uuid}.wav"),
       ).to_s
     end
 
@@ -44,8 +44,9 @@ module Azure
       stdout, stderr, status =
         Open3.capture3("ffmpeg", "-i", file.to_s, "-ac", "1", "-ar", "16000", wav_file)
       raise Exception, stderr unless status.success?
+
       Rails.logger.debug("--- convert_audio_to_wav ---")
-      Rails.logger.debug(File.size wav_file) if File.exist? wav_file
+      Rails.logger.debug(File.size(wav_file)) if File.exist? wav_file
     end
 
     def transcripts_from_sdk
@@ -58,6 +59,7 @@ module Azure
       Rails.logger.debug(stdout)
       Rails.logger.debug(stderr)
       raise Exception, stderr.presence || stdout unless status.success?
+
       stdout
     end
 

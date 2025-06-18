@@ -6,10 +6,10 @@ module Authentication
     unless is_admin?
       if is_moderator?
         redirect_to moderator_url
-        return
+        nil
       else
         authentication_failed
-        return
+        nil
       end
     end
   end
@@ -18,23 +18,23 @@ module Authentication
     get_current_user
     unless is_moderator?
       authentication_failed
-      return
+      nil
     end
   end
 
   def authentication_failed
     respond_to do |format|
-      format.html {
-        redirect_to root_url(show_alert: 'You must log in as admin to access this section.'), allow_other_host: true
-      }
-      format.json {
+      format.html do
+        redirect_to root_url(show_alert: "You must log in as admin to access this section."), allow_other_host: true
+      end
+      format.json do
         render json: {
           error: 1,
-          message: 'You must log in as admin to access this section.'
+          message: "You must log in as admin to access this section.",
         }
-      }
+      end
     end
-    return
+    nil
   end
 
   def is_admin?
@@ -46,15 +46,16 @@ module Authentication
   end
 
   def get_current_user
-    return nil unless request.cookies.key?('authHeaders')
-    auth_headers = JSON.parse(request.cookies['authHeaders'])
+    return nil unless request.cookies.key?("authHeaders")
+
+    auth_headers = JSON.parse(request.cookies["authHeaders"])
 
     expiration_datetime = DateTime.strptime(auth_headers["expiry"], "%s")
     current_user = User.find_by(uid: auth_headers["uid"])
 
     if current_user &&
-       current_user.tokens.has_key?(auth_headers["client"]) &&
-       expiration_datetime > DateTime.now
+        current_user.tokens.has_key?(auth_headers["client"]) &&
+        expiration_datetime > DateTime.now
 
       @current_user = current_user
     end

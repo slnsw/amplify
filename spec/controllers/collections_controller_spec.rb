@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe CollectionsController, type: :controller do
-
   describe "GET #index" do
     let!(:published_institution1) { create(:institution, name: "Alpha Institution", hidden: false) }
     let!(:published_institution2) { create(:institution, name: "Beta Institution", hidden: false) }

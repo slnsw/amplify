@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::TranscriptionConventionsController, type: :controller do
   let(:admin) { create(:user, :admin) }
@@ -36,22 +36,22 @@ RSpec.describe Admin::TranscriptionConventionsController, type: :controller do
 
   describe "POST #create" do
     it "creates a transcription_convention and redirects on success" do
-      expect {
+      expect do
         post :create, params: {
           institution_id: institution.id,
-          transcription_convention: attributes_for(:transcription_convention)
+          transcription_convention: attributes_for(:transcription_convention),
         }
-      }.to change(TranscriptionConvention, :count).by(1)
+      end.to change(TranscriptionConvention, :count).by(1)
       expect(response).to redirect_to(admin_institution_transcription_conventions_path(institution))
     end
 
     it "renders new on failure" do
-      expect {
+      expect do
         post :create, params: {
           institution_id: institution.id,
-          transcription_convention: { convention_key: "" }
+          transcription_convention: { convention_key: "" },
         }
-      }.to change(TranscriptionConvention, :count).by(1)
+      end.to change(TranscriptionConvention, :count).by(1)
       expect(response).to redirect_to(admin_institution_transcription_conventions_path(institution))
     end
   end
@@ -61,7 +61,7 @@ RSpec.describe Admin::TranscriptionConventionsController, type: :controller do
       patch :update, params: {
         institution_id: institution.id,
         id: transcription_convention.id,
-        transcription_convention: { convention_key: "Updated" }
+        transcription_convention: { convention_key: "Updated" },
       }
       expect(response).to redirect_to(admin_institution_transcription_conventions_path(institution))
       expect(transcription_convention.reload.convention_key).to eq("Updated")
@@ -71,7 +71,7 @@ RSpec.describe Admin::TranscriptionConventionsController, type: :controller do
       patch :update, params: {
         institution_id: institution.id,
         id: transcription_convention.id,
-        transcription_convention: { convention_key: "" }
+        transcription_convention: { convention_key: "" },
       }
       expect(response).to redirect_to(admin_institution_transcription_conventions_path(institution))
     end
@@ -79,9 +79,9 @@ RSpec.describe Admin::TranscriptionConventionsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the transcription_convention and redirects" do
-      expect {
+      expect do
         delete :destroy, params: { institution_id: institution.id, id: transcription_convention.id }
-      }.to change(TranscriptionConvention, :count).by(-1)
+      end.to change(TranscriptionConvention, :count).by(-1)
       expect(response).to redirect_to(admin_institution_transcription_conventions_path(institution))
     end
   end

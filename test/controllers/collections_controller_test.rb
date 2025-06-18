@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class CollectionsControllerTest < ActionController::TestCase
   setup do
@@ -12,7 +12,7 @@ class CollectionsControllerTest < ActionController::TestCase
   end
 
   test "should create collection" do
-    assert_difference('Collection.count') do
+    assert_difference("Collection.count") do
       post :create, collection: { description: @collection.description, image_url: @collection.image_url, title: @collection.title, uid: @collection.uid, url: @collection.url, vendor_id: @collection.vendor_id, vendor_identifier: @collection.vendor_identifier }
     end
 
@@ -30,7 +30,7 @@ class CollectionsControllerTest < ActionController::TestCase
   end
 
   test "should destroy collection" do
-    assert_difference('Collection.count', -1) do
+    assert_difference("Collection.count", -1) do
       delete :destroy, id: @collection
     end
 

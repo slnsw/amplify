@@ -1,11 +1,11 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe StatsPolicy do
+  subject { described_class }
+
   let(:staff) { create(:user, :moderator) }
   let(:user)  { create(:user) }
   let(:stats) { double("Stats") }
-
-  subject { described_class }
 
   describe "#index?" do
     it "permits staff users" do

@@ -19,11 +19,12 @@ module ApplicationHelper
   def gulp_asset_plain(asset_type, asset_name, suffix = "")
     Rails.cache.fetch("gulp_asset_plain:#{asset_type}:#{asset_name}:#{suffix}", expires_in: 12.hours) do
       globbed = Dir.glob(
-        Rails.root.join('public', 'assets', asset_type, "#{asset_name}*#{suffix}.#{asset_type}")
+        Rails.root.join("public", "assets", asset_type, "#{asset_name}*#{suffix}.#{asset_type}"),
       ).sort_by(&:length)
       first = globbed.first
       return "" if first.nil?
-      first.gsub(Rails.root.join('public').to_s, "")
+
+      first.gsub(Rails.root.join("public").to_s, "")
     end
   end
 
@@ -33,8 +34,9 @@ module ApplicationHelper
 
   def current_user_edits
     return unless current_user
+
     number = number_to_human(current_user.total_edits, format: "%n%u", units: { thousand: "K+" })
-    content_tag :span, number, class: "select-active__admin-score"
+    tag.span(number, class: "select-active__admin-score")
   end
 
   def time_display(start_time)
@@ -71,13 +73,13 @@ module ApplicationHelper
 
         "#{n.to_i}#{name}" unless n.to_i == 0
       end
-    end.compact.reverse.join(' ')
+    end.compact.reverse.join(" ")
   end
 
   def footer_link(link)
     return if link.title.blank? || link.url.blank?
 
-    link_to link.title, link.url, target: :_blank
+    link_to link.title, link.url, target: :_blank, rel: :noopener
   end
 
   def conditional_separator(collection, index)

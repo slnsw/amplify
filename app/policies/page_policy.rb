@@ -29,5 +29,4 @@ class PagePolicy < ApplicationPolicy
       end
     end
   end
-
 end

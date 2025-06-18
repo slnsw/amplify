@@ -10,8 +10,8 @@ module AzuresHelper
       "-ar", "16000",
       a_string_including("aboutSpeechSdk.")
     ).and_return([
-      "", "", double("command execution status", :success? => true)
-    ])
+                   "", "", double("command execution status", success?: true)
+                 ])
   end
 
   def stub_azure_speech_to_text(
@@ -24,7 +24,7 @@ module AzuresHelper
       a_hash_including({}),
       "node",
       a_string_including("speech-to-text.js"),
-      input_file
+      input_file,
     ).and_return([transcript_content, error_message, status])
   end
 end
