@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user_role do
-    name { 'user' }
+    sequence(:name) { |n| "role_#{n}" }
     hiearchy { 10 }
     description { 'Registered user' }
 
