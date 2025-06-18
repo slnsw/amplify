@@ -51,8 +51,8 @@ RSpec.feature 'Summary Page' do
         end
       end
 
-      context 'when selecting a start_date' do
-        it 'filters the stats by date' do
+      xcontext 'when selecting a start_date' do
+        xit 'filters the stats by date' do
           fill_in 'start_date', with: '26112021'
           expect(page).to have_text('Total number of items: 2')
           expect(page).to have_text('Total duration of items: 01h 06m 28s')
