@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
   let(:institution) { FactoryBot.create :institution }
@@ -8,8 +8,8 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       url: "collection_catalogue_reference",
       uid: "collection-uid",
       title: "The collection's title",
-      vendor: Vendor.create(uid: 'voice_base', name: 'VoiceBase'),
-      institution_id: institution.id
+      vendor: Vendor.create(uid: "voice_base", name: "VoiceBase"),
+      institution_id: institution.id,
     )
   end
   let(:transcript) do
@@ -20,13 +20,13 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       url: "transcript_catalogue_reference",
       audio_url: "s3_audio_url",
       image_url: "s3_image_url",
-      transcript_status: TranscriptStatus.create(name: 'initialized', progress: 0, description: "Transcript initialized"),
+      transcript_status: TranscriptStatus.create(name: "initialized", progress: 0, description: "Transcript initialized"),
       collection: collection,
       vendor: collection.vendor,
     )
   end
   let(:speaker) do
-    Speaker.create!(name: 'Jane Bloggs')
+    Speaker.create!(name: "Jane Bloggs")
   end
   let(:user) { create(:user, :admin, email: "user@email.com", password: "password") }
 
@@ -35,7 +35,7 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
   end
 
   describe "GET #new" do
-    let(:action) { get :new, params: {collection_uid: collection.uid  } }
+    let(:action) { get :new, params: { collection_uid: collection.uid } }
 
     it "is successful" do
       action
@@ -53,15 +53,15 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       let(:params) do
         {
           uid: "new_transcript",
-          audio: File.open(Rails.root.join('spec', 'fixtures', 'audio.mp3')),
-          script: File.open(Rails.root.join('spec', 'fixtures', 'transcript.srt')),
-          image: File.open(Rails.root.join('spec', 'fixtures', 'image.jpg')),
+          audio: File.open(Rails.root.join("spec", "fixtures", "audio.mp3")),
+          script: File.open(Rails.root.join("spec", "fixtures", "transcript.srt")),
+          image: File.open(Rails.root.join("spec", "fixtures", "image.jpg")),
           vendor_id: collection.vendor.id,
           collection_id: collection.id,
-          speakers: "Anonymous"
+          speakers: "Anonymous",
         }
       end
-      let(:action) { post :create, params:  { transcript: params  } }
+      let(:action) { post :create, params: { transcript: params } }
 
       it "is successful" do
         action
@@ -76,7 +76,7 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       it "creates a new transcript" do
         expect do
           action
-        end.to change { Transcript.count }
+        end.to change(Transcript, :count)
       end
 
       it "saves speaker data" do
@@ -87,7 +87,7 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
 
     context "invalid request" do
       let(:params) { { uid: "", speakers: "" } }
-      let(:action) { post :create, params: { transcript: params  } }
+      let(:action) { post :create, params: { transcript: params } }
 
       it "responds with a bad request status" do
         action
@@ -102,13 +102,13 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       it "does not create a new transcript" do
         expect do
           action
-        end.to_not change { Transcript.count }
+        end.not_to change(Transcript, :count)
       end
     end
   end
 
   describe "GET #edit" do
-    let(:action) { get :edit, params: { id: transcript.id  } }
+    let(:action) { get :edit, params: { id: transcript.id } }
 
     it "is successful" do
       action
@@ -126,7 +126,7 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       let(:params) do
         { title: "Revised title", speakers: "John Doe" }
       end
-      let(:action) { put :update, params: { id: transcript.uid, transcript: params  } }
+      let(:action) { put :update, params: { id: transcript.uid, transcript: params } }
 
       it "is successful" do
         action
@@ -141,14 +141,14 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       it "updates the transcript" do
         expect do
           action
-        end.to change { transcript.reload.title }
-          .from("The transcript title").to("Revised title")
+        end.to change { transcript.reload.title }.
+          from("The transcript title").to("Revised title")
       end
     end
 
     context "invalid update request" do
       let(:params) { { uid: "", speakers: "" } }
-      let(:action) { put :update,  params: { id: transcript.uid, transcript: params  } }
+      let(:action) { put :update, params: { id: transcript.uid, transcript: params } }
 
       it "responds with a bad request status" do
         action
@@ -163,14 +163,14 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
       it "does not update the transcript" do
         expect do
           action
-        end.to_not change { transcript.reload.uid }
+        end.not_to change { transcript.reload.uid }
       end
     end
   end
 
   describe "GET speaker_search" do
     context "valid request" do
-      let (:action) { post :speaker_search, params: { query: 'jane'  } }
+      let (:action) { post :speaker_search, params: { query: "jane" } }
 
       it "responds with an ok status" do
         action
@@ -181,7 +181,7 @@ RSpec.describe Admin::Cms::TranscriptsController, type: :controller do
 
   describe "POST process_transcript" do
     context "valid request" do
-      let (:action) { post :process_transcript, params: { id: transcript.id  } }
+      let (:action) { post :process_transcript, params: { id: transcript.id } }
 
       it "responds with an ok status" do
         action

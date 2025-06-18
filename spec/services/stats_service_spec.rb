@@ -59,7 +59,7 @@ RSpec.describe StatsService, type: :service do
 
     context "when filtering by date" do
       it "filters data" do
-        expect(described_class.new(user, '2021-11-11', '2021-11-12').completion_stats).
+        expect(described_class.new(user, "2021-11-11", "2021-11-12").completion_stats).
           to eq(completed: 100.0, in_draft: 0.0, in_review: 0.0, total: 1, duration: 0, not_yet_started: 0.0)
       end
     end

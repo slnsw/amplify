@@ -2,9 +2,9 @@ class User < ApplicationRecord
   has_paper_trail
   # Include default devise modules.
   devise :database_authenticatable,
-          :recoverable, :confirmable, :registerable,
-          :rememberable, :trackable, :validatable, :omniauthable,
-          omniauth_providers: [:google_oauth2, :facebook]
+         :recoverable, :confirmable, :registerable,
+         :rememberable, :trackable, :validatable, :omniauthable,
+         omniauth_providers: [:google_oauth2, :facebook]
 
   belongs_to :user_role, optional: true
   belongs_to :institution, optional: true
@@ -14,11 +14,11 @@ class User < ApplicationRecord
   scope :only_public_users, -> { where("user_role_id < ?", UserRole::MIN_STAFF_LEVEL) }
   scope :only_staff_users, -> { where("user_role_id >= ?", UserRole::MIN_STAFF_LEVEL) }
 
-  def incrementLinesEdited(amount=1)
+  def incrementLinesEdited(amount = 1)
     update(lines_edited: lines_edited + amount)
   end
 
-  def recalculate(edits=nil)
+  def recalculate(edits = nil)
     edits ||= TranscriptEdit.getByUser(id)
     if edits
       update(lines_edited: edits.length)
@@ -60,7 +60,6 @@ class User < ApplicationRecord
     user_role.try(:name) == "content_editor"
   end
 
-
   # can be either,
   # admin, moderator, content_editor
   def staff?
@@ -71,34 +70,32 @@ class User < ApplicationRecord
     admin? || content_editor?
   end
 
-
   def admin_or_moderator?
     admin? || moderator?
   end
 
   def self.orderByInstitution
-    self.includes(:institution).order("institutions.name ASC NULLS FIRST").limit(1000)
+    includes(:institution).order("institutions.name ASC NULLS FIRST").limit(1000)
   end
 
   def self.getStatsByDay
     Rails.cache.fetch("#{ENV['PROJECT_ID']}/users/stats", expires_in: 10.minutes) do
-      User
-        .select('DATE(created_at) AS date, COUNT(*) AS count')
-        .group('DATE(created_at)')
-        .order('DATE(created_at)')
+      User.
+        select("DATE(created_at) AS date, COUNT(*) AS count").
+        group("DATE(created_at)").
+        order("DATE(created_at)")
     end
   end
 
   # https://github.com/zquestz/omniauth-google-oauth2
   def self.from_omniauth(access_token)
     data = access_token.info
-    user = User.where(email: data['email']).first
+    user = User.where(email: data["email"]).first
 
     unless user
-      user = User.new(name: data['name'],
-                         email: data['email'],
-                         password: Devise.friendly_token[0,20]
-                        )
+      user = User.new(name: data["name"],
+                      email: data["email"],
+                      password: Devise.friendly_token[0, 20])
       user.skip_confirmation!
       user.skip_confirmation_notification!
       user.save
@@ -108,7 +105,7 @@ class User < ApplicationRecord
 
   def self.getReport(params)
     users = User.all
-    if (params[:page])
+    if params[:page]
       params[:per_page] ||= 20
       users = users.paginate(page: params[:page], per_page: params[:per_page])
     end
@@ -117,19 +114,19 @@ class User < ApplicationRecord
       page_count: users.count,
       total_items: User.all.count,
       total_pages: (User.all.count / (params[:per_page] || 1)).ceil,
-      results: users.map { |u|
+      results: users.map do |u|
         u.getUserReport({
-          start_date: params[:start_date],
-          end_date: params[:end_date]
-        })
-      }
+                          start_date: params[:start_date],
+                          end_date: params[:end_date],
+                        })
+      end,
     }
   end
 
   def getUserReport(params)
     edits = TranscriptEdit.where(user_id: id)
-    edits = edits.where("transcript_edits.updated_at >= ?", params[:start_date]) if (params[:start_date])
-    edits = edits.where("transcript_edits.updated_at <= ?", params[:end_date]) if (params[:end_date])
+    edits = edits.where("transcript_edits.updated_at >= ?", params[:start_date]) if params[:start_date]
+    edits = edits.where("transcript_edits.updated_at <= ?", params[:end_date]) if params[:end_date]
     lines = edits.map { |e| e.transcript_line }.compact.uniq
     transcripts = lines.map { |l| l.transcript }.compact.uniq
     collections = transcripts.map { |t| t.collection }.compact.uniq

@@ -20,7 +20,7 @@ module IndexTemplate
   end
 
   def environment_app_config
-    app_config = ENV['APP_CONFIG']
+    app_config = ENV["APP_CONFIG"]
     @app_config = app_config.to_json
   end
 end

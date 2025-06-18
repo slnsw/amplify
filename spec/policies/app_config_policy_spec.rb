@@ -1,11 +1,11 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe AppConfigPolicy do
+  subject { described_class }
+
   let(:admin) { create(:user, :admin) }
   let(:user)  { create(:user) }
   let(:app_config) { double("AppConfig") }
-
-  subject { described_class }
 
   describe "permissions" do
     %i[index? edit? update?].each do |action|

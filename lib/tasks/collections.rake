@@ -1,21 +1,19 @@
-require 'csv'
-require 'fileutils'
+require "csv"
+require "fileutils"
 
 namespace :collections do
-
   # Usage rake collections:load['oral-history','collections_seeds.csv']
   desc "Load collections by project key and csv file"
-  task :load, [:project_key, :filename] => :environment do |task, args|
-
+  task :load, [:project_key, :filename] => :environment do |_task, args|
     # Validate project
-    project_path = Rails.root.join('project', args[:project_key], '/')
+    project_path = Rails.root.join("project", args[:project_key], "/")
     if !File.directory?(project_path)
       puts "No project directory found for: #{args[:project_key]}"
       exit
     end
 
     # Validate file
-    file_path = Rails.root.join('project', args[:project_key], 'data', args[:filename])
+    file_path = Rails.root.join("project", args[:project_key], "data", args[:filename])
     if !File.exist? file_path
       puts "No collection file found: #{file_path}"
       exit
@@ -28,7 +26,7 @@ namespace :collections do
     # Write to database
     collections.each do |attributes|
       if attributes.key?(:vendor)
-        attributes[:vendor] = Vendor.find_by_uid(attributes[:vendor])
+        attributes[:vendor] = Vendor.find_by(uid: attributes[:vendor])
       end
       if attributes[:vendor].blank?
         attributes.delete(:vendor)
@@ -47,17 +45,16 @@ namespace :collections do
 
   # Usage rake collections:update_file['oral-history','collections_seeds.csv']
   desc "Update a csv file based on data in database"
-  task :update_file, [:project_key, :filename] => :environment do |task, args|
-
+  task :update_file, [:project_key, :filename] => :environment do |_task, args|
     # Validate project
-    project_path = Rails.root.join('project', args[:project_key], '/')
+    project_path = Rails.root.join("project", args[:project_key], "/")
     if !File.directory?(project_path)
       puts "No project directory found for: #{args[:project_key]}"
       exit
     end
 
     # Validate file
-    file_path = Rails.root.join('project', args[:project_key], 'data', args[:filename])
+    file_path = Rails.root.join("project", args[:project_key], "data", args[:filename])
     if !File.exist? file_path
       puts "No collection file found: #{file_path}"
       exit
@@ -83,8 +80,8 @@ namespace :collections do
     collections = []
 
     csv_body = File.read(file_path)
-    csv = CSV.new(csv_body, :headers => true, :header_converters => :symbol, :converters => [:all])
-    collections = csv.to_a.map {|row| row.to_hash }
+    csv = CSV.new(csv_body, headers: true, header_converters: :symbol, converters: [:all])
+    collections = csv.to_a.map { |row| row.to_hash }
 
     collections
   end
@@ -97,5 +94,4 @@ namespace :collections do
       end
     end
   end
-
 end

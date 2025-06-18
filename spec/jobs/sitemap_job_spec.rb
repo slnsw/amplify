@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe SitemapJob, type: :job do
   before do
@@ -10,6 +10,7 @@ RSpec.describe SitemapJob, type: :job do
           @add_block = block
           instance_eval(&block)
         end
+
         def add(path, options = {})
           @added_paths ||= []
           @added_paths << [path, options]
@@ -48,7 +49,7 @@ RSpec.describe SitemapJob, type: :job do
       ["/page/tutorial", { priority: 0.3 }],
       ["/transcripts/#{transcript.id}", {}],
       ["/collections/#{collection.id}", {}],
-      ["/institutions/#{institution.slug}", {}]
+      ["/institutions/#{institution.slug}", {}],
     )
   end
 end

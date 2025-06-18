@@ -35,7 +35,7 @@ class TranscriptService
     if user && (user.admin? || user.content_editor?)
       Transcript.find_by(uid: uid)
     else
-      self.find_by_uid(uid)
+      find_by(uid: uid)
     end
   end
 
@@ -79,7 +79,7 @@ class TranscriptService
 
   def handle_transcript
     yield
-  rescue StandardError => error
-    raise error
+  rescue StandardError => e
+    raise e
   end
 end

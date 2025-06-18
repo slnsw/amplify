@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe TranscriptsController, type: :controller do
   render_views
@@ -15,7 +15,11 @@ RSpec.describe TranscriptsController, type: :controller do
       expect(response).to have_http_status(:ok)
       expect(response.media_type).to eq("application/json")
       # Optionally, check for keys in the JSON response
-      json = JSON.parse(response.body) rescue nil
+      json = begin
+               JSON.parse(response.body)
+             rescue StandardError
+               nil
+             end
       expect(json).to be_a(Hash).or be_a(Array)
     end
   end
@@ -25,7 +29,11 @@ RSpec.describe TranscriptsController, type: :controller do
       get :show, params: { id: transcript.uid }, format: :json
       expect(response).to have_http_status(:ok)
       expect(response.media_type).to eq("application/json")
-      json = JSON.parse(response.body) rescue nil
+      json = begin
+               JSON.parse(response.body)
+             rescue StandardError
+               nil
+             end
       expect(json).to be_a(Hash).or be_a(Array)
     end
 
@@ -44,8 +52,8 @@ RSpec.describe TranscriptsController, type: :controller do
         institution_transcript_path(
           transcript.collection.institution.slug,
           transcript.collection.uid,
-          transcript.uid
-        )
+          transcript.uid,
+        ),
       )
     end
   end

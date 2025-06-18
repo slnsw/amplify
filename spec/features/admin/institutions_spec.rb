@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Institution Page" do
+RSpec.describe "Institution Page" do
   let(:admin) { create(:user, :admin) }
   let!(:institution1) { create(:institution, name: "First institution") }
   let!(:institution2) { create(:institution, name: "Second institution") }
@@ -50,8 +50,8 @@ RSpec.feature "Institution Page" do
         click_button("Save")
         expect(page).to have_current_path(admin_institutions_path, wait: 5)
         institution1.reload
-        expect(institution1.slug).to eq('firstinstitution')
-        expect(institution1.institution_links.first.title).to eq('My Link')
+        expect(institution1.slug).to eq("firstinstitution")
+        expect(institution1.institution_links.first.title).to eq("My Link")
       end
     end
   end

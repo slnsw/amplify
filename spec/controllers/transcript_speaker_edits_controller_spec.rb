@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe TranscriptSpeakerEditsController, type: :controller do
   routes { Rails.application.routes }
@@ -12,8 +12,8 @@ RSpec.describe TranscriptSpeakerEditsController, type: :controller do
       transcript_speaker_edit: {
         transcript_id: transcript_line.transcript_id,
         transcript_line_id: transcript_line.id,
-        speaker_id: speaker.id
-      }
+        speaker_id: speaker.id,
+      },
     }
   end
 

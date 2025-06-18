@@ -37,8 +37,8 @@ class TranscriptsController < ApplicationController
   def show
     if @institution && @collection && (!params[:institution] || !params[:collection]) && !params[:format]
       transcript_params = [@institution&.slug, @collection.uid, params[:id]]
-      transcript_params.push({t: params[:t]}) if params[:t]
-      transcript_params.push({preview: true}) if params[:preview]
+      transcript_params.push({ t: params[:t] }) if params[:t]
+      transcript_params.push({ preview: true }) if params[:preview]
 
       return redirect_to institution_transcript_path(*transcript_params)
     end
@@ -108,7 +108,7 @@ class TranscriptsController < ApplicationController
 
   def set_transcript_for_show
     @transcript = TranscriptService.find_by_uid_for_admin(params[:id], logged_in_user)
-    raise ActiveRecord::RecordNotFound unless @transcript.present?
+    raise ActiveRecord::RecordNotFound if @transcript.blank?
   end
 
   def transcript_params

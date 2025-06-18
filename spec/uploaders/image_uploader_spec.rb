@@ -3,10 +3,10 @@ require "carrierwave/test/matchers"
 RSpec.describe ImageUploader, type: :uploader do
   include CarrierWave::Test::Matchers
 
-  let(:vendor) { Vendor.create!(uid: 'voice_base', name: 'VoiceBase') }
+  let(:vendor) { Vendor.create!(uid: "voice_base", name: "VoiceBase") }
   let(:institution) { FactoryBot.create :institution }
 
-  context 'collection image uploader' do
+  context "collection image uploader" do
     let(:collection) do
       Collection.create!(
         description: "A summary of the collection's content",
@@ -14,11 +14,10 @@ RSpec.describe ImageUploader, type: :uploader do
         uid: "collection-uid",
         title: "The collection's title",
         vendor: vendor,
-        institution_id: institution.id
+        institution_id: institution.id,
       )
     end
     let(:uploader) { ImageUploader.new(collection, :image) }
-
 
     before do
       ImageUploader.enable_processing = true
@@ -41,18 +40,16 @@ RSpec.describe ImageUploader, type: :uploader do
     end
   end
 
-  context 'transcript image uploader' do
-    let(:transcript) {
+  context "transcript image uploader" do
+    let(:transcript) do
       create(:transcript,
-        crop_x: '0',
-        crop_y: '0',
-        crop_w: '2000',
-        crop_h: '900',
-        image:  File.open(Rails.root.join("spec", "fixtures", "4k_example_image.jpg"))
-      )
-    }
+             crop_x: "0",
+             crop_y: "0",
+             crop_w: "2000",
+             crop_h: "900",
+             image: File.open(Rails.root.join("spec", "fixtures", "4k_example_image.jpg")))
+    end
     let(:transcript_uploader) { ImageUploader.new(transcript, :image) }
-
 
     before do
       ImageUploader.enable_processing = true

@@ -1,7 +1,7 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::Cms::CollectionsController, type: :controller do
-  let(:vendor) { Vendor.create!(uid: 'voice_base', name: 'VoiceBase') }
+  let(:vendor) { Vendor.create!(uid: "voice_base", name: "VoiceBase") }
   let(:institution) { FactoryBot.create :institution }
   let(:collection) do
     Collection.create!(
@@ -10,7 +10,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
       uid: "collection-uid",
       title: "The collection's title",
       vendor: vendor,
-      institution_id: institution.id
+      institution_id: institution.id,
     )
   end
   let(:user) { create(:user, :admin, email: "user@email.com", password: "password") }
@@ -20,7 +20,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
   end
 
   describe "GET #show" do
-    let(:action) { get :show, params: { id: collection.uid  } }
+    let(:action) { get :show, params: { id: collection.uid } }
 
     it "is successful" do
       action
@@ -55,13 +55,13 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
           title: "New collection title",
           description: "New description of collection",
           url: "new_collection_catalogue_reference",
-          image: File.open(Rails.root.join('spec', 'fixtures', 'image.jpg')),
+          image: File.open(Rails.root.join("spec", "fixtures", "image.jpg")),
           vendor_id: vendor.id,
           institution_id: institution.id,
-          theme_ids: ['']
+          theme_ids: [""],
         }
       end
-      let(:action) { post :create, params: { collection: params  } }
+      let(:action) { post :create, params: { collection: params } }
 
       it "is successful" do
         action
@@ -75,8 +75,8 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
     end
 
     context "invalid request" do
-      let(:params) { { uid: "", theme_ids: [''] } }
-      let(:action) { post :create, params: { collection: params  } }
+      let(:params) { { uid: "", theme_ids: [""] } }
+      let(:action) { post :create, params: { collection: params } }
 
       it "responds with a bad request status" do
         action
@@ -91,7 +91,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
       it "does not create a new collection" do
         expect do
           action
-        end.to_not change { Collection.count }
+        end.not_to change(Collection, :count)
       end
     end
   end
@@ -113,7 +113,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
   describe "PUT #update" do
     context "valid update request" do
       let(:params) do
-        { title: "Revised title", theme_ids: [''] }
+        { title: "Revised title", theme_ids: [""] }
       end
       let(:action) { put :update, params: { id: collection.uid, collection: params } }
 
@@ -130,14 +130,14 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
       it "updates the collection" do
         expect do
           action
-        end.to change { collection.reload.title }
-          .from("The collection's title").to("Revised title")
+        end.to change { collection.reload.title }.
+          from("The collection's title").to("Revised title")
       end
     end
 
     context "invalid update request" do
-      let(:params) { { uid: "", theme_ids: [''] } }
-      let(:action) { put :update, params: {id: collection.uid, collection: params  } }
+      let(:params) { { uid: "", theme_ids: [""] } }
+      let(:action) { put :update, params: { id: collection.uid, collection: params } }
 
       it "responds with a bad request status" do
         action
@@ -152,7 +152,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
       it "does not update the collection" do
         expect do
           action
-        end.to_not change { collection.reload.uid }
+        end.not_to change { collection.reload.uid }
       end
     end
   end

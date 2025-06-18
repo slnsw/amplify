@@ -1,5 +1,5 @@
-require 'open-uri'
-require 'shellwords'
+require "open-uri"
+require "shellwords"
 
 module Azure
   class SpeechToTextJob < ApplicationJob
@@ -15,7 +15,7 @@ module Azure
       transcript.update_columns(
         process_status: :started,
         process_message: nil,
-        process_started_at: Time.current
+        process_started_at: Time.current,
       )
 
       speech_to_text = Azure::SpeechToTextService.new(file: file).recognize
@@ -39,12 +39,12 @@ module Azure
       transcript.update_columns(
         process_status: :completed,
         process_message: nil,
-        process_completed_at: Time.current
+        process_completed_at: Time.current,
       )
     rescue Exception => e
       transcript.update_columns(
         process_status: :failed,
-        process_message: e.message
+        process_message: e.message,
       )
       Bugsnag.notify e
     ensure
@@ -57,7 +57,7 @@ module Azure
       default_name = Rails.root.join("public", audio.cache_dir, audio.cached?, audio.sanitized_file.filename)
       return default_name if default_name.to_s.size <= 150
 
-      extension = audio.sanitized_file.filename.split('.').last
+      extension = audio.sanitized_file.filename.split(".").last
       new_random_name = SecureRandom.hex
       new_name = Rails.root.join("public", audio.cache_dir, audio.cached?, "#{new_random_name}.#{extension}")
 

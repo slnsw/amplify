@@ -11,7 +11,7 @@ class Admin::Cms::TranscriptsController < AdminController
   end
 
   def create
-    @transcript = Transcript.new(transcript_params.merge vendor_id: Vendor.first&.id)
+    @transcript = Transcript.new(transcript_params.merge(vendor_id: Vendor.first&.id))
 
     if @transcript.save && @transcript.update(speakers: transcript_params[:speakers])
       flash[:notice] = "The new transcript has been saved."
@@ -78,17 +78,17 @@ class Admin::Cms::TranscriptsController < AdminController
   def update_multiple
     if params[:transcript_ids]
       case params[:commit]
-      when 'publish'
+      when "publish"
         publish_trancripts(params[:transcript_ids])
-      when 'unpublish'
+      when "unpublish"
         unpublish_trancripts(params[:transcript_ids])
-      when 'delete'
+      when "delete"
         delete_trancripts(params[:transcript_ids])
       else
-        flash.now[:notice] = 'Unknown action'
+        flash.now[:notice] = "Unknown action"
       end
     else
-      flash.now[:notice] = 'Please select some transcripts'
+      flash.now[:notice] = "Please select some transcripts"
     end
 
     respond_to do |format|

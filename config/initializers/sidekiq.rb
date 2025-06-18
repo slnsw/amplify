@@ -23,7 +23,7 @@ unless %w(test development).include?(Rails.env)
     class: "RecalculateTranscriptsJob",
   )
 
-	Sidekiq::Cron::Job.create(
+  Sidekiq::Cron::Job.create(
     name: "Creates or updates xml sitemap",
     cron: "0 0 * * *",
     class: "SitemapJob",

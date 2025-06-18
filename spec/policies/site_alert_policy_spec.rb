@@ -1,6 +1,8 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe SiteAlertPolicy do
+  subject { described_class }
+
   let(:admin) { create(:user, :admin) }
   let(:user)  { create(:user) }
   let!(:site_alert) do
@@ -13,11 +15,9 @@ RSpec.describe SiteAlertPolicy do
       admin_access: true,
       scheduled: false,
       publish_at: Time.current,
-      unpublish_at: Time.current + 1.day
+      unpublish_at: Time.current + 1.day,
     )
   end
-
-  subject { described_class }
 
   describe "permissions" do
     %i[index? update?].each do |action|

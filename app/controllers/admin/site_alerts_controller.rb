@@ -56,7 +56,7 @@ class Admin::SiteAlertsController < AdminController
       :published,
       :admin_access,
       :publish_at,
-      :unpublish_at
+      :unpublish_at,
     )
   end
 end

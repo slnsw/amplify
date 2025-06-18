@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   routes { Rails.application.routes }
@@ -6,9 +6,9 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   let(:user) { create(:user) }
   let(:auth_hash) do
     {
-      'provider' => 'facebook',
-      'uid' => '123456',
-      'info' => { 'email' => 'test@example.com', 'name' => 'Test User' }
+      "provider" => "facebook",
+      "uid" => "123456",
+      "info" => { "email" => "test@example.com", "name" => "Test User" },
     }
   end
 
@@ -45,7 +45,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
   describe "GET #google_oauth2" do
     before do
-      request.env["omniauth.auth"]['provider'] = 'google_oauth2'
+      request.env["omniauth.auth"]["provider"] = "google_oauth2"
     end
 
     context "when user is persisted" do
@@ -86,8 +86,8 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       allow(controller).to receive(:params).and_return(ActionController::Parameters.new("state" => "abc123"))
       expect(controller.redirect_url).to eq(
         Rails.application.routes.url_helpers.institution_transcript_path(
-          institution: "inst1", collection: "col1", id: "abc123"
-        )
+          institution: "inst1", collection: "col1", id: "abc123",
+        ),
       )
     end
   end

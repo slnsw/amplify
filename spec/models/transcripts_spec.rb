@@ -149,16 +149,16 @@ RSpec.describe Transcript, type: :model do
     let(:collection) { create :collection, :published }
     let(:params) do
       { collections: [collection.title], sort_by: sort_by,
-      search: "", institution: nil, theme: [""] }
+        search: "", institution: nil, theme: [""] }
     end
 
     before do
       %w[B A].each do |title|
         create :transcript, :published,
-          title: title,
-          collection: collection,
-          project_uid: "nsw-state-library-amplify",
-          lines: 1
+               title: title,
+               collection: collection,
+               project_uid: "nsw-state-library-amplify",
+               lines: 1
       end
     end
 
@@ -217,8 +217,8 @@ RSpec.describe Transcript, type: :model do
 
       it "shows theme1 records" do
         expect(described_class.search({
-          theme: ["theme1"],
-        })).to eq([transcript2])
+                                        theme: ["theme1"],
+                                      })).to eq([transcript2])
       end
     end
   end

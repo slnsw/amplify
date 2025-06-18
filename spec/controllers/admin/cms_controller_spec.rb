@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::CmsController, type: :controller do
   let(:user) { create(:user, :admin, email: "user@email.com", password: "password") }

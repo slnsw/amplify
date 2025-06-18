@@ -4,5 +4,4 @@ class DefaultController < ApplicationController
   def index
     render file: environment_index_file
   end
-
 end

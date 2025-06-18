@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe RecalculateTranscriptsJob, type: :job do
   it "calls recalculate on the latest 250 transcripts" do

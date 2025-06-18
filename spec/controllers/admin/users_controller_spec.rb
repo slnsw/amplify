@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::UsersController, type: :controller do
   let(:admin) { create(:user, :admin) }
@@ -24,9 +24,9 @@ RSpec.describe Admin::UsersController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the user and returns no_content" do
-      expect {
+      expect do
         delete :destroy, params: { id: user.id }, format: :json
-      }.to change(User, :count).by(-1)
+      end.to change(User, :count).by(-1)
       expect(response).to have_http_status(:no_content)
     end
   end
@@ -46,17 +46,17 @@ RSpec.describe Admin::UsersController, type: :controller do
 
     describe "PATCH #update" do
       it "denies access" do
-        expect {
+        expect do
           patch :update, params: { id: resource&.id, user: { user_role_id: 1 } }, format: :json
-        }.to raise_error(Pundit::NotAuthorizedError)
+        end.to raise_error(Pundit::NotAuthorizedError)
       end
     end
 
     describe "DELETE #destroy" do
       it "denies access" do
-        expect {
+        expect do
           delete :destroy, params: { id: resource&.id }, format: :json
-        }.to raise_error(Pundit::NotAuthorizedError)
+        end.to raise_error(Pundit::NotAuthorizedError)
       end
     end
   end

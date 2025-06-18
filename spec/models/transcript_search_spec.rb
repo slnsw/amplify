@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe TranscriptSearch do
   let!(:institution) { create(:institution) }
@@ -9,7 +9,7 @@ RSpec.describe TranscriptSearch do
 
   before do
     allow(Project).to receive(:getActive).and_return({ data: { "transcriptsPerPage" => 10 } })
-    allow(ENV).to receive(:[]).with('PROJECT_ID').and_return(transcript.project_uid)
+    allow(ENV).to receive(:[]).with("PROJECT_ID").and_return(transcript.project_uid)
   end
 
   context "when searching by text" do

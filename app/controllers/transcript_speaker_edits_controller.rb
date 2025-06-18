@@ -84,11 +84,11 @@ class TranscriptSpeakerEditsController < ApplicationController
 
   private
 
-    def set_transcript_speaker_edit
-      @transcript_speaker_edit = TranscriptSpeakerEdit.find(params[:id])
-    end
+  def set_transcript_speaker_edit
+    @transcript_speaker_edit = TranscriptSpeakerEdit.find(params[:id])
+  end
 
-    def transcript_speaker_edit_params
-      params.require(:transcript_speaker_edit).permit(:transcript_id, :transcript_line_id, :user_id, :session_id, :speaker_id)
-    end
+  def transcript_speaker_edit_params
+    params.require(:transcript_speaker_edit).permit(:transcript_id, :transcript_line_id, :user_id, :session_id, :speaker_id)
+  end
 end

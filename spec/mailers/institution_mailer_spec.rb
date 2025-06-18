@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe InstitutionMailer, type: :mailer do
   describe ".delete_institution" do

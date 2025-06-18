@@ -10,8 +10,7 @@ class Admin::TranscriptionConventionsController < AdminController
     @transcription_convention = @institution.transcription_conventions.build
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @transcription_convention = @institution.transcription_conventions.build(transcription_convention_params)
@@ -37,15 +36,16 @@ class Admin::TranscriptionConventionsController < AdminController
   end
 
   private
-    def set_transcription_convention
-      @transcription_convention = @institution.transcription_conventions.find_by(id: params[:id])
-    end
 
-    def set_institution
-      @institution = Institution.friendly.find(params[:institution_id])
-    end
+  def set_transcription_convention
+    @transcription_convention = @institution.transcription_conventions.find_by(id: params[:id])
+  end
 
-    def transcription_convention_params
-      params.require(:transcription_convention).permit(:convention_key, :convention_text, :example)
-    end
+  def set_institution
+    @institution = Institution.friendly.find(params[:institution_id])
+  end
+
+  def transcription_convention_params
+    params.require(:transcription_convention).permit(:convention_key, :convention_text, :example)
+  end
 end

@@ -1,5 +1,4 @@
-class StatsPolicy < Struct.new(:user, :stats)
-
+StatsPolicy = Struct.new(:user, :stats) do
   attr_reader :user, :stats
 
   def initialize(user, stats)

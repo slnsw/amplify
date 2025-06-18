@@ -11,8 +11,7 @@ class FlagsController < ApplicationController
   end
 
   # GET /flags/1.json
-  def show
-  end
+  def show; end
 
   # POST /flags.json
   def create
@@ -34,7 +33,7 @@ class FlagsController < ApplicationController
       @flag = Flag.new(flag_params)
       if @flag.save
         line = TranscriptLine.find flag[:transcript_line_id]
-        line.incrementFlag()
+        line.incrementFlag
         render json: @flag, status: :created, location: @flag
         success = true
       end
@@ -73,11 +72,11 @@ class FlagsController < ApplicationController
 
   private
 
-    def set_flag
-      @flag = Flag.find(params[:id])
-    end
+  def set_flag
+    @flag = Flag.find(params[:id])
+  end
 
-    def flag_params
-      params.require(:flag).permit(:transcript_id, :transcript_line_id, :flag_type_id, :session_id, :user_id, :text, :is_resolved)
-    end
+  def flag_params
+    params.require(:flag).permit(:transcript_id, :transcript_line_id, :flag_type_id, :session_id, :user_id, :text, :is_resolved)
+  end
 end

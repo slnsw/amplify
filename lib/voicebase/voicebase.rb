@@ -1,6 +1,6 @@
-require 'formdata'
-require 'stringio'
-require 'net/http'
+require "formdata"
+require "stringio"
+require "net/http"
 
 module Voicebase
   class << self
@@ -16,7 +16,7 @@ module Voicebase
     attr_accessor :api_key, :voicebase_api_url
 
     def initialize
-      @api_key = ''
+      @api_key = ""
       @voicebase_api_url = "https://apis.voicebase.com/v3/"
     end
   end
@@ -27,11 +27,11 @@ module Voicebase
     attr_accessor :voicebase_api_key, :voicebase_url
 
     def initialize
-      @voicebase_api_key = ENV["VOICEBASE_API_KEY"]  #Voicebase.configuration.api_key
-      @voicebase_url = "https://apis.voicebase.com/v3/"  # Voicebase.configuration.voicebase_api_url
+      @voicebase_api_key = ENV["VOICEBASE_API_KEY"]  # Voicebase.configuration.api_key
+      @voicebase_url = "https://apis.voicebase.com/v3/" # Voicebase.configuration.voicebase_api_url
     end
 
-    def get_transcript(media_id, format: 'srt')
+    def get_transcript(media_id, format: "srt")
       get_request("https://apis.voicebase.com/v3/media/#{media_id}/transcript/#{format}")
     end
 
@@ -39,12 +39,11 @@ module Voicebase
       get_request("https://apis.voicebase.com/v3/media/#{media_id}/progress")
     end
 
-
     def upload_media(media_url)
       # create form data
       f = FormData.new
-      f.append('configuration', '')
-      f.append('mediaUrl', media_url)
+      f.append("configuration", "")
+      f.append("mediaUrl", media_url)
 
       uri = URI.parse("https://apis.voicebase.com/v3/media")
 
@@ -54,7 +53,7 @@ module Voicebase
       req.body_stream = f
       req.add_field("Authorization", "Bearer #{@voicebase_api_key}")
 
-      http = Net::HTTP.new(uri.host,uri.port)
+      http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.request(req)
     end
@@ -67,7 +66,7 @@ module Voicebase
       req = Net::HTTP::Get.new(uri)
       req.add_field("Authorization", "Bearer #{@voicebase_api_key}")
 
-      http = Net::HTTP.new(uri.host,uri.port)
+      http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.request(req)
     end

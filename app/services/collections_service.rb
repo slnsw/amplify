@@ -4,11 +4,7 @@ class CollectionsService
   end
 
   def self.by_institution(institution_slug)
-    institution_slug =  if institution_slug.present? 
-                          institution_slug
-                        else
-                          Institution.state_library_nsw.try(:slug)
-                        end
+    institution_slug =  institution_slug.presence || Institution.state_library_nsw.try(:slug)
     Collection.
       published.
       with_published_institution.

@@ -1,7 +1,7 @@
 # sorting list for the homepage dropown
 class SortList
   def self.list
-    options.map { |id, title| OpenStruct.new(id: id, title: title)  }
+    options.map { |id, title| OpenStruct.new(id: id, title: title) }
   end
 
   def self.options

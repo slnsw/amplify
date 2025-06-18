@@ -150,12 +150,12 @@ RSpec.describe Collection, type: :model do
   end
 
   describe "#unpublish" do
-    let!(:collection) { FactoryBot.create :collection, :published}
+    let!(:collection) { FactoryBot.create :collection, :published }
 
-       it "unpublishes the collection" do
-        expect { collection.unpublish! }.
-          to change(collection, :published?).from(true).to(false)
-      end
+    it "unpublishes the collection" do
+      expect { collection.unpublish! }.
+        to change(collection, :published?).from(true).to(false)
+    end
   end
   # rubocop:enable RSpec/PredicateMatcher
 end

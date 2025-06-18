@@ -1,10 +1,10 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe FlagPolicy do
+  subject { described_class }
+
   let(:user) { create(:user) }
   let(:scope) { Flag } # Assuming you have a Flag model
-
-  subject { described_class }
 
   describe "#initialize" do
     it "assigns user and scope" do

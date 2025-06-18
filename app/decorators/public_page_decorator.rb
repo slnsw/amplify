@@ -4,5 +4,4 @@ class PublicPageDecorator < ApplicationDecorator
   def display_content
     h.raw object.content
   end
-
 end

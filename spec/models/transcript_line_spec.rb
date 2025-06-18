@@ -169,8 +169,8 @@ RSpec.describe TranscriptLine, type: :model do
     # rubocop:enable RSpec/ExampleLength: Example has too many lines
   end
 
-  describe 'scopes' do
-    xdescribe '#fuzzy_search' do # skipping this test for now as it is flakky
+  describe "scopes" do
+    xdescribe "#fuzzy_search" do # skipping this test for now as it is flakky
       subject(:fuzzy_search) { TranscriptLine.fuzzy_search(keyword) }
 
       let!(:jenna) do
@@ -180,10 +180,10 @@ RSpec.describe TranscriptLine, type: :model do
         FactoryBot.create :transcript_line, original_text: "who was Jennifer"
       end
 
-      context 'when searching with jenna' do
+      context "when searching with jenna" do
         let(:keyword) { "Jenna" }
 
-        it 'returns' do
+        it "returns" do
           expect(fuzzy_search).to contain_exactly(jenna, jenni)
         end
       end

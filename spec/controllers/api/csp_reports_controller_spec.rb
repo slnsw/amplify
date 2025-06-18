@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Api::CspReportsController, type: :controller do
   describe "POST #create" do

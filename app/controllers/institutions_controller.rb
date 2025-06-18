@@ -60,11 +60,11 @@ class InstitutionsController < ApplicationController
     list = params[:path].to_s.split("/")
     {
       institution_id: list.shift,
-      collection_id: list.shift
+      collection_id: list.shift,
     }
   end
 
   def filter_requests
-    return head :not_found if (params[:format] && params[:format] != "html")
+    return head :not_found if params[:format] && params[:format] != "html"
   end
 end

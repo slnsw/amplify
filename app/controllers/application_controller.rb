@@ -51,23 +51,24 @@ class ApplicationController < ActionController::Base
   end
 
   def project_key
-    ENV['PROJECT_ID']
+    ENV["PROJECT_ID"]
   end
 
   def frontend_config
     frontend_config_obj = Rails.application.config_for(:frontend)
     return {} if frontend_config_obj.blank?
+
     frontend_config_obj
   end
 
   def facebook_app_id
-    ENV['FACEBOOK_APP_ID']
+    ENV["FACEBOOK_APP_ID"]
   end
 
   private
 
   # Overwriting the sign_out redirect path method
-  def after_sign_up_path_for(resource_or_scope)
+  def after_sign_up_path_for(_resource_or_scope)
     new_user_session_path
   end
 
@@ -91,4 +92,3 @@ class ApplicationController < ActionController::Base
     params[:per_page] ||= 50
   end
 end
-

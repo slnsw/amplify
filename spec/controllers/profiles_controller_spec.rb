@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Admin::ProfilesController, type: :controller do
   let(:admin) { create(:user, :admin) }
@@ -24,8 +24,8 @@ RSpec.describe Admin::ProfilesController, type: :controller do
           id: admin.id,
           user_role: {
             commit: "update_transcribing_role",
-            transcribing_role: "editor"
-          }
+            transcribing_role: "editor",
+          },
         }
       end
 
