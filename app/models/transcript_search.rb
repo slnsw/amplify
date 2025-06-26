@@ -30,7 +30,7 @@ class TranscriptSearch
     # else just normal search (title, description)
     else
       # Build initial query w/ pagination
-      @transcripts = Transcript
+      @transcripts = Transcript.includes(:transcript_lines)
         .select('transcripts.*, COALESCE(collections.title, \'\') as collection_title, \'\' AS guess_text, \'\' AS original_text, 0 AS start_time')
         .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
         .joins('INNER JOIN institutions ON institutions.id = collections.institution_id')
