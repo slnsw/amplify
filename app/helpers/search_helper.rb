@@ -12,7 +12,12 @@ module SearchHelper
     if !query.blank?
       full_path = "#{transcript.transcript.decorate.path}?t=#{time_display(transcript.start_time)}"
       text = transcript.guess_text.empty? ? transcript.original_text : transcript.guess_text
-      text = transcript.transcript_lines.first&.guess_text.to_s.truncate(100) if text.blank?
+      if text.blank?
+        transcript_line = transcript.transcript_lines.first
+        text = transcript_line&.guess_text
+        text = transcript_line&.original_text if text.blank? 
+        text = text.to_s.truncate(100) 
+      end
       content_tag :a, href: full_path, class: 'search_item__line' do
         "...#{text}.."
       end
