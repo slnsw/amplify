@@ -16,6 +16,8 @@ RUN apt-get update \
         postgresql-client \
         bash \
     && rm -rf /var/lib/apt/lists/*
+
+# Add user.
 RUN addgroup --gid 1000 amplify
 RUN adduser --gecos "" \
     --disabled-password \
@@ -28,18 +30,22 @@ ENV CHROME_BIN=/usr/bin/chromium
 
 # Copy the Gemfile and Gemfile.lock into the image and install gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle install
 
-# Run npm install
+# Install dependencies.
+RUN bundle install
 RUN npm install
+
+# Set bundle cache permissions so CLI user can update packages.
+# Don't do this in a production Dockerfile!
+RUN chmod -R a+rw /usr/local/bundle
+# Purge the cache directory.
+RUN rm -r /usr/local/bundle/cache/*
+
+# Set up user.
+USER amplify
 
 # Copy the rest of the application code into the image
 COPY . .
 
-# Add files
-# COPY docker/compose/amplify-cli/docker-entrypoint.sh /
-# RUN chmod +x /docker-entrypoint.sh
-
 # CMD
-USER amplify
 ENTRYPOINT ["/bin/bash", "-c", "sleep infinity"]
