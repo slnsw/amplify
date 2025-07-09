@@ -104,8 +104,9 @@ gem "webvtt-ruby", "~> 0.3.2"
 # load fog-aws first to reduce the number of imported classes
 gem "carrierwave", "~> 1.1"
 # require installation of the following
-# sudo apt-get install build-essential libcurl4-openssl-dev
 # this is to allow fog get installed with ovirt-engine-sdk
+# sudo apt-get install build-essential libcurl4-openssl-dev
+# gem install ovirt-engine-sdk -v4.4.1 -- --with-cflags="-Wno-error=incompatible-pointer-types -Wno-error=implicit-function-declaration"
 gem "fog", "~> 2.1.0"
 gem "mini_magick", "~> 4.8"
 
@@ -125,7 +126,7 @@ group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
 
-  gem "byebug", "~> 11.0.0", platforms: [:mri, :mingw, :x64_mingw]
+  gem "byebug", ">= 11.1.3", platforms: [:mri, :mingw, :x64_mingw]
   gem "factory_bot_rails", "~> 5.0.2"
   gem "faker"
   gem "pry", "~> 0.12.2"

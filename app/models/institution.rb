@@ -106,4 +106,8 @@ class Institution < ApplicationRecord
       InstitutionLink.new(title: "", url: "", position: 7),
     ]
   end
+
+  def published?
+    !hidden
+  end
 end
