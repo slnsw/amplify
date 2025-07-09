@@ -8,7 +8,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
   def filename
-    "#{secure_token}.#{file.extension}" if original_filename.present?
+    "#{secure_token}.#{file.extension}"
   end
 
   # Override the directory where uploaded files will be stored.
@@ -49,12 +49,12 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   # Add a white list of extensions which are allowed to be uploaded.
-  def extension_whitelist
+  def extension_allowlist
     %w(jpg jpeg gif png)
   end
 
   # Add a white list of mime types which are allowed to be uploaded.
-  def content_type_whitelist
+  def content_type_allowlist
     /image\//
   end
 

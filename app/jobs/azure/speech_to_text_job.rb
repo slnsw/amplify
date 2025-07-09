@@ -54,12 +54,12 @@ module Azure
 
     def download(audio)
       audio.cache_stored_file!
-      default_name = Rails.root.join("public", audio.cache_dir, audio.cached?, audio.sanitized_file.filename)
+      default_name = Rails.root.join("public", audio.cache_dir, audio.cached?.to_s, audio.file.filename)
       return default_name if default_name.to_s.size <= 150
 
-      extension = audio.sanitized_file.filename.split('.').last
+      extension = audio.file.filename.split('.').last
       new_random_name = SecureRandom.hex
-      new_name = Rails.root.join("public", audio.cache_dir, audio.cached?, "#{new_random_name}.#{extension}")
+      new_name = Rails.root.join("public", audio.cache_dir, audio.cached?.to_s, "#{new_random_name}.#{extension}")
 
       File.rename(default_name, new_name)
 

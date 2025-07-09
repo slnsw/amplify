@@ -34,7 +34,8 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 ActiveRecord::Base.logger.level = Logger::INFO
 ActionController::Base.logger.level = Logger::ERROR
-ActiveSupport::Deprecation.silenced = true
+# ActiveSupport::Deprecation.silenced was removed in Rails 7.2
+# Use Rails.application.config.active_support.deprecation_behavior = :silence in config files instead
 Rails.logger.level = Logger::ERROR
 
 RSpec.configure do |config|

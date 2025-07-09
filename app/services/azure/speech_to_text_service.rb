@@ -43,7 +43,7 @@ module Azure
     def convert_audio_to_wav
       stdout, stderr, status =
         Open3.capture3("ffmpeg", "-i", file.to_s, "-ac", "1", "-ar", "16000", wav_file)
-      raise Exception, stderr unless status.success?
+      raise Exception, stderr.to_s unless status.success?
       Rails.logger.debug("--- convert_audio_to_wav ---")
       Rails.logger.debug(File.size wav_file) if File.exist? wav_file
     end
@@ -57,7 +57,8 @@ module Azure
       Rails.logger.debug("--- transcripts_from_sdk ---")
       Rails.logger.debug(stdout)
       Rails.logger.debug(stderr)
-      raise Exception, stderr.presence || stdout unless status.success?
+      error_message = (stderr.presence || stdout).to_s
+      raise Exception, error_message unless status.success?
       stdout
     end
 

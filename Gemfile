@@ -1,17 +1,38 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.0.0"
+ruby "3.4.4"
+
+# Standard library gems removed for Ruby 3.4+, thus, needs to be installed separately
+gem "base64"
+gem "csv"
+gem "ostruct"
+gem "bigdecimal"
+gem "mutex_m"
+gem "drb"
+gem "nkf"
+gem "abbrev"
+gem "net-ftp"
+gem "net-imap"
+gem "net-pop"
+gem "net-smtp"
+gem "open-uri"
+gem "optparse"
+gem "time"
+gem "uri"
+gem "observer"
+gem "webrick"
+gem "rackup"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.0.4", ">= 7.0.4.3"
+gem "rails", "~> 8.0.2"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.0"
-gem "puma-daemon", require: false
+gem "puma", "~> 6.0"
+gem "puma-daemon", "~> 0.5", require: false
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -23,10 +44,10 @@ gem "turbo-rails"
 gem "stimulus-rails"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem "jbuilder"
+gem "jbuilder", "~> 2.13.0"
 
 # Use Redis adapter to run Action Cable in production
-gem "redis", "~> 4.0"
+gem "redis", "~> 5.0"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -54,7 +75,7 @@ gem "pg_search", "~> 2.1.4"
 gem "will_paginate", "~> 3.3.0"
 
 # Caching
-gem "dalli", "~> 2.7.9"
+gem "dalli", "~> 3.0"
 
 # Disabling assets; replaced with Gulp
 gem "autoprefixer-rails", "~> 8.6", ">= 8.6.5"
@@ -78,7 +99,7 @@ gem "figaro"
 # requires jwt v2.0 or better.
 # Facebook's gem is a bit behind.
 gem 'jwt'
-gem "devise", "~> 4.9.0"
+gem "devise", "~> 4.9.4"
 # gem 'devise-security'
 gem "oauth2", github: "oauth-xx/oauth2", ref: "v2.0.1"
 gem "omniauth-facebook", "~> 9.0.0"
@@ -102,11 +123,15 @@ gem "webvtt-ruby", "~> 0.3.2"
 
 # For uploading of transcipts and image files
 # load fog-aws first to reduce the number of imported classes
-gem "carrierwave", "~> 1.1"
+gem "carrierwave", "~> 3.0"
 # require installation of the following
 # sudo apt-get install build-essential libcurl4-openssl-dev
 # this is to allow fog get installed with ovirt-engine-sdk
-gem "fog", "~> 2.1.0"
+# gem "fog", "~> 2.3.0"
+# Using specific providers to avoid ovirt-engine-sdk compatibility issues with Ruby 3.4
+gem "fog-aws"
+gem "fog-local"
+gem "fog-core"
 gem "mini_magick", "~> 4.8"
 
 # Error logging
@@ -123,12 +148,14 @@ end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  # DISABLED: Rails 8.0 debug gem conflicts with Pry - use Pry instead
+  # gem "debug", platforms: [:mri, :mingw, :x64_mingw]
 
   gem "byebug", "~> 11.0.0", platforms: [:mri, :mingw, :x64_mingw]
   gem "factory_bot_rails", "~> 5.0.2"
   gem "faker"
-  gem "pry", "~> 0.12.2"
+  gem 'pry', '~> 0.15.0'
+  gem 'pry-rails'
   gem 'rspec-rails', '~> 6.0.0'
 end
 
@@ -143,7 +170,7 @@ group :development do
   # gem "spring"
 
   gem "foreman"
-  gem "listen", ">= 3.0.5", "< 3.2"
+  gem "listen", "~> 3.5"
   gem 'spring'
   gem 'spring-commands-rspec'
 
@@ -154,14 +181,13 @@ group :development do
   gem "capistrano-rails", "~> 1.6", require: false
   gem "capistrano-rvm"
   gem "capistrano-sidekiq"
-  gem "rubocop", "~> 0.65.0"
+  gem "rubocop", "~> 1.50"
 
   gem "bcrypt_pbkdf", "~> 1.1"
   gem "ed25519", "~> 1.2"
 
   gem "dotenv-rails", "~> 2.7.1"
   gem "letter_opener", "~> 1.7.0"
-  gem "reinteractive-style", "~> 0.2.8"
   gem "brakeman"
 end
 
@@ -185,11 +211,11 @@ end
 # tracking errors
 gem "bugsnag"
 gem "draper", "~> 4.0.2"
-gem 'nokogiri', '1.12.5'
-gem "sanitize", "~> 5.2.0"
+gem 'nokogiri', '~> 1.15'
+gem "sanitize", "~> 6.0.0"
 
 gem "acts_as_singleton", "~> 0.0.8"
-gem "acts-as-taggable-on", "~> 9.0.1"
+gem "acts-as-taggable-on", "~> 12.0"
 gem "chartkick", "~> 5.0.1"
 gem "formdata", "~> 0.1.2"
 gem "friendly_id", "~> 5.2.0"
@@ -197,11 +223,11 @@ gem "httparty", "~> 0.16.4"
 gem "pundit", "~> 2.0.1"
 gem "rest-client", "~> 2.0.2"
 gem "seed_migration", "~> 1.2.3"
-gem "sidekiq", "< 6"
-gem "sidekiq-cron", "~> 1.2.0"
+gem "sidekiq", "~> 7.0"
+gem "sidekiq-cron", "~> 2.3"
 
 # Track object changes
-gem "paper_trail", "~> 10.3.1"
+gem "paper_trail", "~> 16.0"
 
 # Sitemap generator'
-gem 'sitemap_generator'
+gem 'sitemap_generator', "~> 6.3.0"
