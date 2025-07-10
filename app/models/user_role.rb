@@ -4,6 +4,7 @@ class UserRole < ApplicationRecord
   # any user role that is <= 3 consider as public users (guest and registred)
   MIN_STAFF_LEVEL = 3
 
+  # TODO: Convert to integer-based enum
   enum :transcribing_role, { admin: 'admin', registered_user: 'registered_user' }
 
   def self.getAll

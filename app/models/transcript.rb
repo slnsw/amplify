@@ -21,6 +21,7 @@ class Transcript < ApplicationRecord
   pg_search_scope :search_default, :against => [:title, :description]
   pg_search_scope :search_by_title, :against => :title
 
+  # TODO: Convert to integer-based enum
   enum :transcript_type, { voicebase: 0, manual: 1, azure: 2 }
 
   enum :process_status, { started: 'started', completed: 'completed', failed: 'failed' }, prefix: :process
