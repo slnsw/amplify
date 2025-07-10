@@ -10,7 +10,10 @@
       <th scope="col">Name</th>
       <th scope="col">Slug</th>
       <th scope="col">URL</th>
-      <th colspan="3" scope="col"></th>
+      <th scope="col">Collections</th>
+      <th scope="col">Transcripts</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
     </tr>
   </thead>
 
@@ -20,6 +23,8 @@
         <td><%= institution.name %></td>
         <td><%= institution.slug %></td>
         <td><%= institution.url %></td>
+        <td><%= institution.collections.published.count %></td>
+        <td><%= institution.published_transcripts.count %></td>
         <td>
           <%= link_to admin_institution_transcription_conventions_path(institution) do %>
             <%= fa_icon "table" %>
