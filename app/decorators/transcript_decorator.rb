@@ -6,10 +6,14 @@ class TranscriptDecorator < Draper::Decorator
   end
 
   def absolute_url
+    # Rails 7.1 compatibility: safely access default_url_options
+    default_options = Rails.application.config.action_controller.default_url_options
+    host = default_options&.[](:host) || 'localhost:3000'
+
     Rails.application.routes.url_helpers.url_for(
-      host: Rails.application.config.action_controller.default_url_options[:host],
-      controller: "transcripts",  
-      action: "show", 
+      host: host,
+      controller: "transcripts",
+      action: "show",
       institution: institution.slug,
       collection: collection.uid,
       id: object.uid,

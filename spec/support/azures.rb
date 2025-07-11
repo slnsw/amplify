@@ -18,7 +18,7 @@ module AzuresHelper
     input_file: a_string_including("aboutSpeechSdk."),
     transcript_content: file_fixture("speech_to_text/speech-to-text-script.json").read,
     error_message: "",
-    status:
+    status: double("command execution status", :success? => true)
   )
     expect(Open3).to receive(:capture3).with(
       a_hash_including({}),

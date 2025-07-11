@@ -21,6 +21,11 @@ class Transcript < ApplicationRecord
   pg_search_scope :search_default, :against => [:title, :description]
   pg_search_scope :search_by_title, :against => :title
 
+  # TODO: Convert to integer-based enum
+  enum :transcript_type, { voicebase: 0, manual: 1, azure: 2 }
+
+  enum :process_status, { started: 'started', completed: 'completed', failed: 'failed' }, prefix: :process
+
   scope :voicebase_processing_pending, -> { voicebase.where(process_completed_at: nil) }
   scope :not_picked_up_for_voicebase_processing, -> { voicebase.where.not(process_started_at: nil) }
   scope :completed, -> { where(percent_completed: 100) }
@@ -43,10 +48,6 @@ class Transcript < ApplicationRecord
   attribute :image_item_url_title, :string, default: "View image in Library catalogue"
 
   after_save :process_speech_to_text_for_audio_file
-
-  enum transcript_type: { voicebase: 0, manual: 1, azure: 2 }
-
-  enum process_status: { started: 'started', completed: 'completed', failed: 'failed' }, _prefix: :process
 
   def self.seconds_per_line
     5
