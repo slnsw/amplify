@@ -15,6 +15,7 @@ class Institution < ApplicationRecord
   has_many :transcription_conventions, dependent: :destroy
   has_many :users, dependent: :destroy
   has_many :institution_links, dependent: :destroy
+  has_many :transcripts, through: :collections
 
   validates :name, presence: true
   validates :name, uniqueness: true
@@ -49,6 +50,10 @@ class Institution < ApplicationRecord
 
   def self.state_library_nsw
     find_by(name: "State Library of New South Wales")
+  end
+
+  def published_transcripts
+    transcripts.published.where("collections.published_at IS NOT NULL")
   end
 
   after_create do
