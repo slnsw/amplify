@@ -172,6 +172,7 @@ group :development do
   gem "capistrano-rvm"
   gem "capistrano-sidekiq"
   gem "rubocop", "~> 1.50"
+  gem "sshkit", "~> 1.23"
 
   gem "bcrypt_pbkdf", "~> 1.1"
   gem "ed25519", "~> 1.2"
