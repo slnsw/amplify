@@ -1,4 +1,4 @@
-lock '3.17.3'
+lock '3.19.2'
 
 set :application, 'nsw-state-library-amplify'
 # set :scm, :git
