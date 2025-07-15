@@ -69,10 +69,11 @@ gem "dalli", "~> 3.0"
 
 # Disabling assets; replaced with Gulp
 gem "autoprefixer-rails", "~> 8.6", ">= 8.6.5"
+# TODO: Upgrade to Bootstrap 5.x.x to fix vulnerabilities
 gem "bootstrap", "~> 4.1.1"
 gem "coffee-rails", "~> 4.2"
 gem "font-awesome-rails", "~> 4.7.0"
-gem "jquery-rails", "~> 4.3.3"
+gem "jquery-rails", "~> 4.6.0"
 gem "sass-rails", "~> 5.0"
 gem "select2-rails", "~> 4.0.13"
 gem "summernote-rails", "0.8.10"
@@ -106,7 +107,7 @@ gem "exception_handler", "~> 0.8.0"
 # Parsers for project asset precompilation
 gem "ejs", "~> 1.1.1"
 gem "execjs", "~> 2.7.0"
-gem "redcarpet", "~> 3.4.0"
+gem "redcarpet", "~> 3.6.1"
 
 # For audio transcripts
 gem "webvtt-ruby", "~> 0.3.2"
@@ -209,7 +210,6 @@ gem "acts-as-taggable-on", "~> 12.0"
 gem "chartkick", "~> 5.0.1"
 gem "formdata", "~> 0.1.2"
 gem "friendly_id", "~> 5.2.0"
-gem "httparty", "~> 0.16.4"
 gem "pundit", "~> 2.0.1"
 gem "rest-client", "~> 2.0.2"
 gem "seed_migration", "~> 1.2.3"

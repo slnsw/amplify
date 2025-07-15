@@ -22,8 +22,6 @@ module Voicebase
   end
 
   class Client
-    include HTTParty
-
     attr_accessor :voicebase_api_key, :voicebase_url
 
     def initialize
