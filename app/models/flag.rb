@@ -13,7 +13,7 @@ class Flag < ApplicationRecord
       END as user_name,
       COALESCE(user_roles.name, \'guest\') as user_role,
       COALESCE(user_roles.hiearchy, 0) as user_hiearchy,
-      COALESCE(user_roles.transcribing_role, \'registered_user\') as transcribing_role')
+      COALESCE(user_roles.transcribing_role, 0) as transcribing_role')
       .joins('INNER JOIN flag_types ON flags.flag_type_id = flag_types.id
               LEFT OUTER JOIN users ON users.id = flags.user_id
               LEFT OUTER JOIN user_roles ON user_roles.id = users.user_role_id')

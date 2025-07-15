@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_30_160961) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_15_020731) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_trgm"
@@ -147,7 +147,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_160961) do
 
   create_table "site_alerts", force: :cascade do |t|
     t.string "machine_name", null: false
-    t.string "level", default: "status", null: false
     t.text "message"
     t.integer "user_id", default: 0, null: false
     t.boolean "published", default: false
@@ -157,6 +156,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_160961) do
     t.datetime "unpublish_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.integer "level", default: 0, null: false
+    t.index ["level"], name: "index_site_alerts_on_level"
     t.index ["machine_name"], name: "index_site_alerts_on_machine_name", unique: true
   end
 
@@ -326,7 +327,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_160961) do
     t.boolean "publish", default: false
     t.integer "transcript_type", default: 0
     t.string "voicebase_media_id"
-    t.string "process_status"
     t.datetime "process_completed_at", precision: nil
     t.datetime "process_started_at", precision: nil
     t.integer "crop_x"
@@ -334,8 +334,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_160961) do
     t.integer "crop_w"
     t.integer "crop_h"
     t.string "process_message"
+    t.integer "process_status"
     t.index ["collection_id"], name: "index_transcripts_on_collection_id"
     t.index ["duration"], name: "index_transcripts_on_duration"
+    t.index ["process_status"], name: "index_transcripts_on_process_status"
     t.index ["project_uid"], name: "index_transcripts_on_project_uid"
     t.index ["transcript_status_id"], name: "index_transcripts_on_transcript_status_id"
     t.index ["uid"], name: "index_transcripts_on_uid", unique: true
@@ -348,8 +350,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_160961) do
     t.string "description"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "transcribing_role", default: "registered_user"
+    t.integer "transcribing_role", default: 0
     t.index ["name"], name: "index_user_roles_on_name", unique: true
+    t.index ["transcribing_role"], name: "index_user_roles_on_transcribing_role"
   end
 
   create_table "users", force: :cascade do |t|
@@ -402,5 +405,4 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_160961) do
     t.datetime "created_at", precision: nil
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
-
 end
