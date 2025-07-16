@@ -3,7 +3,7 @@
   
     <div class="form-group">
       <%= form.label :level %>
-      <%= form.select :level, options_for_select(SiteAlert.levels.map{|k, v| [k, v]}), required: true, class: 'form-control' %>
+      <%= form.select :level, options_for_select(SiteAlert.levels.keys), required: true, class: 'form-control' %>
       <div class="alert-light" role="alert">
         Specify the level of urgency indicated by this message.
       </div>
