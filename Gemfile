@@ -164,7 +164,7 @@ group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
 
-  gem "capistrano", "~> 3.17", require: false
+  gem "capistrano", "~> 3.19.2", require: false
   gem "capistrano3-puma", github: "seuros/capistrano-puma"
   gem "capistrano-bundler", '~> 2.0'
   gem "capistrano-npm"
@@ -172,6 +172,8 @@ group :development do
   gem "capistrano-rvm"
   gem "capistrano-sidekiq"
   gem "rubocop", "~> 1.50"
+  gem "sshkit", "~> 1.23"
+  gem "stringio"
 
   gem "bcrypt_pbkdf", "~> 1.1"
   gem "ed25519", "~> 1.2"

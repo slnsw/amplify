@@ -44,4 +44,5 @@ COPY . .
 
 # CMD
 USER amplify
+RUN git config --global --add safe.directory '*'
 ENTRYPOINT ["/bin/bash", "-c", "sleep infinity"]
