@@ -231,7 +231,8 @@ class Transcript < ApplicationRecord
                 'transcripts.vendor_id = :vendor_id AND transcripts.lines <= 0 AND ' \
                 'collections.vendor_identifier != :empty AND transcripts.vendor_identifier != :empty AND ' \
                 'transcripts.project_uid = :project_uid',
-                     { vendor_id: vendor[:id], empty: '', project_uid: project_uid })
+                { vendor_id: vendor[:id], empty: '', project_uid: project_uid }
+)
   end
 
   def self.get_for_update_by_vendor(vendor_uid, project_uid)
@@ -241,7 +242,8 @@ class Transcript < ApplicationRecord
                 'transcripts.vendor_id = :vendor_id AND collections.vendor_id = :vendor_id AND ' \
                 'collections.vendor_identifier != :empty AND transcripts.vendor_identifier != :empty AND ' \
                 'transcripts.project_uid = :project_uid',
-                     { vendor_id: vendor[:id], empty: '', project_uid: project_uid })
+                { vendor_id: vendor[:id], empty: '', project_uid: project_uid }
+)
   end
 
   def self.get_for_upload_by_vendor(vendor_uid, project_uid)
@@ -251,7 +253,8 @@ class Transcript < ApplicationRecord
                 'transcripts.vendor_id = :vendor_id AND transcripts.vendor_identifier = :empty AND ' \
                 'collections.vendor_id = :vendor_id AND transcripts.lines <= 0 AND ' \
                 'collections.vendor_identifier != :empty AND transcripts.project_uid = :project_uid',
-                     { vendor_id: vendor[:id], empty: '', project_uid: project_uid })
+                { vendor_id: vendor[:id], empty: '', project_uid: project_uid }
+)
   end
 
   def self.get_updated_after(date, page = 1, _options = {})
