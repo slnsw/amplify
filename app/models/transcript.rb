@@ -131,22 +131,16 @@ class Transcript < ApplicationRecord
   end
 
   def self.sort_string(sort)
-    case sort
-    when 'title_asc'
-      'transcripts.title asc, transcripts.id asc'
-    when 'title_desc'
-      'transcripts.title desc, transcripts.id desc'
-    when 'percent_completed_desc'
-      'transcripts.percent_completed desc, transcripts.percent_edited desc'
-    when 'percent_completed_asc'
-      'transcripts.percent_completed asc, transcripts.percent_edited'
-    when 'duration_asc'
-      'transcripts.duration asc, transcripts.id'
-    when 'duration_desc'
-      'transcripts.duration desc, transcripts.id desc'
-    when 'collection_id_asc'
-      'collections.title asc, transcripts.id'
-    end
+    sort_options = {
+      'title_asc' => 'transcripts.title asc, transcripts.id asc',
+      'title_desc' => 'transcripts.title desc, transcripts.id desc',
+      'percent_completed_desc' => 'transcripts.percent_completed desc, transcripts.percent_edited desc',
+      'percent_completed_asc' => 'transcripts.percent_completed asc, transcripts.percent_edited',
+      'duration_asc' => 'transcripts.duration asc, transcripts.id',
+      'duration_desc' => 'transcripts.duration desc, transcripts.id desc',
+      'collection_id_asc' => 'collections.title asc, transcripts.id'
+    }
+    sort_options[sort]
   end
 
   def self.get_for_home_page(params)
@@ -232,7 +226,7 @@ class Transcript < ApplicationRecord
                 'collections.vendor_identifier != :empty AND transcripts.vendor_identifier != :empty AND ' \
                 'transcripts.project_uid = :project_uid',
                 { vendor_id: vendor[:id], empty: '', project_uid: project_uid }
-)
+              )
   end
 
   def self.get_for_update_by_vendor(vendor_uid, project_uid)
@@ -243,7 +237,7 @@ class Transcript < ApplicationRecord
                 'collections.vendor_identifier != :empty AND transcripts.vendor_identifier != :empty AND ' \
                 'transcripts.project_uid = :project_uid',
                 { vendor_id: vendor[:id], empty: '', project_uid: project_uid }
-)
+              )
   end
 
   def self.get_for_upload_by_vendor(vendor_uid, project_uid)
@@ -254,7 +248,7 @@ class Transcript < ApplicationRecord
                 'collections.vendor_id = :vendor_id AND transcripts.lines <= 0 AND ' \
                 'collections.vendor_identifier != :empty AND transcripts.project_uid = :project_uid',
                 { vendor_id: vendor[:id], empty: '', project_uid: project_uid }
-)
+              )
   end
 
   def self.get_updated_after(date, page = 1, _options = {})
@@ -438,21 +432,21 @@ class Transcript < ApplicationRecord
     reviewing_lines = edited_lines.select { |s| s[:transcript_line_status_id] == reviewing_status[:id] }
 
     # Calculate
-    _lines_edited = edited_lines.length
-    _lines_completed = completed_lines.length
-    _lines_reviewing = reviewing_lines.length
-    _percent_edited = (1.0 * _lines_edited / lines * 100).round.to_i
-    _percent_completed = (1.0 * _lines_completed / lines * 100).round.to_i
-    _percent_reviewing = (1.0 * _lines_reviewing / lines * 100).round.to_i
+    lines_edited_count = edited_lines.length
+    lines_completed_count = completed_lines.length
+    lines_reviewing_count = reviewing_lines.length
+    percent_edited_count = (1.0 * lines_edited_count / lines * 100).round.to_i
+    percent_completed_count = (1.0 * lines_completed_count / lines * 100).round.to_i
+    percent_reviewing_count = (1.0 * lines_reviewing_count / lines * 100).round.to_i
 
     # Get user count
-    _users_contributed = get_users_contributed_count
+    users_contributed_count = get_users_contributed_count
 
     # Update
     update(
-      lines_edited: _lines_edited, lines_completed: _lines_completed, lines_reviewing: _lines_reviewing,
-      percent_edited: _percent_edited, percent_completed: _percent_completed, percent_reviewing: _percent_reviewing,
-      users_contributed: _users_contributed
+      lines_edited: lines_edited_count, lines_completed: lines_completed_count, lines_reviewing: lines_reviewing_count,
+      percent_edited: percent_edited_count, percent_completed: percent_completed_count, percent_reviewing: percent_reviewing_count,
+      users_contributed: users_contributed_count
     )
   end
 
@@ -474,7 +468,11 @@ class Transcript < ApplicationRecord
     if options[:q].present?
       # Build initial query w/ pagination
       transcripts = TranscriptLine
-                    .select('transcripts.*, COALESCE(collections.title, \'\') AS collection_title, transcript_lines.guess_text, transcript_lines.original_text, transcript_lines.start_time, transcript_lines.transcript_id')
+                    .select(
+                      'transcripts.*, COALESCE(collections.title, \'\') AS collection_title, ' \
+                      'transcript_lines.guess_text, transcript_lines.original_text, ' \
+                      'transcript_lines.start_time, transcript_lines.transcript_id'
+                    )
                     .joins('INNER JOIN transcripts ON transcripts.id = transcript_lines.transcript_id')
                     .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
                     .joins('INNER JOIN institutions ON institutions.id = collections.institution_id')
@@ -486,12 +484,15 @@ class Transcript < ApplicationRecord
     else
       # Build initial query w/ pagination
       transcripts = Transcript
-                    .select('transcripts.*, COALESCE(collections.title, \'\') as collection_title, \'\' AS guess_text, \'\' AS original_text, 0 AS start_time')
+                    .select(
+                      'transcripts.*, COALESCE(collections.title, \'\') as collection_title, ' \
+                      '\'\' AS guess_text, \'\' AS original_text, 0 AS start_time'
+                    )
                     .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
                     .joins('INNER JOIN institutions ON institutions.id = collections.institution_id')
 
       # Check for query
-      transcripts = transcripts.search_default(options[:q]) if options[:q].present? && options[:q].present?
+      transcripts = transcripts.search_default(options[:q]) if options[:q].present?
     end
 
     transcripts = transcripts.where.not(transcripts: { published_at: nil })
@@ -512,7 +513,10 @@ class Transcript < ApplicationRecord
     end
 
     if options[:theme].present?
-      transcripts = transcripts.joins('inner join taggings on taggings.taggable_id = collections.id inner join tags on tags.id =  taggings.tag_id')
+      transcripts = transcripts.joins(
+        'inner join taggings on taggings.taggable_id = collections.id ' \
+        'inner join tags on tags.id = taggings.tag_id'
+      )
       transcripts = transcripts.where(tags: { name: options[:theme] })
     end
 
@@ -526,11 +530,11 @@ class Transcript < ApplicationRecord
   end
 
   def update_users_contributed(edits = [])
-    _users_contributed = get_users_contributed_count(edits)
+    users_contributed_count = get_users_contributed_count(edits)
 
-    return unless _users_contributed != users_contributed
+    return unless users_contributed_count != users_contributed
 
-    update(users_contributed: _users_contributed)
+    update(users_contributed: users_contributed_count)
   end
 
   def _get_audio_urls_from_hash(contents)
@@ -555,7 +559,8 @@ class Transcript < ApplicationRecord
 
   def _get_lines_from_hash(contents)
     transcript_lines = []
-    if contents['audio_files']&.length&.positive? && contents['audio_files'][0]['transcript'] && contents['audio_files'][0]['transcript']['parts']&.length&.positive?
+    if contents['audio_files']&.length&.positive? && contents['audio_files'][0]['transcript'] &&
+       contents['audio_files'][0]['transcript']['parts']&.length&.positive?
       raw_lines = contents['audio_files'][0]['transcript']['parts']
       raw_lines.each_with_index do |raw_line, i|
         transcript_lines << {
