@@ -389,8 +389,6 @@ class Transcript < ApplicationRecord
     end
   end
 
-  private
-
   def process_transcript_lines(transcript_lines, contents)
     # remove existing lines
     TranscriptLine.where(transcript_id: id).destroy_all
@@ -462,8 +460,6 @@ class Transcript < ApplicationRecord
     update_transcript_statistics(line_counts, users_contributed_count)
   end
 
-  private
-
   def calculate_line_counts(edited_lines, statuses)
     completed_status = statuses.find { |s| s[:name] == 'completed' }
     reviewing_status = statuses.find { |s| s[:name] == 'reviewing' }
@@ -501,8 +497,6 @@ class Transcript < ApplicationRecord
     transcripts = apply_search_filters(transcripts, options, per_page)
     transcripts.order("transcripts.#{sort_by} #{sort_order}")
   end
-
-  private
 
   def self.calculate_per_page(project)
     per_page = 500
@@ -623,8 +617,6 @@ class Transcript < ApplicationRecord
     build_transcript_lines_from_raw(raw_lines)
   end
 
-  private
-
   def valid_audio_content?(contents)
     contents['audio_files']&.length&.positive? &&
     contents['audio_files'][0]['transcript'] &&
@@ -669,9 +661,6 @@ class Transcript < ApplicationRecord
       process_speaker_from_cue(cue, i, speakers)
     end
   end
-
-
-  private
 
   def process_speaker_from_cue(cue, sequence, speakers)
     speaker_match = /^<v ([^>]*)>[ ]*.*/.match(cue.text)
