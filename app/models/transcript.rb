@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class Transcript < ApplicationRecord
   has_paper_trail
   include ImageSizeValidation
@@ -217,26 +218,26 @@ class Transcript < ApplicationRecord
   def self.get_for_homepage(page = 1, options = {})
     page ||= 1
     str_order = sort_string(options)
-
     project = Project.getActive
-
     per_page = 500
     per_page = project[:data]['transcriptsPerPage'].to_i if project && project[:data]['transcriptsPerPage']
-
     Rails.cache.fetch("#{ENV.fetch('PROJECT_ID', nil)}/transcripts/#{page}/#{per_page}/#{options[:order]}",
                       expires_in: 10.minutes) do
-      query = Transcript
-              .select('transcripts.*, COALESCE(collections.title, \'\') as collection_title')
-              .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
-              .where(
-                'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND ' \
-                'transcripts.is_published = :is_published',
-                { project_uid: ENV.fetch('PROJECT_ID', nil), is_published: 1 }
-              )
-              .paginate(page: page, per_page: per_page)
+      query = base_homepage_query(page, per_page)
       query = query.order(str_order) if str_order
       query
     end
+  end
+
+  def self.base_homepage_query(page, per_page)
+    Transcript
+      .select('transcripts.*, COALESCE(collections.title, \'\') as collection_title')
+      .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
+      .where(
+        'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.is_published = :is_published',
+        { project_uid: ENV.fetch('PROJECT_ID', nil), is_published: 1 }
+      )
+      .paginate(page: page, per_page: per_page)
   end
 
   def self.get_for_download_by_vendor(vendor_uid, project_uid)
@@ -300,65 +301,73 @@ class Transcript < ApplicationRecord
     return if lines <= 0
 
     statuses ||= TranscriptLineStatus.allCached
+    changed, new_lines_edited, new_lines_completed, new_lines_reviewing =
+      delta_line_counts(
+        line_status_id_before,
+        line_status_id_after,
+        statuses
+      )
+    return unless changed
 
-    # initialize stats
-    changed = false
+    update_delta_stats(new_lines_edited, new_lines_completed, new_lines_reviewing)
+  end
+
+  def update_delta_stats(new_lines_edited, new_lines_completed, new_lines_reviewing)
+    percents = calculate_percents(new_lines_edited, new_lines_completed, new_lines_reviewing)
+    update(
+      lines_edited: new_lines_edited,
+      lines_completed: new_lines_completed,
+      lines_reviewing: new_lines_reviewing,
+      percent_edited: percents[:edited],
+      percent_completed: percents[:completed],
+      percent_reviewing: percents[:reviewing]
+    )
+  end
+
+  def calculate_percents(edited, completed, reviewing)
+    {
+      edited: percent_count(edited),
+      completed: percent_count(completed),
+      reviewing: percent_count(reviewing)
+    }
+  end
+
+  def delta_line_counts(line_status_id_before, line_status_id_after, statuses)
     new_lines_completed = lines_completed
     new_lines_edited = lines_edited
     new_lines_reviewing = lines_reviewing
-    percent_completed
-    percent_edited
-    percent_reviewing
-
-    # retrieve statuses
     before_status = statuses.find { |s| s[:id] == line_status_id_before }
     after_status = statuses.find { |s| s[:id] == line_status_id_after }
 
-    # Case: initialized before, something else after, increment lines edited
-    if (!before_status || before_status.name != 'editing') && after_status && after_status.name == 'editing'
-      new_lines_edited += 1
-      changed = true
-
-    # Case: edited before, not edited after
-    elsif before_status && before_status.name == 'editing' && (!after_status || after_status.name != 'editing')
-      new_lines_edited -= 1
-      changed = true
-    end
-
-    # Case: not completed before, completed after
-    if (!before_status || before_status.name != 'completed') && after_status && after_status.name == 'completed'
-      new_lines_completed += 1
-      changed = true
-
-    # Case: completed before, not completed after
-    elsif before_status && before_status.name == 'completed' && (!after_status || after_status.name != 'completed')
-      new_lines_completed -= 1
-      changed = true
-    end
-
-    # Case: not reviewing before, reviewing after
-    if (!before_status || before_status.name != 'reviewing') && after_status && after_status.name == 'reviewing'
-      new_lines_reviewing += 1
-      changed = true
-
-    # Case: reviewing before, not reviewing after
-    elsif before_status && before_status.name == 'reviewing' && (!after_status || after_status.name != 'reviewing')
-      new_lines_reviewing -= 1
-      changed = true
-    end
-
-    # Update
-    return unless changed
-
-    new_percent_edited = (1.0 * new_lines_edited / lines * 100).round.to_i
-    new_percent_completed = (1.0 * new_lines_completed / lines * 100).round.to_i
-    new_percent_reviewing = (1.0 * new_lines_reviewing / lines * 100).round.to_i
-
-    update(
-      lines_edited: new_lines_edited, lines_completed: new_lines_completed,
-      lines_reviewing: new_lines_reviewing, percent_edited: new_percent_edited,
-      percent_completed: new_percent_completed, percent_reviewing: new_percent_reviewing
+    # Use a helper to DRY up the repeated logic
+    changed, new_lines_edited = delta_status_count(
+      before_status, after_status, 'editing', new_lines_edited
     )
+    changed, new_lines_completed = delta_status_count(
+      before_status, after_status, 'completed', new_lines_completed, changed: changed
+    )
+    changed, new_lines_reviewing = delta_status_count(
+      before_status, after_status, 'reviewing', new_lines_reviewing, changed: changed
+    )
+    [changed, new_lines_edited, new_lines_completed, new_lines_reviewing]
+  end
+
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def delta_status_count(before_status, after_status, status_name, count, changed: false)
+    # Early return for increment
+    if (!before_status || before_status.name != status_name) && after_status&.name == status_name
+      return [true,
+              count + 1]
+    end
+    # Early return for decrement
+    if before_status&.name == status_name && (!after_status || after_status.name != status_name)
+      return [true,
+              count - 1]
+    end
+
+    [changed, count]
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/ClassLength
   end
 
   def get_users_contributed_count(edits = [])
@@ -421,30 +430,24 @@ class Transcript < ApplicationRecord
 
   def load_from_webvtt(webvtt)
     transcript_lines = _get_lines_from_webvtt(webvtt)
+    process_webvtt_lines(transcript_lines, webvtt) if transcript_lines.length.positive?
+    cleanup_speakers_and_assign(webvtt)
+  end
 
-    if transcript_lines.length.positive?
-      # remove existing lines
-      TranscriptLine.where(transcript_id: id).destroy_all
+  def process_webvtt_lines(transcript_lines, webvtt)
+    TranscriptLine.where(transcript_id: id).destroy_all
+    TranscriptLine.create(transcript_lines)
+    transcript_status = TranscriptStatus.find_by(name: 'transcript_downloaded')
+    transcript_duration = _get_duration_from_webvtt(webvtt)
+    update(lines: transcript_lines.length, transcript_status_id: transcript_status[:id],
+           duration: transcript_duration, transcript_retrieved_at: DateTime.now)
+    Rails.logger.debug { "Created #{transcript_lines.length} lines from transcript #{uid}" }
+  end
 
-      # create the lines
-      TranscriptLine.create(transcript_lines)
-
-      # update transcript
-      transcript_status = TranscriptStatus.find_by(name: 'transcript_downloaded')
-      transcript_duration = _get_duration_from_webvtt(webvtt)
-
-      update(lines: transcript_lines.length, transcript_status_id: transcript_status[:id],
-             duration: transcript_duration, transcript_retrieved_at: DateTime.now)
-      Rails.logger.debug { "Created #{transcript_lines.length} lines from transcript #{uid}" }
-    end
-
-    # Delete existing speakers
-    speaker_ids = TranscriptSpeaker.select('speaker_id').where(transcript_id: id)
-    speaker_ids = speaker_ids.map(&:speaker_id)
+  def cleanup_speakers_and_assign(webvtt)
+    speaker_ids = TranscriptSpeaker.where(transcript_id: id).pluck(:speaker_id)
     Speaker.where(id: speaker_ids).delete_all
     TranscriptSpeaker.where(transcript_id: id).destroy_all
-
-    # Check for speakers
     _get_speakers_webvtt(webvtt)
   end
 
@@ -463,10 +466,8 @@ class Transcript < ApplicationRecord
   def calculate_line_counts(edited_lines, statuses)
     completed_status = statuses.find { |s| s[:name] == 'completed' }
     reviewing_status = statuses.find { |s| s[:name] == 'reviewing' }
-
-    completed_lines = edited_lines.select { |s| s[:transcript_line_status_id] == completed_status[:id] }
-    reviewing_lines = edited_lines.select { |s| s[:transcript_line_status_id] == reviewing_status[:id] }
-
+    completed_lines = filter_lines_by_status(edited_lines, completed_status)
+    reviewing_lines = filter_lines_by_status(edited_lines, reviewing_status)
     {
       edited: edited_lines.length,
       completed: completed_lines.length,
@@ -474,17 +475,26 @@ class Transcript < ApplicationRecord
     }
   end
 
-  def update_transcript_statistics(line_counts, users_contributed_count)
-    percent_edited_count = (1.0 * line_counts[:edited] / lines * 100).round.to_i
-    percent_completed_count = (1.0 * line_counts[:completed] / lines * 100).round.to_i
-    percent_reviewing_count = (1.0 * line_counts[:reviewing] / lines * 100).round.to_i
+  def filter_lines_by_status(lines, status)
+    return [] unless status
 
+    lines.select { |s| s[:transcript_line_status_id] == status[:id] }
+  end
+
+  def update_transcript_statistics(line_counts, users_contributed_count)
+    percent_edited_count = percent_count(line_counts[:edited])
+    percent_completed_count = percent_count(line_counts[:completed])
+    percent_reviewing_count = percent_count(line_counts[:reviewing])
     update(
       lines_edited: line_counts[:edited], lines_completed: line_counts[:completed],
       lines_reviewing: line_counts[:reviewing], percent_edited: percent_edited_count,
       percent_completed: percent_completed_count, percent_reviewing: percent_reviewing_count,
       users_contributed: users_contributed_count
     )
+  end
+
+  def percent_count(count)
+    (1.0 * count / lines * 100).round.to_i
   end
 
   def self.search(options)
@@ -549,16 +559,18 @@ class Transcript < ApplicationRecord
   end
 
   def self.apply_search_filters(transcripts, options, per_page)
-    transcripts = transcripts.where.not(transcripts: { published_at: nil })
-    transcripts = transcripts.where.not(collections: { published_at: nil })
-    transcripts = transcripts.where(transcripts: { project_uid: ENV.fetch('PROJECT_ID', nil) })
-                             .paginate(page: options[:page], per_page: per_page)
-
-    # Apply optional filters
+    transcripts = base_search_filters(transcripts, options, per_page)
     transcripts = apply_collection_filter(transcripts, options[:collection_id]) if options[:collection_id].present?
     transcripts = apply_institution_filter(transcripts, options[:institution_id]) if options[:institution_id].present?
     transcripts = apply_theme_search_filter(transcripts, options[:theme]) if options[:theme].present?
     transcripts
+  end
+
+  def self.base_search_filters(transcripts, options, per_page)
+    transcripts.where.not(transcripts: { published_at: nil })
+               .where.not(collections: { published_at: nil })
+               .where(transcripts: { project_uid: ENV.fetch('PROJECT_ID', nil) })
+               .paginate(page: options[:page], per_page: per_page)
   end
 
   def self.apply_collection_filter(transcripts, collection_id)
