@@ -5,12 +5,12 @@ class TranscriptLine < ApplicationRecord
   pg_search_scope :search_by_all_text, :against => [:guess_text, :original_text] # User text weighted more than original text
   pg_search_scope :search_by_original_text, :against => :original_text
   pg_search_scope :search_by_guess_text, :against => :guess_text
-  pg_search_scope :fuzzy_search, against: :guess_text,
-                  using: {
-                    trigram: {
-                      threshold: 0.1
-                    }
+pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
+                using: {
+                  trigram: {
+                    threshold: 0.1
                   }
+                }
   belongs_to :transcript_line_status, optional: true
   belongs_to :transcript, optional: true,touch: true
   has_many :transcript_edits
@@ -166,11 +166,12 @@ class TranscriptLine < ApplicationRecord
       status_id = editing_status[:id]
     end
 
-    # Update line if it has changed
+    # Update line if it has changed, or if consensus text changes while completed
     transcript = Transcript.find(transcript_id)
     status_changed = (status_id != transcript_line_status_id)
     old_status_id = transcript_line_status_id
-    if status_changed || best_guess_text != guess_text
+    should_update_text = status_changed || best_guess_text != guess_text || (transcript_line_status&.name == "completed" && final_text.present? && text != final_text)
+    if should_update_text
       update(transcript_line_status_id: status_id, guess_text: best_guess_text, text: final_text)
 
       # Update transcript if line status has changed
