@@ -142,7 +142,7 @@ group :development, :test do
   # DISABLED: Rails 8.0 debug gem conflicts with Pry - use Pry instead
   # gem "debug", platforms: [:mri, :mingw, :x64_mingw]
 
-  gem "byebug", "~> 11.0.0", platforms: [:mri, :mingw, :x64_mingw]
+  gem "byebug", "~> 11.1.3", platforms: [:mri, :mingw, :x64_mingw]
   gem "factory_bot_rails", "~> 5.0.2"
   gem "faker"
   gem 'pry', '~> 0.15.0'
@@ -172,7 +172,7 @@ group :development do
   gem "capistrano-rails", "~> 1.6", require: false
   gem "capistrano-rvm"
   gem "capistrano-sidekiq"
-  gem "rubocop", "~> 1.50"
+  gem "rubocop", "~> 1.79"
   gem "sshkit", "~> 1.23"
   gem "stringio"
 
