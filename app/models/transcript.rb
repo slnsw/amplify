@@ -670,6 +670,7 @@ class Transcript < ApplicationRecord
     end
   end
 
+
   private
 
   def process_speaker_from_cue(cue, sequence, speakers)
@@ -712,6 +713,7 @@ class Transcript < ApplicationRecord
     Azure::SpeechToTextJob.perform_later(id) if azure?
   end
 
+  # Public: Returns the disk usage for this transcript.
   def disk_usage
     Rails.cache.fetch("Transcript:disk_usage:#{id}", expires_in: 23.hours) do
       {
