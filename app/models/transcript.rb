@@ -56,11 +56,11 @@ class Transcript < ApplicationRecord
   end
 
   def publish!
-    update_columns(published_at: Time.current, publish: true)
+    update!(published_at: Time.current, publish: true)
   end
 
   def unpublish!
-    update_columns(published_at: nil, publish: false)
+    update!(published_at: nil, publish: false)
   end
 
   def transcription_conventions
@@ -619,8 +619,8 @@ class Transcript < ApplicationRecord
 
   def valid_audio_content?(contents)
     contents['audio_files']&.length&.positive? &&
-    contents['audio_files'][0]['transcript'] &&
-    contents['audio_files'][0]['transcript']['parts']&.length&.positive?
+      contents['audio_files'][0]['transcript'] &&
+      contents['audio_files'][0]['transcript']['parts']&.length&.positive?
   end
 
   def build_transcript_lines_from_raw(raw_lines)
