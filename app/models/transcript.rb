@@ -113,7 +113,8 @@ class Transcript < ApplicationRecord
         .select('transcripts.*, collections.uid AS collection_uid')
         .joins('INNER JOIN collections ON collections.id = transcripts.collection_id')
         .where(
-          'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.is_published = :is_published AND collections.uid = :collection_uid',
+          'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND ' \
+          'transcripts.is_published = :is_published AND collections.uid = :collection_uid',
           { project_uid: project_uid, is_published: 1, collection_uid: collection_uid }
         )
 
@@ -122,7 +123,8 @@ class Transcript < ApplicationRecord
         .select("transcripts.*, COALESCE(collections.uid, '') as collection_uid")
         .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
         .where(
-          'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.is_published = :is_published',
+          'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND ' \
+          'transcripts.is_published = :is_published',
           { project_uid: project_uid, is_published: 1 }
         )
     end
@@ -155,7 +157,8 @@ class Transcript < ApplicationRecord
                       .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
                       .joins('LEFT OUTER JOIN institutions ON institutions.id = collections.institution_id')
                       .where(
-                        'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.published_at is NOT NULL and collections.published_at is NOT NULL',
+                        'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND ' \
+                        'transcripts.published_at is NOT NULL and collections.published_at is NOT NULL',
                         { project_uid: ENV.fetch('PROJECT_ID', nil) }
                       )
                       .where(institutions: { hidden: false })
@@ -210,9 +213,11 @@ class Transcript < ApplicationRecord
       query = Transcript
               .select('transcripts.*, COALESCE(collections.title, \'\') as collection_title')
               .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
-              .where('transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.is_published = :is_published', {
-                       project_uid: ENV.fetch('PROJECT_ID', nil), is_published: 1
-                     })
+              .where(
+                'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND ' \
+                'transcripts.is_published = :is_published',
+                { project_uid: ENV.fetch('PROJECT_ID', nil), is_published: 1 }
+              )
               .paginate(page: page, per_page: per_page)
       query = query.order(str_order) if str_order
       query
