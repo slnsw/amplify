@@ -266,9 +266,11 @@ class Transcript < ApplicationRecord
     Transcript
       .select('transcripts.*, COALESCE(collections.uid, \'\') AS collection_uid')
       .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
-      .where('transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.is_published = :is_published AND transcripts.updated_at > :update_after', {
-               project_uid: ENV.fetch('PROJECT_ID', nil), is_published: 1, update_after: date
-             })
+      .where(
+        'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND ' \
+        'transcripts.is_published = :is_published AND transcripts.updated_at > :update_after',
+        { project_uid: ENV.fetch('PROJECT_ID', nil), is_published: 1, update_after: date }
+      )
       .distinct
       .order('updated_at DESC')
       .paginate(page: page, per_page: per_page)
@@ -337,8 +339,11 @@ class Transcript < ApplicationRecord
     new_percent_completed = (1.0 * new_lines_completed / lines * 100).round.to_i
     new_percent_reviewing = (1.0 * new_lines_reviewing / lines * 100).round.to_i
 
-    update(lines_edited: new_lines_edited, lines_completed: new_lines_completed,
-           lines_reviewing: new_lines_reviewing, percent_edited: new_percent_edited, percent_completed: new_percent_completed, percent_reviewing: new_percent_reviewing)
+    update(
+      lines_edited: new_lines_edited, lines_completed: new_lines_completed,
+      lines_reviewing: new_lines_reviewing, percent_edited: new_percent_edited,
+      percent_completed: new_percent_completed, percent_reviewing: new_percent_reviewing
+    )
   end
 
   def get_users_contributed_count(edits = [])
