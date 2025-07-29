@@ -445,8 +445,8 @@ class Transcript < ApplicationRecord
     # Update
     update(
       lines_edited: lines_edited_count, lines_completed: lines_completed_count, lines_reviewing: lines_reviewing_count,
-      percent_edited: percent_edited_count, percent_completed: percent_completed_count, percent_reviewing: percent_reviewing_count,
-      users_contributed: users_contributed_count
+      percent_edited: percent_edited_count, percent_completed: percent_completed_count,
+      percent_reviewing: percent_reviewing_count, users_contributed: users_contributed_count
     )
   end
 
