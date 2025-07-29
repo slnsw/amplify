@@ -97,7 +97,7 @@ class Transcript < ApplicationRecord
     uid
   end
 
-  def self.get_edited
+  def self.edited
     Transcript.joins(:transcript_edits).distinct
   end
 
@@ -112,17 +112,19 @@ class Transcript < ApplicationRecord
       Transcript
         .select('transcripts.*, collections.uid AS collection_uid')
         .joins('INNER JOIN collections ON collections.id = transcripts.collection_id')
-        .where('transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.is_published = :is_published AND collections.uid = :collection_uid', {
-                 project_uid: project_uid, is_published: 1, collection_uid: collection_uid
-               })
+        .where(
+          'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.is_published = :is_published AND collections.uid = :collection_uid',
+          { project_uid: project_uid, is_published: 1, collection_uid: collection_uid }
+        )
 
     else
       Transcript
         .select("transcripts.*, COALESCE(collections.uid, '') as collection_uid")
         .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
-        .where('transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.is_published = :is_published', {
-                 project_uid: project_uid, is_published: 1
-               })
+        .where(
+          'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.is_published = :is_published',
+          { project_uid: project_uid, is_published: 1 }
+        )
     end
   end
 
@@ -152,9 +154,10 @@ class Transcript < ApplicationRecord
                       .select('transcripts.*, COALESCE(collections.title, \'\') as collection_title')
                       .joins('LEFT OUTER JOIN collections ON collections.id = transcripts.collection_id')
                       .joins('LEFT OUTER JOIN institutions ON institutions.id = collections.institution_id')
-                      .where('transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.published_at is NOT NULL and collections.published_at is NOT NULL', { project_uid: ENV.fetch(
-                        'PROJECT_ID', nil
-                      ) })
+                      .where(
+                        'transcripts.lines > 0 AND transcripts.project_uid = :project_uid AND transcripts.published_at is NOT NULL and collections.published_at is NOT NULL',
+                        { project_uid: ENV.fetch('PROJECT_ID', nil) }
+                      )
                       .where(institutions: { hidden: false })
 
     # scope by collection
@@ -166,7 +169,9 @@ class Transcript < ApplicationRecord
     # scope for theme
     # since the theme is coming from the dropdown, we can use it as is
     if params[:themes].present?
-      query = query.joins('inner join taggings on taggings.taggable_id = collections.id inner join tags on tags.id =  taggings.tag_id')
+      query = query.joins(
+        'inner join taggings on taggings.taggable_id = collections.id inner join tags on tags.id =  taggings.tag_id'
+      )
       query = query.where(tags: { name: params[:themes] })
     end
 
@@ -252,7 +257,7 @@ class Transcript < ApplicationRecord
       .paginate(page: page, per_page: per_page)
   end
 
-  def self.sortableFields
+  def self.sortable_fields
     %w[percent_completed duration title collection_id]
   end
 
@@ -439,7 +444,7 @@ class Transcript < ApplicationRecord
     options[:sort_by] ||= 'title'
     sort_by = options[:sort_by]
     sort_by = 'percent_completed' if sort_by.present? && sort_by == 'completeness'
-    sort_by = 'title' unless Transcript.sortableFields.include? sort_by
+    sort_by = 'title' unless Transcript.sortable_fields.include? sort_by
 
     transcripts = nil
 
