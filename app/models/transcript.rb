@@ -393,7 +393,7 @@ class Transcript < ApplicationRecord
 
   def process_transcript_lines(transcript_lines, contents)
     # remove existing lines
-    TranscriptLine.destroy_all(transcript_id: id)
+    TranscriptLine.where(transcript_id: id).destroy_all
 
     # create the lines
     TranscriptLine.create(transcript_lines)
@@ -426,7 +426,7 @@ class Transcript < ApplicationRecord
 
     if transcript_lines.length.positive?
       # remove existing lines
-      TranscriptLine.destroy_all(transcript_id: id)
+      TranscriptLine.where(transcript_id: id).destroy_all
 
       # create the lines
       TranscriptLine.create(transcript_lines)
@@ -444,7 +444,7 @@ class Transcript < ApplicationRecord
     speaker_ids = TranscriptSpeaker.select('speaker_id').where(transcript_id: id)
     speaker_ids = speaker_ids.map(&:speaker_id)
     Speaker.where(id: speaker_ids).delete_all
-    TranscriptSpeaker.destroy_all(transcript_id: id)
+    TranscriptSpeaker.where(transcript_id: id).destroy_all
 
     # Check for speakers
     _get_speakers_webvtt(webvtt)
