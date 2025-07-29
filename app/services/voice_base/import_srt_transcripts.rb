@@ -27,7 +27,7 @@ module VoiceBase
 
     def call
       # Retrieve empty transcripts that have VoiceBase as their vendor.
-      transcripts = Transcript.getForDownloadByVendor('voice_base', @project_id)
+      transcripts = Transcript.get_for_download_by_vendor('voice_base', @project_id)
       puts "Retrieved #{transcripts.count} empty transcripts from collections \
       with VoiceBase as their vendor."
 

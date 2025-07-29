@@ -180,7 +180,7 @@ class TranscriptLine < ApplicationRecord
     end
 
     # Update user count
-    transcript.updateUsersContributed
+    transcript.update_users_contributed
   end
 
   def recalculateSpeaker(edits=nil, project=nil)
