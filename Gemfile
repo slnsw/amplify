@@ -172,7 +172,9 @@ group :development do
   gem "capistrano-rails", "~> 1.6", require: false
   gem "capistrano-rvm"
   gem "capistrano-sidekiq"
-  gem "rubocop", "~> 1.50"
+  gem "rubocop", "~> 1.69"
+  gem "rubocop-rails", "~> 2.27"
+  gem "rubocop-rspec", "~> 3.3"
   gem "sshkit", "~> 1.23"
   gem "stringio"
 
