@@ -11,7 +11,7 @@ class TranscriptSearch
     options[:sort_by] ||= "title"
     sort_by = options[:sort_by]
     sort_by = "percent_completed" if sort_by.present? && sort_by=="completeness"
-    sort_by = "title" if !Transcript.sortableFields().include? sort_by
+    sort_by = "title" if !Transcript.sortable_fields().include? sort_by
 
     @transcripts = nil
 

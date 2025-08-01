@@ -16,7 +16,7 @@ class TranscriptsController < ApplicationController
   def index
     project = Project.getActive
     @project_settings = project[:data]
-    @transcripts = Transcript.getForHomepage(params[:page], order: "id")
+    @transcripts = Transcript.get_for_homepage(params[:page], order: "id")
   end
 
   # GET /search?sort_by=completeness&order=desc&collection_id=1&q=amy&page=1

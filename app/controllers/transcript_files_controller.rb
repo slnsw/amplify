@@ -6,7 +6,7 @@ class TranscriptFilesController < ApplicationController
 
   # GET /transcripts.json?updated_after=yyyy-mm-dd&page=1
   def index
-    @transcripts = Transcript.getUpdatedAfter(@updated_after)
+    @transcripts = Transcript.get_updated_after(@updated_after)
     @opt = transcript_file_params
   end
 

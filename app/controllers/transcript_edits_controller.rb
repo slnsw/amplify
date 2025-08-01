@@ -15,11 +15,11 @@ class TranscriptEditsController < ApplicationController
 
     elsif params[:user_id]
       @transcript_edits = TranscriptEdit.getByUser(params[:user_id])
-      @transcripts = Transcript.getByUserEdited(params[:user_id])
+      @transcripts = Transcript.get_by_user_edited(params[:user_id])
 
     elsif user_signed_in?
       @transcript_edits = TranscriptEdit.getByUser(current_user.id)
-      @transcripts = Transcript.getByUserEdited(current_user.id)
+      @transcripts = Transcript.get_by_user_edited(current_user.id)
     end
   end
 
