@@ -24,10 +24,9 @@ class Transcript < ApplicationRecord
   pg_search_scope :search_default, against: %i[title description]
   pg_search_scope :search_by_title, against: :title
 
-  # TODO: Convert to integer-based enum
   enum :transcript_type, { voicebase: 0, manual: 1, azure: 2 }
 
-  enum :process_status, { started: 'started', completed: 'completed', failed: 'failed' }, prefix: :process
+  enum :process_status, { started: 0, completed: 1, failed: 2 }, prefix: :process
 
   scope :voicebase_processing_pending, -> { voicebase.where(process_completed_at: nil) }
   scope :not_picked_up_for_voicebase_processing, -> { voicebase.where.not(process_started_at: nil) }
