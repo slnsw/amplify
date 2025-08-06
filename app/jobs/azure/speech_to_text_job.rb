@@ -11,11 +11,16 @@ module Azure
       return if transcript.process_started?
 
       begin
-        file = download(transcript.audio)
+        # Use OpenURI to download the audio file as primary approach.
+        file = download_via_open_uri(transcript.audio)
+        Rails.logger.info "=============== Successfully downloaded via OpenURI: #{file.path} ==============="
+        Rails.logger.info "=============== File Exists in Local Directory: #{File.exist?(file.path)} ==============="
       rescue StandardError => e
-        Rails.logger.error "=============== Failed to download audio file: #{e.message} ==============="
-        Rails.logger.error '=============== From cache_stored_file! ==============='
-        file = download_alternative(transcript.audio) # Returns Tempfile object
+        Rails.logger.error "=============== Failed to download audio file via OPENURI: #{e.message} ==============="
+
+        file = download(transcript.audio)
+        Rails.logger.info "=============== Successfully downloaded via CarrierWave cache: #{file} ==============="
+        Rails.logger.info "=============== File Exists in Local Directory: #{File.exist?(file)} ==============="
       end
 
       transcript.update_columns(
@@ -76,6 +81,7 @@ module Azure
     # rubocop:disable Metrics/AbcSize
     # Reference: https://github.com/carrierwaveuploader/carrierwave/wiki/How-to%3A-Recreate-and-reprocess-your-files-stored-on-fog
     def download(audio)
+      # TODO: Remove or mark for deprecation after testing
       # Step 1: Download S3 file to local cache
       audio.cache_stored_file!
 
@@ -84,6 +90,10 @@ module Azure
 
       # Step 3: Now we can access the local file path
       local_path = audio.file.path
+
+      # Check if file actually exists on disk
+      raise StandardError, "CarrierWave cached file does not exist: #{local_path}" unless File.exist?(local_path)
+
       return local_path if local_path.to_s.size <= 150
 
       # If the path is too long, create a shorter path
@@ -99,8 +109,10 @@ module Azure
       new_name
     end
 
-    def download_alternative(audio)
-      # Just a fallback method in case the cache_stored_file! fails
+    def download_via_open_uri(audio)
+      # Primary approach to download the audio file. Since the upgrade from Carrierwave 2 -> 3, the cache_stored_file!
+      # method is not working as expected. Hence, we are using the OpenURI method to download the audio file.
+
       # Download the remote file to a Tempfile object instead of using the Carrierwave cache
       file = Tempfile.new(['audio', File.extname(audio.url)])
       file.binmode
