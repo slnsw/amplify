@@ -10,18 +10,8 @@ module Azure
       transcript = Transcript.find transcript_id
       return if transcript.process_started?
 
-      begin
-        # Use OpenURI to download the audio file as primary approach.
-        file = download_via_open_uri(transcript.audio)
-        Rails.logger.info "=============== Successfully downloaded via OpenURI: #{file.path} ==============="
-        Rails.logger.info "=============== File Exists in Local Directory: #{File.exist?(file.path)} ==============="
-      rescue StandardError => e
-        Rails.logger.error "=============== Failed to download audio file via OPENURI: #{e.message} ==============="
-
-        file = download(transcript.audio)
-        Rails.logger.info "=============== Successfully downloaded via CarrierWave cache: #{file} ==============="
-        Rails.logger.info "=============== File Exists in Local Directory: #{File.exist?(file)} ==============="
-      end
+      # Use OpenURI to download the audio file instead of CarrierWave cache
+      file = download_via_open_uri(transcript.audio)
 
       transcript.update_columns(
         process_status: :started,
@@ -31,7 +21,7 @@ module Azure
 
       # Usage of Tempfile object is still backwards compatible with the old implementation
       # Hence, No changes are required in the Azure::SpeechToTextService class
-      speech_to_text = Azure::SpeechToTextService.new(file: file.is_a?(String) ? file : file.path).recognize
+      speech_to_text = Azure::SpeechToTextService.new(file: file.path).recognize
       lines = speech_to_text.lines
       wav_file = File.open(speech_to_text.wav_file_path)
 
@@ -43,7 +33,7 @@ module Azure
           end
           transcript.update_columns(
             lines: lines.length,
-            duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{Shellwords.escape(file.to_s)}`.to_i
+            duration: `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 #{Shellwords.escape(file.path)}`.to_i
           )
         end
       end
@@ -61,52 +51,14 @@ module Azure
       )
       Bugsnag.notify e
     ensure
-      # Handle cleanup for both string paths and Tempfile objects
-      if file
-        if file.respond_to?(:close) && file.respond_to?(:unlink)
-          # Tempfile object - use tempfile cleanup methods
-          file.close unless file.closed?
-          file.unlink
-        elsif file.is_a?(String) && File.exist?(file)
-          # String path - use regular file deletion
-          File.delete(file)
-        end
+      if file&.respond_to?(:close) && file.respond_to?(:unlink)
+        file.close unless file.closed?
+        file.unlink
       end
 
       if speech_to_text&.wav_file_path && File.exist?(speech_to_text&.wav_file_path.to_s)
         File.delete speech_to_text&.wav_file_path
       end
-    end
-
-    # rubocop:disable Metrics/AbcSize
-    # Reference: https://github.com/carrierwaveuploader/carrierwave/wiki/How-to%3A-Recreate-and-reprocess-your-files-stored-on-fog
-    def download(audio)
-      # TODO: Remove or mark for deprecation after testing
-      # Step 1: Download S3 file to local cache
-      audio.cache_stored_file!
-
-      # Step 2: Retrieve the cached file as a SanitizedFile (this converts Fog::File to SanitizedFile)
-      audio.retrieve_from_cache!(audio.cache_name)
-
-      # Step 3: Now we can access the local file path
-      local_path = audio.file.path
-
-      # Check if file actually exists on disk
-      raise StandardError, "CarrierWave cached file does not exist: #{local_path}" unless File.exist?(local_path)
-
-      return local_path if local_path.to_s.size <= 150
-
-      # If the path is too long, create a shorter path
-      extension = audio.file.filename.split('.').last
-      new_random_name = SecureRandom.hex
-      new_name = Rails.public_path.join(audio.cache_dir, "#{new_random_name}.#{extension}")
-
-      # Ensure the directory exists
-      FileUtils.mkdir_p(File.dirname(new_name))
-
-      File.rename(local_path, new_name)
-
-      new_name
     end
 
     def download_via_open_uri(audio)
@@ -125,11 +77,9 @@ module Azure
       file # Return the Tempfile object, not just the path
     rescue StandardError => e
       Rails.logger.error "=============== Failed to download audio file: #{e.message} ==============="
-      Rails.logger.error '=============== From download_alternative (Using OpenURI)! ==============='
       file&.close
       file&.unlink
       raise e
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end
