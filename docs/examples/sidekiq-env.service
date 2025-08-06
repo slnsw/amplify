@@ -10,6 +10,9 @@ ExecStart=/bin/bash -lc '/home/deploy/.rvm/wrappers/ruby-3.0.0@global/bundle exe
 ExecReload=/bin/kill -TSTP $MAINPID
 ExecStop=/bin/kill -TERM $MAINPID
 
+StandardOutput=file:/home/deploy/nsw-state-library-amplify/shared/log/sidekiq_unit_access.log
+StandardError=file:/home/deploy/nsw-state-library-amplify/shared/log/sidekiq_unit_error.log
+
 RestartSec=5
 Restart=on-failure
 
