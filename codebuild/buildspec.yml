@@ -1,26 +1,17 @@
 version: 0.2
 
 env:
-  # You can override in Terraform or CodeBuild environment variables
   variables:
     IMAGE_TAG: "latest"
-    AWS_DEFAULT_REGION: 'ap-southeast-2'
+    AWS_DEFAULT_REGION: "ap-southeast-2"
     ECS_CONTAINER_NAME: "web"
-  parameter-store:
-    # Optional: If you store sensitive values in SSM Parameter Store
-    # DOCKER_PASSWORD: "/myapp/docker_password"
-  secrets-manager:
-    # Optional: If you use Secrets Manager
-    # MY_SECRET: "myapp/secret_key:password"
 
 phases:
   pre_build:
-     # AWS_ACCOUNT_ID and ECR_REPO_NAME environment variables are set in CodeBuild via Terraform
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION \
-        | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
       - REPOSITORY_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}
       - echo "Repository URI: $REPOSITORY_URI"
 
