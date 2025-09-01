@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CollectionsController < ApplicationController
   include ActionController::MimeResponds
   include IndexTemplate

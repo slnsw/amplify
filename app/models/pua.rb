@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Pua
   def initialize(options = {})
     @client = _getClient()

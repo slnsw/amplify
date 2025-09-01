@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DashboardHelper
   def edited_info(edits)
     time = display_time(edits.count * Transcript.seconds_per_line)

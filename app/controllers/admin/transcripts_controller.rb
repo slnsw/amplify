@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Admin::TranscriptsController < ApplicationController
   include ActionController::MimeResponds
 

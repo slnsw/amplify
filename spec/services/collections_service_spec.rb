@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe CollectionsService, type: :service do
   describe '.by_institution' do
     let!(:institution) { create :institution }

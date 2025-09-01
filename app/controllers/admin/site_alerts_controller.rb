@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Admin::SiteAlertsController < AdminController
   before_action :set_site_alert, only: [:edit, :update, :destroy, :show]
 

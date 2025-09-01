@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Admin::ProfilesController < ApplicationController
   include Pundit
   layout 'admin'

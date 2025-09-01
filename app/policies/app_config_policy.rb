@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AppConfigPolicy < ApplicationPolicy
   attr_reader :user, :object
 

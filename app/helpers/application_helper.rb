@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ApplicationHelper
   def project_name; end
 

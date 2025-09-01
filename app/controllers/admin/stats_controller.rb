@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Admin::StatsController < AdminController
   before_action :authenticate_staff!
 

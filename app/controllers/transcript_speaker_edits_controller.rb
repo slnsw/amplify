@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TranscriptSpeakerEditsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   before_action :authenticate_user, only: [:create]

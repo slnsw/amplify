@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AudioUploader < CarrierWave::Uploader::Base
   include S3Identifier
 

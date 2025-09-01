@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Page, type: :model do
   # associations
   it { is_expected.to have_one(:public_page) }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Admin::CmsController < AdminController
   def show
     authorize Collection

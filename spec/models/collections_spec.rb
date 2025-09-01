@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Collection, type: :model do
   let(:vendor) { Vendor.create(uid: 'voice_base', name: 'VoiceBase') }
   let(:institution) { FactoryBot.create :institution }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # app/services/token_service.rb
 class TokenService
   SECRET_KEY = Rails.application.secret_key_base

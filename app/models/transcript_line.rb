@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TranscriptLine < ApplicationRecord
   has_paper_trail
   include PgSearch

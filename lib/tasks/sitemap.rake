@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :sitemap do
   desc 'generate sitemap'
   task :generate => :environment do |task, args|

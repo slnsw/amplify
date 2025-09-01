@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Admin::UsersController < AdminController
   before_action :set_user, only: [:update, :destroy]
   before_action :load_collections, only: [:index, :destroy]

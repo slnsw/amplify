@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TranscriptEditPolicy < ApplicationPolicy
   attr_reader :user, :scope
 
