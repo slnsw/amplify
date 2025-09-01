@@ -13,7 +13,8 @@ RSpec.feature 'Transcripts List' do
         create(
           :transcript,
           collection: collection, publish: true, lines: 1,
-          image: File.open(Rails.root.join('spec', 'fixtures', '4k_example_image.jpg'))
+          image: File.open(Rails.root.join('spec', 'fixtures', '4k_example_image.jpg')),
+          crop_x: 0, crop_y: 0, crop_w: 400, crop_h: 200
         )
       end
       let!(:transcript_line) { create(:transcript_line, transcript: transcript) }
