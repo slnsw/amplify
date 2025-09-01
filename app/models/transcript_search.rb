@@ -38,7 +38,7 @@ class TranscriptSearch
 
     @transcripts = transcripts.where('transcripts.published_at IS NOT NULL')
     @transcripts = transcripts.where('collections.published_at IS NOT NULL')
-    @transcripts = transcripts.where('transcripts.project_uid = :project_uid', {project_uid: ENV['PROJECT_ID']})
+    @transcripts = transcripts.where('transcripts.project_uid = :project_uid', { project_uid: ENV['PROJECT_ID'] })
 
     # Check for collection filter
     @transcripts = transcripts.where('collections.title in (?)', options[:collections]) if options[:collections].present?

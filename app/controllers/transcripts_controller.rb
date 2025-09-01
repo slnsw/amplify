@@ -37,8 +37,8 @@ class TranscriptsController < ApplicationController
   def show
     if @institution && @collection && (!params[:institution] || !params[:collection]) && !params[:format]
       transcript_params = [@institution&.slug, @collection.uid, params[:id]]
-      transcript_params.push({t: params[:t]}) if params[:t]
-      transcript_params.push({preview: true}) if params[:preview]
+      transcript_params.push({ t: params[:t] }) if params[:t]
+      transcript_params.push({ preview: true }) if params[:preview]
 
       return redirect_to institution_transcript_path(*transcript_params)
     end
