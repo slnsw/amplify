@@ -5,13 +5,13 @@ class TranscriptSearch
     options[:page] ||= 1
     options[:per_page] ||= 30
     project = Project.getActive
-    per_page = project[:data]["transcriptsPerPage"].to_i if project && project[:data]["transcriptsPerPage"]
-    sort_order = "ASC"
-    sort_order = "DESC" if options[:order].present? && options[:order].downcase=="desc"
-    options[:sort_by] ||= "title"
+    per_page = project[:data]['transcriptsPerPage'].to_i if project && project[:data]['transcriptsPerPage']
+    sort_order = 'ASC'
+    sort_order = 'DESC' if options[:order].present? && options[:order].downcase=='desc'
+    options[:sort_by] ||= 'title'
     sort_by = options[:sort_by]
-    sort_by = "percent_completed" if sort_by.present? && sort_by=="completeness"
-    sort_by = "title" if !Transcript.sortable_fields().include? sort_by
+    sort_by = 'percent_completed' if sort_by.present? && sort_by=='completeness'
+    sort_by = 'title' if !Transcript.sortable_fields().include? sort_by
 
     @transcripts = nil
 
@@ -36,19 +36,19 @@ class TranscriptSearch
         .joins('INNER JOIN institutions ON institutions.id = collections.institution_id')
     end
 
-    @transcripts = transcripts.where("transcripts.published_at IS NOT NULL")
-    @transcripts = transcripts.where("collections.published_at IS NOT NULL")
-    @transcripts = transcripts.where("transcripts.project_uid = :project_uid", {project_uid: ENV['PROJECT_ID']})
+    @transcripts = transcripts.where('transcripts.published_at IS NOT NULL')
+    @transcripts = transcripts.where('collections.published_at IS NOT NULL')
+    @transcripts = transcripts.where('transcripts.project_uid = :project_uid', {project_uid: ENV['PROJECT_ID']})
 
     # Check for collection filter
-    @transcripts = transcripts.where("collections.title in (?)", options[:collections]) if options[:collections].present?
+    @transcripts = transcripts.where('collections.title in (?)', options[:collections]) if options[:collections].present?
 
     # check for institution
-    @transcripts = transcripts.where("institutions.slug = ?", options[:institution]) if options[:institution].present?
+    @transcripts = transcripts.where('institutions.slug = ?', options[:institution]) if options[:institution].present?
 
     if options[:theme].present?
       @transcripts = transcripts.joins('inner join taggings on taggings.taggable_id = collections.id inner join tags on tags.id =  taggings.tag_id')
-      @transcripts = transcripts.where("tags.name in (?)", options[:themes])
+      @transcripts = transcripts.where('tags.name in (?)', options[:themes])
     end
 
     # Check for sort

@@ -33,7 +33,7 @@ module Azure
     # @see #cleanup
     def wav_file
       # store it in /tmp folder as it has much larger space
-      @wav_file ||= Pathname.new("/tmp").join(
+      @wav_file ||= Pathname.new('/tmp').join(
         filename.gsub(extension, ".#{SecureRandom.uuid}.wav")
       ).to_s
     end
@@ -42,19 +42,19 @@ module Azure
     # @see speech-to-text.js
     def convert_audio_to_wav
       stdout, stderr, status =
-        Open3.capture3("ffmpeg", "-i", file.to_s, "-ac", "1", "-ar", "16000", wav_file)
+        Open3.capture3('ffmpeg', '-i', file.to_s, '-ac', '1', '-ar', '16000', wav_file)
       raise Exception, stderr.to_s unless status.success?
-      Rails.logger.debug("--- convert_audio_to_wav ---")
+      Rails.logger.debug('--- convert_audio_to_wav ---')
       Rails.logger.debug(File.size wav_file) if File.exist? wav_file
     end
 
     def transcripts_from_sdk
       stdout, stderr, status =
         Open3.capture3(
-          ENV.to_h.slice("SPEECH_TO_TEXT_KEY", "SPEECH_TO_TEXT_REGION"),
-          "node", Rails.root.join("speech-to-text.js").to_s, wav_file
+          ENV.to_h.slice('SPEECH_TO_TEXT_KEY', 'SPEECH_TO_TEXT_REGION'),
+          'node', Rails.root.join('speech-to-text.js').to_s, wav_file
         )
-      Rails.logger.debug("--- transcripts_from_sdk ---")
+      Rails.logger.debug('--- transcripts_from_sdk ---')
       Rails.logger.debug(stdout)
       Rails.logger.debug(stderr)
       error_message = (stderr.presence || stdout).to_s

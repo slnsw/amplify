@@ -42,11 +42,11 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
   end
 
   def start_time_string
-    Time.at(start_time/1000).utc.strftime("%H:%M:%S.%L")
+    Time.at(start_time/1000).utc.strftime('%H:%M:%S.%L')
   end
 
   def end_time_string
-    Time.at(end_time/1000).utc.strftime("%H:%M:%S.%L")
+    Time.at(end_time/1000).utc.strftime('%H:%M:%S.%L')
   end
 
   def self.getEdited
@@ -60,7 +60,7 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
   def self.getByTranscriptWithSpeakers(transcript_id)
     TranscriptLine
       .select("transcript_lines.*, COALESCE(speakers.name, '') AS speaker_name")
-      .joins("LEFT OUTER JOIN speakers ON transcript_lines.speaker_id = speakers.id")
+      .joins('LEFT OUTER JOIN speakers ON transcript_lines.speaker_id = speakers.id')
       .where(transcript_id: transcript_id)
   end
 
@@ -83,17 +83,17 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
     # Init status & text
     status_id = 1
     best_guess_text = original_text
-    final_text = ""
-    consensus = project[:data]["consensus"]
+    final_text = ''
+    consensus = project[:data]['consensus']
 
     # Filter out blank text or text that is the original text unless they are submitted by super users
     edits_filtered = []
     if edits.length > 0
-      edits_filtered = edits.select { |edit| !edit[:text].blank? && edit[:text] != original_text || edit[:user_hiearchy] >= consensus["superUserHiearchy"] }
+      edits_filtered = edits.select { |edit| !edit[:text].blank? && edit[:text] != original_text || edit[:user_hiearchy] >= consensus['superUserHiearchy'] }
     end
 
     # Only original or blank text was found; use all edits
-    if edits_filtered.length <= 0 && edits.length >= consensus["minLinesForConsensusNoEdits"]
+    if edits_filtered.length <= 0 && edits.length >= consensus['minLinesForConsensusNoEdits']
       edits_filtered = edits.select { |edit| true }
     end
 
@@ -106,17 +106,17 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
     # Super users override all others
     if status_id <= 1 && best_edit&.dig(:edit)
       transcript_edit = best_edit[:edit]
-      is_admin_transcribing_role = transcript_edit[:transcribing_role] == "admin"
+      is_admin_transcribing_role = transcript_edit[:transcribing_role] == 'admin'
 
       if is_admin_transcribing_role
-        completed_status = statuses.find { |s| s[:name] == "completed" }
+        completed_status = statuses.find { |s| s[:name] == 'completed' }
         status_id = completed_status[:id] if completed_status
         final_text = best_guess_text
       end
     end
 
     # Candidate for consensus
-    if status_id <= 1 && edits_filtered.length >= consensus["minLinesForConsensus"]
+    if status_id <= 1 && edits_filtered.length >= consensus['minLinesForConsensus']
       unless best_edit.nil? || best_edit[:group].nil?
         # # Determine what percent agree
         # percent_agree = 1.0 * best_edit[:group][:count] / edits_filtered.length
@@ -130,9 +130,9 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
 
         #NOTE: if best_edits are > 50% of the total edits
         #      consider the line as completed
-        percentage = (best_edit[:group][:count].to_f / consensus["minLinesForConsensus"].to_f) * 100
+        percentage = (best_edit[:group][:count].to_f / consensus['minLinesForConsensus'].to_f) * 100
         if percentage > 50
-          completed_status = statuses.find { |s| s[:name] == "completed" }
+          completed_status = statuses.find { |s| s[:name] == 'completed' }
           status_id = completed_status[:id]
           final_text = best_guess_text
         end
@@ -141,13 +141,13 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
 
     # Candidate for consensus due to mathematical certainty
     # E.g. two people submit the same edit; it doesn't matter who the third is
-    if status_id <= 1 && edits_filtered.length > 1 && edits_filtered.length < consensus["minLinesForConsensus"]
+    if status_id <= 1 && edits_filtered.length > 1 && edits_filtered.length < consensus['minLinesForConsensus']
       unless best_edit.nil? || best_edit[:group].nil?
         # Assume there are minimum edits made for consensus
-        percent_agree = 1.0 * best_edit[:group][:count] / consensus["minLinesForConsensus"]
+        percent_agree = 1.0 * best_edit[:group][:count] / consensus['minLinesForConsensus']
         # Mark as completed
-        if percent_agree >= consensus["minPercentConsensus"]
-          completed_status = statuses.find { |s| s[:name] == "completed" }
+        if percent_agree >= consensus['minPercentConsensus']
+          completed_status = statuses.find { |s| s[:name] == 'completed' }
           status_id = completed_status[:id]
           final_text = best_guess_text
         end
@@ -155,14 +155,14 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
     end
 
     # Ready for review
-    if status_id <= 1 && edits_filtered.length >= consensus["maxLineEdits"]
-      reviewing_status = statuses.find { |s| s[:name] == "reviewing" }
+    if status_id <= 1 && edits_filtered.length >= consensus['maxLineEdits']
+      reviewing_status = statuses.find { |s| s[:name] == 'reviewing' }
       status_id = reviewing_status[:id]
     end
 
     # Edits have been received
     if status_id <= 1 && edits_filtered.length > 0
-      editing_status = statuses.find { |s| s[:name] == "editing" }
+      editing_status = statuses.find { |s| s[:name] == 'editing' }
       status_id = editing_status[:id]
     end
 
@@ -170,7 +170,7 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
     transcript = Transcript.find(transcript_id)
     status_changed = (status_id != transcript_line_status_id)
     old_status_id = transcript_line_status_id
-    should_update_text = status_changed || best_guess_text != guess_text || (transcript_line_status&.name == "completed" && final_text.present? && text != final_text)
+    should_update_text = status_changed || best_guess_text != guess_text || (transcript_line_status&.name == 'completed' && final_text.present? && text != final_text)
     if should_update_text
       update(transcript_line_status_id: status_id, guess_text: best_guess_text, text: final_text)
 
@@ -187,12 +187,12 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
   def recalculateSpeaker(edits=nil, project=nil)
     edits ||= TranscriptSpeakerEdit.getByLine(id)
     project ||= Project.getActive(transcript.collection_id)
-    consensus = project[:data]["consensus"]
+    consensus = project[:data]['consensus']
     best_speaker_id = 0
 
     # Check if there's any edits by priority users (e.g. moderators, admins)
     if edits.length > 0
-      edits_priority = edits.select { |edit| edit[:user_hiearchy] >= consensus["superUserHiearchy"] }
+      edits_priority = edits.select { |edit| edit[:user_hiearchy] >= consensus['superUserHiearchy'] }
       edits = edits_priority.select { |edit| true } if edits_priority.length > 0
     end
 
@@ -214,11 +214,11 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
   def chooseBestEdit(edits, project)
     best_group = nil
     best_edit = nil
-    consensus = project[:data]["consensus"]
+    consensus = project[:data]['consensus']
 
     # Check if there's any edits by priority users (e.g. moderators, admins)
     if edits.length > 0
-      edits_priority = edits.select { |edit| edit[:user_hiearchy] >= consensus["superUserHiearchy"] }
+      edits_priority = edits.select { |edit| edit[:user_hiearchy] >= consensus['superUserHiearchy'] }
       if edits_priority.length > 0
         edits_priority = edits_priority.sort_by { |edit| [edit[:user_hiearchy] * -1, Time.now - edit.updated_at] }
         edits = edits_priority.select { |edit| true }

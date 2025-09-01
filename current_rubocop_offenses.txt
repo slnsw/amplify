@@ -1,0 +1,212 @@
+
+258   Style/FrozenStringLiteralComment [Unsafe Correctable]
+200   Layout/SpaceInsideHashLiteralBraces [Safe Correctable]
+169   Layout/LineLength [Safe Correctable]
+61    Naming/MethodName
+48    Layout/EmptyLinesAroundBlockBody [Safe Correctable]
+48    RSpec/LetSetup
+47    RSpec/MultipleExpectations
+46    Layout/DotPosition [Safe Correctable]
+43    RSpec/MultipleMemoizedHelpers
+40    Style/SymbolArray [Safe Correctable]
+39    Style/HashSyntax [Safe Correctable]
+38    Style/IfUnlessModifier [Safe Correctable]
+34    Lint/UnusedBlockArgument [Safe Correctable]
+32    Layout/FirstArrayElementIndentation [Safe Correctable]
+31    RSpec/IndexedLet
+30    Style/NumericPredicate [Unsafe Correctable]
+28    Layout/MultilineMethodCallIndentation [Safe Correctable]
+28    Style/ClassAndModuleChildren [Unsafe Correctable]
+26    Metrics/AbcSize
+26    Style/FetchEnvVar [Safe Correctable]
+25    Layout/ExtraSpacing [Safe Correctable]
+20    Rails/HttpPositionalArguments [Safe Correctable]
+20    Rails/StrongParametersExpect [Unsafe Correctable]
+19    Layout/IndentationWidth [Safe Correctable]
+19    RSpec/ContextWording
+19    RSpec/DescribedClass [Unsafe Correctable]
+19    Style/GuardClause [Safe Correctable]
+18    Layout/SpaceInsideBlockBraces [Safe Correctable]
+17    Layout/IndentationConsistency [Safe Correctable]
+17    Rails/I18nLocaleTexts
+17    Rails/WhereEquals [Unsafe Correctable]
+17    Style/NegatedIf [Safe Correctable]
+16    Layout/ArgumentAlignment [Safe Correctable]
+16    Metrics/MethodLength
+15    Layout/TrailingWhitespace [Safe Correctable]
+15    Rails/HttpStatus [Safe Correctable]
+15    Style/OpenStructUse
+14    RSpec/VerifiedDoubles
+14    Rails/FilePath [Safe Correctable]
+14    Rails/Present [Safe Correctable]
+14    Rails/RootPathnameMethods [Unsafe Correctable]
+14    Rails/SkipsModelValidations
+14    Style/ZeroLengthPredicate [Unsafe Correctable]
+13    Style/NumericLiterals [Safe Correctable]
+13    Style/TrailingCommaInArguments [Safe Correctable]
+12    Layout/EmptyLineAfterGuardClause [Safe Correctable]
+12    Lint/MissingSuper
+12    Metrics/BlockLength
+11    Layout/EmptyLines [Safe Correctable]
+11    Layout/EmptyLinesAroundClassBody [Safe Correctable]
+11    Layout/SpaceAfterColon [Safe Correctable]
+11    RSpec/ExampleLength
+11    Style/SymbolProc [Unsafe Correctable]
+10    Layout/FirstHashElementIndentation [Safe Correctable]
+10    Rails/HelperInstanceVariable
+10    Style/TrailingCommaInHashLiteral [Safe Correctable]
+9     Layout/EmptyLinesAfterModuleInclusion [Safe Correctable]
+9     Naming/VariableName
+9     RSpec/ImplicitBlockExpectation
+9     RSpec/MetadataStyle [Safe Correctable]
+9     Style/RedundantParentheses [Safe Correctable]
+8     Layout/LeadingCommentSpace [Safe Correctable]
+8     Metrics/PerceivedComplexity
+8     RSpec/MessageSpies
+8     RSpec/RepeatedExampleGroupBody
+8     Rails/RootPublicPath [Safe Correctable]
+8     Security/Open
+8     Style/BlockDelimiters [Safe Correctable]
+7     Layout/HashAlignment [Safe Correctable]
+7     Layout/SpaceAfterComma [Safe Correctable]
+7     Layout/SpaceAroundEqualsInParameterDefault [Safe Correctable]
+7     Layout/SpaceAroundOperators [Safe Correctable]
+7     Lint/AmbiguousBlockAssociation [Safe Correctable]
+7     Lint/RedundantCopDisableDirective [Safe Correctable]
+7     Metrics/CyclomaticComplexity
+7     Naming/VariableNumber
+7     Rails/DynamicFindBy [Unsafe Correctable]
+7     Style/MethodCallWithoutArgsParentheses [Safe Correctable]
+7     Style/RedundantReturn [Safe Correctable]
+6     Lint/UnusedMethodArgument [Safe Correctable]
+6     RSpec/RepeatedExampleGroupDescription
+6     Rails/ActionOrder [Safe Correctable]
+6     Rails/Output [Unsafe Correctable]
+6     Rails/RedundantActiveRecordAllMethod [Unsafe Correctable]
+6     Rails/RedundantPresenceValidationOnBelongsTo [Unsafe Correctable]
+6     Style/RedundantSelf [Safe Correctable]
+5     Layout/SpaceBeforeBlockBraces [Safe Correctable]
+5     Layout/TrailingEmptyLines [Safe Correctable]
+5     Lint/EmptyBlock
+5     RSpec/EmptyExampleGroup [Unsafe Correctable]
+5     RSpec/NamedSubject
+5     RSpec/NestedGroups
+5     RSpec/NotToNot [Safe Correctable]
+5     Rails/ActionControllerTestCase [Unsafe Correctable]
+5     Rails/HasManyOrHasOneDependent
+5     Style/EmptyMethod [Safe Correctable]
+5     Style/StringLiteralsInInterpolation [Safe Correctable]
+5     Style/TrailingCommaInArrayLiteral [Safe Correctable]
+4     Layout/EmptyLineBetweenDefs [Safe Correctable]
+4     Lint/UselessAssignment [Safe Correctable]
+4     RSpec/ExcessiveDocstringSpacing [Safe Correctable]
+4     RSpec/ReceiveMessages [Unsafe Correctable]
+4     Rails/Blank [Unsafe Correctable]
+4     Rails/TimeZone [Unsafe Correctable]
+4     Rails/WhereNot [Safe Correctable]
+4     Rails/WhereRange [Unsafe Correctable]
+4     Style/ReturnNilInPredicateMethodDefinition [Unsafe Correctable]
+3     Layout/EmptyLinesAroundAccessModifier [Safe Correctable]
+3     Layout/EmptyLinesAroundMethodBody [Safe Correctable]
+3     Lint/RedundantSafeNavigation [Unsafe Correctable]
+3     Naming/PredicateMethod
+3     Naming/PredicatePrefix
+3     RSpec/AnyInstance
+3     RSpec/BeEq [Unsafe Correctable]
+3     RSpec/ExpectChange [Unsafe Correctable]
+3     Rails/ApplicationController [Unsafe Correctable]
+3     Style/AccessorGrouping [Safe Correctable]
+3     Style/EachWithObject [Safe Correctable]
+3     Style/FileWrite [Safe Correctable]
+3     Style/FloatDivision [Unsafe Correctable]
+3     Style/IfInsideElse [Safe Correctable]
+3     Style/MultipleComparison [Safe Correctable]
+3     Style/Next [Safe Correctable]
+3     Style/RedundantAssignment [Safe Correctable]
+3     Style/SafeNavigation [Unsafe Correctable]
+3     Style/SoleNestedConditional [Safe Correctable]
+2     Layout/CommentIndentation [Safe Correctable]
+2     Layout/EmptyLinesAroundExceptionHandlingKeywords [Safe Correctable]
+2     Layout/MultilineMethodCallBraceLayout [Safe Correctable]
+2     Layout/MultilineOperationIndentation [Safe Correctable]
+2     Lint/CopDirectiveSyntax
+2     Lint/DeprecatedClassMethods [Safe Correctable]
+2     Lint/NonAtomicFileOperation [Unsafe Correctable]
+2     Lint/ParenthesesAsGroupedExpression [Safe Correctable]
+2     Lint/RaiseException [Unsafe Correctable]
+2     Lint/RescueException
+2     Lint/UselessMethodDefinition [Unsafe Correctable]
+2     Metrics/ClassLength
+2     Naming/MemoizedInstanceVariableName [Unsafe Correctable]
+2     RSpec/ChangeByZero [Safe Correctable]
+2     RSpec/NoExpectationExample
+2     RSpec/StubbedMock
+2     Rails/CompactBlank [Unsafe Correctable]
+2     Rails/Delegate [Safe Correctable]
+2     Rails/SquishedSQLHeredocs [Unsafe Correctable]
+2     Rails/UniqueValidationWithoutIndex
+2     Style/ConditionalAssignment [Safe Correctable]
+2     Style/EmptyElse [Safe Correctable]
+2     Style/ExpandPathArguments [Safe Correctable]
+2     Style/FormatStringToken [Safe Correctable]
+2     Style/IdenticalConditionalBranches [Unsafe Correctable]
+2     Style/MapIntoArray [Unsafe Correctable]
+2     Style/MixinUsage
+2     Style/NegatedIfElseCondition [Safe Correctable]
+2     Style/NestedParenthesizedCalls [Safe Correctable]
+2     Style/RaiseArgs [Unsafe Correctable]
+2     Style/RedundantBegin [Safe Correctable]
+2     Style/RedundantInterpolation [Unsafe Correctable]
+2     Style/WordArray [Safe Correctable]
+1     Layout/BlockAlignment [Safe Correctable]
+1     Layout/BlockEndNewline [Safe Correctable]
+1     Layout/ClosingParenthesisIndentation [Safe Correctable]
+1     Layout/EmptyLinesAroundModuleBody [Safe Correctable]
+1     Layout/EndAlignment [Safe Correctable]
+1     Lint/AmbiguousOperatorPrecedence [Safe Correctable]
+1     Lint/DisjunctiveAssignmentInConstructor [Unsafe Correctable]
+1     Lint/UselessRescue
+1     Naming/AccessorMethodName
+1     Naming/MethodParameterName
+1     Naming/RescuedExceptionsVariableName [Safe Correctable]
+1     RSpec/BeNil [Safe Correctable]
+1     RSpec/ClassCheck [Safe Correctable]
+1     RSpec/EmptyLineAfterExample [Safe Correctable]
+1     RSpec/EmptyLineAfterSubject [Safe Correctable]
+1     RSpec/ImplicitExpect [Safe Correctable]
+1     RSpec/LeadingSubject [Safe Correctable]
+1     RSpec/MatchArray [Safe Correctable]
+1     RSpec/PredicateMatcher [Unsafe Correctable]
+1     Rails/AssertNot [Safe Correctable]
+1     Rails/DeprecatedActiveModelErrorsMethods [Unsafe Correctable]
+1     Rails/InverseOf
+1     Rails/LexicallyScopedActionFilter
+1     Rails/LinkToBlank [Safe Correctable]
+1     Rails/NegateInclude [Unsafe Correctable]
+1     Rails/OutputSafety
+1     Rails/Presence [Safe Correctable]
+1     Rails/TopLevelHashWithIndifferentAccess [Safe Correctable]
+1     Rails/Validation [Safe Correctable]
+1     Rails/WhereExists [Unsafe Correctable]
+1     Style/AndOr [Unsafe Correctable]
+1     Style/ClassEqualityComparison [Unsafe Correctable]
+1     Style/CollectionQuerying [Unsafe Correctable]
+1     Style/CommentAnnotation [Safe Correctable]
+1     Style/DefWithParentheses [Safe Correctable]
+1     Style/FormatString [Safe Correctable]
+1     Style/Lambda [Safe Correctable]
+1     Style/MutableConstant [Unsafe Correctable]
+1     Style/OptionalBooleanParameter
+1     Style/ParenthesesAroundCondition [Safe Correctable]
+1     Style/PercentLiteralDelimiters [Safe Correctable]
+1     Style/PreferredHashMethods [Unsafe Correctable]
+1     Style/RedundantArgument [Unsafe Correctable]
+1     Style/RedundantCondition [Safe Correctable]
+1     Style/RedundantSelfAssignmentBranch [Safe Correctable]
+1     Style/RegexpLiteral [Safe Correctable]
+1     Style/SafeNavigationChainLength
+1     Style/StructInheritance [Unsafe Correctable]
+1     Style/UnlessElse [Safe Correctable]
+--
+2295  Total in 268 files
+

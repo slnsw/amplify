@@ -4,7 +4,7 @@ require 'fileutils'
 namespace :collections do
 
   # Usage rake collections:load['oral-history','collections_seeds.csv']
-  desc "Load collections by project key and csv file"
+  desc 'Load collections by project key and csv file'
   task :load, [:project_key, :filename] => :environment do |task, args|
 
     # Validate project
@@ -46,7 +46,7 @@ namespace :collections do
   end
 
   # Usage rake collections:update_file['oral-history','collections_seeds.csv']
-  desc "Update a csv file based on data in database"
+  desc 'Update a csv file based on data in database'
   task :update_file, [:project_key, :filename] => :environment do |task, args|
 
     # Validate project
@@ -90,7 +90,7 @@ namespace :collections do
   end
 
   def update_collections_to_file(file_path, collections)
-    CSV.open(file_path, "wb") do |csv|
+    CSV.open(file_path, 'wb') do |csv|
       csv << collections.first.keys # adds the attributes name on the first line
       collections.each do |hash|
         csv << hash.values

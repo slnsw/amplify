@@ -64,7 +64,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   def validate_dimensions
     manipulate! do |img|
       if img.dimensions.any?{|i| i > 8000 }
-        raise CarrierWave::ProcessingError, "dimensions too large"
+        raise CarrierWave::ProcessingError, 'dimensions too large'
       end
       img
     end

@@ -8,6 +8,6 @@ class AudioUploader < CarrierWave::Uploader::Base
   end
 
   def cache_dir
-    "/tmp/carrierwave/"
+    '/tmp/carrierwave/'
   end
 end

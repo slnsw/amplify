@@ -4,7 +4,7 @@ require 'fileutils'
 namespace :speakers do
 
   # Usage rake speakers:load['oral-history','speakers_seeds.csv']
-  desc "Load transcripts by project key and csv file"
+  desc 'Load transcripts by project key and csv file'
   task :load, [:project_key, :filename] => :environment do |task, args|
 
     # Validate project

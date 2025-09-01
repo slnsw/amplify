@@ -4,7 +4,7 @@ require 'webvtt'
 namespace :webvtt do
 
   # Usage: rake webvtt:read['oral-history']
-  desc "Parse WebVTT files"
+  desc 'Parse WebVTT files'
   task :read, [:project_key] => :environment do |task, args|
 
     # Retrieve transcripts that have "webvtt" as its vendor and are empty

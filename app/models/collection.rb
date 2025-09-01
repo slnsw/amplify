@@ -9,7 +9,7 @@ class Collection < ApplicationRecord
   mount_uploader :image, ImageUploader
   acts_as_taggable_on :themes
 
-  has_many :transcripts, -> { order("title asc") }, dependent: :destroy
+  has_many :transcripts, -> { order('title asc') }, dependent: :destroy
   belongs_to :vendor
   belongs_to :institution
 
@@ -23,7 +23,7 @@ class Collection < ApplicationRecord
   attribute :collection_url_title, :string, default: ' View in Library catalogue'
 
   scope :by_institution, ->(institution_id) { where(institution_id: institution_id) }
-  scope :with_published_institution, -> { joins(:institution).where("institutions.hidden = false") }
+  scope :with_published_institution, -> { joins(:institution).where('institutions.hidden = false') }
 
   before_save :save_consensus_params, if: -> { min_lines_for_consensus.present? }
 
@@ -37,20 +37,20 @@ class Collection < ApplicationRecord
   # Class Methods
   def self.getForHomepage
     Rails.cache.fetch("#{ENV['PROJECT_ID']}/collections", expires_in: 10.minutes) do
-      Collection.where(project_uid: ENV['PROJECT_ID']).order("title")
+      Collection.where(project_uid: ENV['PROJECT_ID']).order('title')
     end
   end
 
   def self.getForDownloadByVendor(vendor_uid, project_uid)
     vendor = Vendor.find_by_uid(vendor_uid)
-    Collection.where("vendor_id = :vendor_id AND vendor_identifier != :empty AND project_uid = :project_uid",
-      {vendor_id: vendor[:id], empty: "", project_uid: project_uid})
+    Collection.where('vendor_id = :vendor_id AND vendor_identifier != :empty AND project_uid = :project_uid',
+      {vendor_id: vendor[:id], empty: '', project_uid: project_uid})
   end
 
   def self.getForUploadByVendor(vendor_uid, project_uid)
     vendor = Vendor.find_by_uid(vendor_uid)
-    Collection.where("vendor_id = :vendor_id AND vendor_identifier = :empty AND project_uid = :project_uid",
-      {vendor_id: vendor[:id], empty: "", project_uid: project_uid})
+    Collection.where('vendor_id = :vendor_id AND vendor_identifier = :empty AND project_uid = :project_uid',
+      {vendor_id: vendor[:id], empty: '', project_uid: project_uid})
   end
 
   # Instance Methods

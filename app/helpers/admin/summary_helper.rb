@@ -12,6 +12,6 @@ module Admin::SummaryHelper
       # So if the duration of any of the time components is 0,
       # then it will display as 00.
       "#{time.round.to_s.rjust(2, '0')}#{suffix}"
-    end.join(" ")
+    end.join(' ')
   end
 end

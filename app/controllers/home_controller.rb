@@ -3,7 +3,7 @@ class HomeController < ApplicationController
   before_action :authenticate_user!, except: [:index]
   before_action :load_collections
   before_action :load_institutions
-  layout "application_v2"
+  layout 'application_v2'
 
   include HomeSearch
 

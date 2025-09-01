@@ -5,13 +5,13 @@ class TranscriptEditsControllerTest < ActionController::TestCase
     @transcript_edit = transcript_edits(:one)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get :index
     assert_response :success
     assert_not_nil assigns(:transcript_edits)
   end
 
-  test "should create transcript_edit" do
+  test 'should create transcript_edit' do
     assert_difference('TranscriptEdit.count') do
       post :create, transcript_edit: { session_id: @transcript_edit.session_id, text: @transcript_edit.text, transcript_id: @transcript_edit.transcript_id, transcript_line_id: @transcript_edit.transcript_line_id, user_id: @transcript_edit.user_id, weight: @transcript_edit.weight }
     end
@@ -19,17 +19,17 @@ class TranscriptEditsControllerTest < ActionController::TestCase
     assert_response 201
   end
 
-  test "should show transcript_edit" do
+  test 'should show transcript_edit' do
     get :show, id: @transcript_edit
     assert_response :success
   end
 
-  test "should update transcript_edit" do
+  test 'should update transcript_edit' do
     put :update, id: @transcript_edit, transcript_edit: { session_id: @transcript_edit.session_id, text: @transcript_edit.text, transcript_id: @transcript_edit.transcript_id, transcript_line_id: @transcript_edit.transcript_line_id, user_id: @transcript_edit.user_id, weight: @transcript_edit.weight }
     assert_response 204
   end
 
-  test "should destroy transcript_edit" do
+  test 'should destroy transcript_edit' do
     assert_difference('TranscriptEdit.count', -1) do
       delete :destroy, id: @transcript_edit
     end

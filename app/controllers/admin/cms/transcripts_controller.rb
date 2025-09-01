@@ -14,10 +14,10 @@ class Admin::Cms::TranscriptsController < AdminController
     @transcript = Transcript.new(transcript_params.merge vendor_id: Vendor.first&.id)
 
     if @transcript.save && @transcript.update(speakers: transcript_params[:speakers])
-      flash[:notice] = "The new transcript has been saved."
+      flash[:notice] = 'The new transcript has been saved.'
       redirect_to admin_cms_collection_path(@transcript.collection)
     else
-      flash[:errors] = "The new transcript could not be saved."
+      flash[:errors] = 'The new transcript could not be saved.'
       render :new, status: :unprocessable_entity
     end
   end
@@ -27,10 +27,10 @@ class Admin::Cms::TranscriptsController < AdminController
   def update
     remove_image
     if @transcript.update(transcript_params)
-      flash[:notice] = "The transcript updates have been saved."
+      flash[:notice] = 'The transcript updates have been saved.'
       redirect_to admin_cms_collection_path(@transcript.collection)
     else
-      flash[:errors] = "The transcript updates could not be saved."
+      flash[:errors] = 'The transcript updates could not be saved.'
       render :edit, status: :unprocessable_entity
     end
   end
@@ -46,13 +46,13 @@ class Admin::Cms::TranscriptsController < AdminController
     # only admins
     authorize @transcript
     @transcript.destroy
-    flash[:notice] = "Transcript item has been deleted"
+    flash[:notice] = 'Transcript item has been deleted'
     redirect_to admin_cms_collection_path(@transcript.collection)
   end
 
   def speaker_search
     speakers = Speaker.
-      where("LOWER(name) LIKE ?", "%#{params[:query].downcase}%").
+      where('LOWER(name) LIKE ?', "%#{params[:query].downcase}%").
       map do |s|
         { value: s.name, data: s.name }
       end
@@ -63,7 +63,7 @@ class Admin::Cms::TranscriptsController < AdminController
     TranscriptService.new(@transcript).reset
     # this functionality is only for admins, error will be raised and
     # lodged in bugsnag in an event of an error
-    flash[:notice] = "Transcript reset successful"
+    flash[:notice] = 'Transcript reset successful'
     redirect_to admin_cms_collection_path(@transcript.collection)
   end
 
@@ -120,7 +120,7 @@ class Admin::Cms::TranscriptsController < AdminController
       :image_item_url_title,
       :transcript_type
     ).merge(
-      project_uid: ENV["PROJECT_ID"],
+      project_uid: ENV['PROJECT_ID'],
     )
   end
   # rubocop:enable Metrics/MethodLength
@@ -130,7 +130,7 @@ class Admin::Cms::TranscriptsController < AdminController
   end
 
   def ingest_transcript
-    imp = VoiceBase::ImportSrtTranscripts.new(project_id: ENV["PROJECT_ID"])
+    imp = VoiceBase::ImportSrtTranscripts.new(project_id: ENV['PROJECT_ID'])
     imp.process_single(@transcript.id)
   end
 

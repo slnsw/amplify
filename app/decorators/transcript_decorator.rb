@@ -12,8 +12,8 @@ class TranscriptDecorator < Draper::Decorator
 
     Rails.application.routes.url_helpers.url_for(
       host: host,
-      controller: "transcripts",
-      action: "show",
+      controller: 'transcripts',
+      action: 'show',
       institution: institution.slug,
       collection: collection.uid,
       id: object.uid,
@@ -55,15 +55,15 @@ class TranscriptDecorator < Draper::Decorator
   end
 
   def display_edited_percentage
-    h.content_tag(:div, '', class: "item-status-bar edited", style: "width: #{object.percent_edited}%")
+    h.content_tag(:div, '', class: 'item-status-bar edited', style: "width: #{object.percent_edited}%")
   end
 
   def display_completed_percentage
-    h.content_tag(:div, '', class: "item-status-bar completed", style: "width: #{object.percent_completed}%")
+    h.content_tag(:div, '', class: 'item-status-bar completed', style: "width: #{object.percent_completed}%")
   end
 
   def display_reviewing_percentage
-    h.content_tag(:div, '', class: "item-status-bar reviewing", style: "width: #{object.percent_reviewing}%; left: #{object.percent_completed}%;")
+    h.content_tag(:div, '', class: 'item-status-bar reviewing', style: "width: #{object.percent_reviewing}%; left: #{object.percent_completed}%;")
   end
 
   def display_status_consensus
@@ -84,7 +84,7 @@ class TranscriptDecorator < Draper::Decorator
 
   def display_status(text, klass, percentage)
     if klass != 'completed' && object.percent_completed < 100
-      h.content_tag(:div, text, class: "transcript_item__status-text") if percentage > 0
+      h.content_tag(:div, text, class: 'transcript_item__status-text') if percentage > 0
     end
   end
 

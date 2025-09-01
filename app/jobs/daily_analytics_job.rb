@@ -3,7 +3,7 @@ class DailyAnalyticsJob < ApplicationJob
 
   def perform
     # cache analytics data
-    Rails.cache.delete("Institution:disk_usage:all")
+    Rails.cache.delete('Institution:disk_usage:all')
     Institution.all_institution_disk_usage
   end
 end

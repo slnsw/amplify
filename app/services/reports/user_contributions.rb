@@ -40,8 +40,8 @@ module Reports
 
     def headers
       [
-        "User ID", "Name", "Edits", "Lines", "Transcripts",
-        "Collections", "Institutions", "Time Spent (s)"
+        'User ID', 'Name', 'Edits', 'Lines', 'Transcripts',
+        'Collections', 'Institutions', 'Time Spent (s)'
       ]
     end
 
@@ -51,7 +51,7 @@ module Reports
       filters << "transcript_edits.updated_at <= #{quoted(:end_date)}" if params[:end_date].present?
       filters << "collections.id = #{params[:collection_id]}" if params[:collection_id].present?
       filters << "institutions.id = #{params[:institution_id]}" if params[:institution_id].present?
-      filters.any? ? "WHERE #{filters.join(' AND ')}" : ""
+      filters.any? ? "WHERE #{filters.join(' AND ')}" : ''
     end
 
     def fetch_rows

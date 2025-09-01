@@ -6,7 +6,7 @@ namespace :sample do
   # Usage:
   #     rake sample:seed
   #     rake sample:seed[1]
-  desc "Seed a transcript for testing various stages of transcripts"
+  desc 'Seed a transcript for testing various stages of transcripts'
   task :seed, [:edits]  => :environment do |task, args|
     do_edits = (args[:edits] || false)
 
@@ -85,7 +85,7 @@ namespace :sample do
   end
 
   def seedLines(transcript)
-    puts "Seeding transcript lines..."
+    puts 'Seeding transcript lines...'
 
     lines = []
     lines << seedLine({transcript_id: transcript.id, sequence: 0, start_time: 2, end_time: 2430, original_text: 'oh really', guess_text: '', text: '', transcript_line_status_id: 1, speaker_id: 0, flag_count: 0})
@@ -117,7 +117,7 @@ namespace :sample do
   end
 
   def seedTranscript
-    puts "Seeding transcript.."
+    puts 'Seeding transcript..'
 
     attributes = {uid: 'sample-transcript', title: 'Together We Listen Sample', audio_url: '/audio/twl_sample.mp3', lines: 8, duration: 22, transcript_status_id: 1, project_uid: 'sample-project', lines_completed: 0, lines_edited: 0, percent_completed: 0, percent_edited: 0}
     transcript = Transcript.find_or_initialize_by(uid: attributes[:uid])

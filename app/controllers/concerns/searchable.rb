@@ -21,8 +21,8 @@ module Searchable
   def build_params
     sort_params.reject { |_key, value|
       value.blank? ||
-      value.to_s == "0" ||
-      (value&.first && (value.first.blank? || value.first == "0")) }
+      value.to_s == '0' ||
+      (value&.first && (value.first.blank? || value.first == '0')) }
   end
 
   def select_institution_id
@@ -38,13 +38,13 @@ module Searchable
   end
 
   def load_institutions
-    new_institution = Institution.new(id: 0, name: "All Institutions")
+    new_institution = Institution.new(id: 0, name: 'All Institutions')
     collection_ids = params[:data] && sort_params[:collection_id]
     @institutions = if (collection_ids&.first).to_i == 0
                       Institution.all.order(name: :asc)
                     else
                       Institution.order(name: :asc).joins(:collections).
-                        where("collections.id in (?)", collection_ids)
+                        where('collections.id in (?)', collection_ids)
                     end.to_a.unshift(new_institution)
   end
 

@@ -1,13 +1,13 @@
 class Admin::ProfilesController < ApplicationController
   include Pundit
-  layout "admin"
+  layout 'admin'
 
   def index
     @user_role = current_user.user_role
   end
 
   def update
-    update_transcribing_role if params.dig(:user_role, :commit) == "update_transcribing_role"
+    update_transcribing_role if params.dig(:user_role, :commit) == 'update_transcribing_role'
 
     redirect_to admin_profiles_path
   end

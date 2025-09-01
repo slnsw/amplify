@@ -9,7 +9,7 @@ module Publishable
   end
 
   def publish_if_needed
-    return if saved_changes["publish"].blank?
+    return if saved_changes['publish'].blank?
 
     publish ? publish! : unpublish!
   end
@@ -23,10 +23,10 @@ module Publishable
   end
 
   def publish!
-    update_column("published_at", Time.current)
+    update_column('published_at', Time.current)
   end
 
   def unpublish!
-    update_column("published_at", nil)
+    update_column('published_at', nil)
   end
 end

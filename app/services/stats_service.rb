@@ -84,10 +84,10 @@ class StatsService
     scope = Transcript.
       joins("INNER JOIN collections ON
       transcripts.collection_id = collections.id")
-    scope = scope.where("collections.institution_id = ?", institution_id) if institution_id
-    scope = scope.where("collections.id = ?", collection_id) if collection_id
-    scope = scope.where("transcripts.updated_at >= ?", @start_date) if @start_date.present?
-    scope = scope.where("transcripts.updated_at <= ?", @end_date) if @end_date.present?
+    scope = scope.where('collections.institution_id = ?', institution_id) if institution_id
+    scope = scope.where('collections.id = ?', collection_id) if collection_id
+    scope = scope.where('transcripts.updated_at >= ?', @start_date) if @start_date.present?
+    scope = scope.where('transcripts.updated_at <= ?', @end_date) if @end_date.present?
     scope
   end
 

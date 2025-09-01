@@ -5,13 +5,13 @@ class CollectionsControllerTest < ActionController::TestCase
     @collection = collections(:one)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get :index
     assert_response :success
     assert_not_nil assigns(:collections)
   end
 
-  test "should create collection" do
+  test 'should create collection' do
     assert_difference('Collection.count') do
       post :create, collection: { description: @collection.description, image_url: @collection.image_url, title: @collection.title, uid: @collection.uid, url: @collection.url, vendor_id: @collection.vendor_id, vendor_identifier: @collection.vendor_identifier }
     end
@@ -19,17 +19,17 @@ class CollectionsControllerTest < ActionController::TestCase
     assert_response 201
   end
 
-  test "should show collection" do
+  test 'should show collection' do
     get :show, id: @collection
     assert_response :success
   end
 
-  test "should update collection" do
+  test 'should update collection' do
     put :update, id: @collection, collection: { description: @collection.description, image_url: @collection.image_url, title: @collection.title, uid: @collection.uid, url: @collection.url, vendor_id: @collection.vendor_id, vendor_identifier: @collection.vendor_identifier }
     assert_response 204
   end
 
-  test "should destroy collection" do
+  test 'should destroy collection' do
     assert_difference('Collection.count', -1) do
       delete :destroy, id: @collection
     end
