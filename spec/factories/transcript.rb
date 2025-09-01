@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryBot.define do
   factory :transcript do
     uid { Faker::Lorem.characters(number:10) }

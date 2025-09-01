@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # sorting list for the homepage dropown
 class SortList
   def self.list

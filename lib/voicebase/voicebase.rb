@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'formdata'
 require 'stringio'
 require 'net/http'

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CollectionsService
   def self.list
     Collection.with_published_institution

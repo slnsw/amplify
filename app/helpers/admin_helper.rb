@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module AdminHelper
   # rubocop:disable Metrics/LineLength, Metrics/MethodLength, Metrics/AbcSize
   def side_menu

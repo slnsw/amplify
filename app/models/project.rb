@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Project
   # rubocop:disable Naming/MethodName
   # rubocop:disable Metrics/LineLength

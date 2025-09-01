@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UserRolePolicy < ApplicationPolicy
   attr_reader :user, :scope
 

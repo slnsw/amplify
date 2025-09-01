@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PageController < ApplicationController
   layout 'application_v2'
 

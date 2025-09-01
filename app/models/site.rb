@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Site
   attr_accessor :footer_content, :footer_links
 

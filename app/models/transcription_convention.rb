@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TranscriptionConvention < ApplicationRecord
   has_paper_trail
   belongs_to :institution

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Admin::InstitutionsController < AdminController
   before_action :set_institution, only: [:edit, :update, :destroy]
 

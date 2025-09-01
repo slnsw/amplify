@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Transcript, type: :model do
   describe 'associations' do
     it { is_expected.to have_many :transcript_lines }

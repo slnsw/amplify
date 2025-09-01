@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Site, type: :model do
   let(:site) { Site.new }
 

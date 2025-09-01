@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TranscriptionConventionPolicy < ApplicationPolicy
   attr_reader :user, :csope
 

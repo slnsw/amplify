@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module VoiceBase
   class VoicebaseApiService
     attr_accessor :transcript

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Api::Institutions::GuidsController < ActionController::Base
   before_action :authenticate_request
 

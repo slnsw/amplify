@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe StatsService, type: :service do
   describe '.transcript_edits as admin' do
     let(:user) { create :user, :admin }
