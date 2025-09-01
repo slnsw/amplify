@@ -137,7 +137,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
 
     context 'invalid update request' do
       let(:params) { { uid: '', theme_ids: [''] } }
-      let(:action) { put :update, params: {id: collection.uid, collection: params  } }
+      let(:action) { put :update, params: { id: collection.uid, collection: params  } }
 
       it 'responds with a bad request status' do
         action

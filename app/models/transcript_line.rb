@@ -54,7 +54,7 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
   end
 
   def self.getEditedByTranscriptId(transcript_id)
-    TranscriptLine.joins(:transcript_edits).where(transcript_lines:{transcript_id: transcript_id}).distinct
+    TranscriptLine.joins(:transcript_edits).where(transcript_lines:{ transcript_id: transcript_id }).distinct
   end
 
   def self.getByTranscriptWithSpeakers(transcript_id)
@@ -200,7 +200,7 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
       # Group the edits by speaker_id
       groups = edits.group_by{|edit| edit.speaker_id}
       # Convert groups from hash to array
-      groups = groups.collect {|group_speaker_id, group_edits| {speaker_id: group_speaker_id, count: group_edits.length} }
+      groups = groups.collect {|group_speaker_id, group_edits| { speaker_id: group_speaker_id, count: group_edits.length } }
       # Sort by frequency of speaker_id
       groups = groups.sort_by { |group| group[:count] * -1 }
       best_speaker_id = groups[0][:speaker_id]

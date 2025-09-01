@@ -16,11 +16,11 @@ namespace :transcripts do
     transcripts = Transcript.getForExport(args[:project_key], args[:collection_uid])
 
     formats = [
-      {id: 'text', label: 'Text', urlExt: '.text', fileType: '.txt'},
-      {id: 'text_with_timestamps', label: 'Text With Timestamps', urlExt: '.text?timestamps=1', fileType: '.txt'},
-      {id: 'webvtt', label: 'WebVTT (Captions)', urlExt: '.vtt', fileType: '.vtt'},
-      {id: 'json', label: 'JSON', urlExt: '.json', fileType: '.json'},
-      {id: 'json_with_edits', label: 'JSON With Edits', urlExt: '.json?edits=1', fileType: '.json'}
+      { id: 'text', label: 'Text', urlExt: '.text', fileType: '.txt' },
+      { id: 'text_with_timestamps', label: 'Text With Timestamps', urlExt: '.text?timestamps=1', fileType: '.txt' },
+      { id: 'webvtt', label: 'WebVTT (Captions)', urlExt: '.vtt', fileType: '.vtt' },
+      { id: 'json', label: 'JSON', urlExt: '.json', fileType: '.json' },
+      { id: 'json_with_edits', label: 'JSON With Edits', urlExt: '.json?edits=1', fileType: '.json' }
     ]
 
     transcripts.each do |transcript|
