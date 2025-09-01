@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class TranscriptsController < ApplicationController
   include LoggedInUserHelper
   layout 'application_v2'

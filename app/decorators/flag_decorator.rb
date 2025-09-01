@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class FlagDecorator < ApplicationDecorator
   delegate_all
 

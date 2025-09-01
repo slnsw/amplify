@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 module UpdateMultipleTranscriptsConcern
   extend ActiveSupport::Concern
 

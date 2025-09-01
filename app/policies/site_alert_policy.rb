@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class SiteAlertPolicy < ApplicationPolicy
     attr_reader :user, :site_alert
   

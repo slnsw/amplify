@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class InstitutionDecorator < ApplicationDecorator
   delegate_all
 

@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 # This set of tests ensures consensus works as expected on the data model level. This does not test the views or controllers.
 # Usage:
 #   Run all the tests: rake test test/models/transcript_edit_test.rb

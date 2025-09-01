@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class Admin::AnalyticsController < AdminController
   before_action :authenticate_staff!
 

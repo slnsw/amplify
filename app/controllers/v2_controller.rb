@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class V2Controller < ApplicationController
   layout 'application_v2'
 

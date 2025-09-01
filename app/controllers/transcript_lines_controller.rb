@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class TranscriptLinesController < ApplicationController
   include LoggedInUserHelper
   skip_before_action :verify_authenticity_token, only: [:resolve]

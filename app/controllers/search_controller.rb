@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class SearchController < ApplicationController
   before_action :load_collections
   before_action :load_institutions

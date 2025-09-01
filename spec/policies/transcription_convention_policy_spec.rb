@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 RSpec.describe TranscriptionConventionPolicy do
   subject { described_class.new(user, transcript_convention) }
 

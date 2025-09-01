@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require 'simplecov'
 require 'pundit/matchers'
 require 'dotenv'

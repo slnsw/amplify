@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 RSpec.describe TranscriptService, type: :service do
   describe '#reset' do
     let!(:user) { FactoryBot.create :user }

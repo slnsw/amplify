@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 RSpec.describe ThemePolicy do
   subject(:create_theme) { described_class.new(user, theme) }
 

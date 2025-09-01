@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 RSpec.describe CollectionPolicy do
   subject { described_class.new(user, collection)  }
 

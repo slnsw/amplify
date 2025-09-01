@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 json.id @transcript.uid
 json.url transcript_url(@transcript)
 json.origin_url @transcript.url unless @transcript.url.blank?

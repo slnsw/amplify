@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require 'ejs'
 require 'execjs'
 require 'fileutils'

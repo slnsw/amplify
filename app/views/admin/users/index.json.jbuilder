@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 json.users @users do |user|
   json.extract! user, :id, :name, :image, :email, :user_role_id, :lines_edited
 end

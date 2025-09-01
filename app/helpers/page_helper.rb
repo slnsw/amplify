@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 module PageHelper
   def themes_checked?(box)
     return unless @build_params[:themes].is_a? Array

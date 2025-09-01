@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 namespace :cache do
 
   # Usage rake cache:clear

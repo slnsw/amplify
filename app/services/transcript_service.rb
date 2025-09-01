@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class TranscriptService
   attr_accessor :transcript
 

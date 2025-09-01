@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 include Rails.application.routes.url_helpers
 default_url_options[:only_path] = true
 

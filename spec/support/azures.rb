@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 module AzuresHelper
   def stub_audio_file_convert(
     input_file: a_string_including('aboutSpeechSdk.mp3'),

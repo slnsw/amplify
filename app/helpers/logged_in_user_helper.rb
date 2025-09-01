@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 module LoggedInUserHelper
   def share_token
     @share_token ||= TokenService.encode(logged_in_user.id)

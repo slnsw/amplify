@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class Admin::Cms::CollectionsController < AdminController
   before_action :authenticate_staff!
 

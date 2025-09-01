@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 RSpec.describe InstitutionPolicy do
   let!(:institution) { FactoryBot.create :institution }
   let!(:institution2) { FactoryBot.create :institution }

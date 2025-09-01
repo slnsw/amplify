@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class PagePolicy < ApplicationPolicy
   attr_reader :user, :page
 

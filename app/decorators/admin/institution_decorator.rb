@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class Admin::InstitutionDecorator < ApplicationDecorator
   delegate_all
 
