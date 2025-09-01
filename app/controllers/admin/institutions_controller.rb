@@ -51,7 +51,9 @@ class Admin::InstitutionsController < AdminController
   def save_institution_links
     InstitutionLink.where(institution: @institution).delete_all
 
-    institution_links_params[:institution_links].to_a.each do |link|
+    links = institution_links_params[:institution_links] || []
+    links.each do |link|
+      next if link[:title].blank? && link[:url].blank?
       InstitutionLink.create(title: link[:title], url: link[:url], position: link[:position], institution: @institution)
     end
   end
@@ -76,6 +78,8 @@ class Admin::InstitutionsController < AdminController
 
   def institution_links_params
     params.require(:institution).permit(institution_links: [:title, :url, :position])
+  rescue ActionController::ParameterMissing
+    { institution_links: [] }
   end
 
   def remove_image_params

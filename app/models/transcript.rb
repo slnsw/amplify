@@ -727,8 +727,12 @@ class Transcript < ApplicationRecord
 
   # If the image has a cropped version we display it, otherwise we display the original image.
   def image_cropped_thumb_url
-    return nil if image_url.blank?
-
-    crop_x.present? ? image_url(:cropped_thumb) : (image_url || collection.image_url)
+    # If transcript has an uploaded image, use it (cropped if crop coords exist)
+    if image.present?
+      crop_x.present? ? image_url(:cropped_thumb) : image_url
+    else
+      # Fallback to collection image if no transcript image
+      collection&.image_url
+    end
   end
 end
