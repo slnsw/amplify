@@ -5,9 +5,9 @@ include CarrierWave::MiniMagick
 namespace :s3 do
   # Usage:
   #     rake s3:file_conversion
-  desc "convert manually uploaded files to carrierwave objects"
+  desc 'convert manually uploaded files to carrierwave objects'
   task image_conversion: :environment do |task|
-    voice_base = Vendor.find_by uid: "voice_base"
+    voice_base = Vendor.find_by uid: 'voice_base'
 
     [Collection, Transcript].each do |klass|
       klass.find_each do |resource|
@@ -45,7 +45,7 @@ namespace :s3 do
   end
 
   task audio_conversion: :environment do |task|
-    voice_base = Vendor.find_by uid: "voice_base"
+    voice_base = Vendor.find_by uid: 'voice_base'
 
     Transcript.find_each do |transcript|
       begin

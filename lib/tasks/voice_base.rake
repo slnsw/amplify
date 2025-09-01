@@ -5,7 +5,7 @@ namespace :voice_base do
     VoiceBase::ImportSrtTranscripts.call(project_id: args[:project_key])
   end
 
-  desc "Import the completed transcripts from the VoiceBase api"
+  desc 'Import the completed transcripts from the VoiceBase api'
   task :import_transcripts_from_api => :environment do |task, args|
     Transcript.voicebase_processing_pending.not_picked_up_for_voicebase_processing.find_each do |transcript|
       VoiceBase::VoicebaseApiService.check_progress(transcript.id)

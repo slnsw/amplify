@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_ie_headers
-    response.headers["X-UA-Compatible"] = "IE=edge"
+    response.headers['X-UA-Compatible'] = 'IE=edge'
   end
 
   def project_key

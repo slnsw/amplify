@@ -19,12 +19,12 @@ class UserPolicy < ApplicationPolicy
       if @user.admin?
         User.all
       elsif @user.content_editor?
-        admin_role = UserRole.find_by(name: "admin")
+        admin_role = UserRole.find_by(name: 'admin')
         User.where.not(user_role_id: admin_role.id).
-          where("institution_id = ? OR institution_id IS NULL", @user.institution_id).
-          where.not("institution_id IS NULL AND user_role_id != 0")
+          where('institution_id = ? OR institution_id IS NULL', @user.institution_id).
+          where.not('institution_id IS NULL AND user_role_id != 0')
       else
-        User.where("institution_id = ?", @user.institution_id)
+        User.where('institution_id = ?', @user.institution_id)
       end
     end
   end

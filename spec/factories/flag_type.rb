@@ -3,6 +3,6 @@ FactoryBot.define do
     name { Faker::Color.color_name }
     label { Faker::Lorem.word }
     description { Faker::Lorem.word }
-    category { "error" }
+    category { 'error' }
   end
 end

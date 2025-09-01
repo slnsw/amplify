@@ -10,19 +10,19 @@ class Pua
         remote_file_url: transcript[:audio_url]
       })
       # update status to audio-uploaded
-      transcript_status = TranscriptStatus.find_by_name("audio_uploaded")
+      transcript_status = TranscriptStatus.find_by_name('audio_uploaded')
       transcript.update(transcript_status_id: transcript_status[:id])
       puts "Uploaded audio file #{transcript[:audio_url]} to Pop Up Archive"
     end
   end
 
   def createCollection(collection)
-    resp = post("/collections", {
+    resp = post('/collections', {
       title: collection[:title],
       description: collection[:description],
       items_visible_by_default: false
     })
-    collection.update(vendor_identifier: resp["id"])
+    collection.update(vendor_identifier: resp['id'])
     collection
   end
 
@@ -39,7 +39,7 @@ class Pua
       })
 
       # update transcript vendor identifier
-      transcript.update(vendor_identifier: item["id"])
+      transcript.update(vendor_identifier: item['id'])
       puts "Created new item #{transcript[:title]} in Pop Up Archive with id: #{item["id"]}"
 
       # attempt to upload file
@@ -50,7 +50,7 @@ class Pua
       item = getItem(transcript)
 
       # upload audio file if no audio files found
-      if item && item["audio_files"].length <= 0
+      if item && item['audio_files'].length <= 0
         puts "No audio files found; submitting audio files for #{item["id"]}"
         createAudioFile(transcript, item)
       end
@@ -66,7 +66,7 @@ class Pua
 
   def getCollections
     resp = get('/collections')
-    resp["collections"]
+    resp['collections']
   end
 
   def getCollection(collection)

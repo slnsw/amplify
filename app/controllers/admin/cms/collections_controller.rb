@@ -16,10 +16,10 @@ class Admin::Cms::CollectionsController < AdminController
     @collection.theme_list.add(theme_list)
 
     if @collection.save
-      flash[:notice] = "The new collection has been saved."
+      flash[:notice] = 'The new collection has been saved.'
       redirect_to admin_cms_path
     else
-      flash[:errors] = "The new collection could not be saved."
+      flash[:errors] = 'The new collection could not be saved.'
       render :new, status: :unprocessable_entity
     end
   end
@@ -30,10 +30,10 @@ class Admin::Cms::CollectionsController < AdminController
     @collection.theme_list = theme_list
     remove_image
     if @collection.update(resource_params)
-      flash[:notice] = "The collection updates have been saved."
+      flash[:notice] = 'The collection updates have been saved.'
       redirect_to admin_cms_path
     else
-      flash[:errors] = "The collection updates could not be saved."
+      flash[:errors] = 'The collection updates could not be saved.'
       render :edit, status: :unprocessable_entity
     end
   end
@@ -43,7 +43,7 @@ class Admin::Cms::CollectionsController < AdminController
     authorize @collection
 
     @collection.destroy
-    flash[:notice] = "Collection has been deleted"
+    flash[:notice] = 'Collection has been deleted'
     redirect_to admin_cms_path
   end
 
@@ -75,7 +75,7 @@ class Admin::Cms::CollectionsController < AdminController
       :publish, :collection_url_title,
       :min_lines_for_consensus
     ).merge(
-      project_uid: ENV["PROJECT_ID"],
+      project_uid: ENV['PROJECT_ID'],
     )
   end
 

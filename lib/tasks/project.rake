@@ -9,7 +9,7 @@ namespace :project do
   # Usage: rake project:load['oral-history']
   #        rake project:load['oral-history','ui']
   #        rake project:load['oral-history','assets']
-  desc "Load project by key: Builds main index.html and project.js which contains all project data (metadata, pages, templates)"
+  desc 'Load project by key: Builds main index.html and project.js which contains all project data (metadata, pages, templates)'
   task :load, [:project_key, :scope] => :environment do |task, args|
     args.with_defaults project_key: 'nsw-state-library-amplify'
     args.with_defaults scope: 'all'
@@ -37,7 +37,7 @@ namespace :project do
     end
 
     # Updates html and config in public folder
-    if args[:scope] == "ui" || args[:scope] == "all"
+    if args[:scope] == 'ui' || args[:scope] == 'all'
 
       # Add pages (parse markdown -> html)
       pages = get_pages(args[:project_key])
@@ -51,7 +51,7 @@ namespace :project do
     end
 
     # Copies assets to public folder
-    if args[:scope] == "assets" || args[:scope] == "all"
+    if args[:scope] == 'assets' || args[:scope] == 'all'
 
       # Copy assets
       copy_assets(args[:project_key])

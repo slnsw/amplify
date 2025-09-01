@@ -2,7 +2,7 @@ namespace :csv do
 
   # Usage:
   #     rake csv:merge[project/the-moth/data/transcripts_seeds.csv,project/the-moth/data/transcripts_seeds2.csv,uid,project/the-moth/data/transcripts_seeds3.csv]
-  desc "Merges two csv files into one; assumes headers are present"
+  desc 'Merges two csv files into one; assumes headers are present'
   task :merge, [:file_a, :file_b, :merge_id, :file_output]  => :environment do |task, args|
 
     # build file paths
@@ -38,7 +38,7 @@ namespace :csv do
   end
 
   def update_file(file_path, data, headers)
-    CSV.open(file_path, "wb") do |csv|
+    CSV.open(file_path, 'wb') do |csv|
       csv << data.first.keys # adds the attributes name on the first line
       data.each do |hash|
         values = []

@@ -18,7 +18,7 @@ namespace :transcript_lines do
       lines = TranscriptLine.where(id: line_id)
 
     elsif !args[:original_text].blank?
-      lines = TranscriptLine.where("text = original_text")
+      lines = TranscriptLine.where('text = original_text')
 
     elsif !args[:transcript_uid].blank?
       transcript = Transcript.find_by(uid: args[:transcript_uid])

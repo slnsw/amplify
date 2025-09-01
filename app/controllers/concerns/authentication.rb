@@ -49,11 +49,11 @@ module Authentication
     return nil unless request.cookies.key?('authHeaders')
     auth_headers = JSON.parse(request.cookies['authHeaders'])
 
-    expiration_datetime = DateTime.strptime(auth_headers["expiry"], "%s")
-    current_user = User.find_by(uid: auth_headers["uid"])
+    expiration_datetime = DateTime.strptime(auth_headers['expiry'], '%s')
+    current_user = User.find_by(uid: auth_headers['uid'])
 
     if current_user &&
-       current_user.tokens.has_key?(auth_headers["client"]) &&
+       current_user.tokens.has_key?(auth_headers['client']) &&
        expiration_datetime > DateTime.now
 
       @current_user = current_user

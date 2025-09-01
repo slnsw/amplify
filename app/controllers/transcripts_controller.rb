@@ -1,6 +1,6 @@
 class TranscriptsController < ApplicationController
   include LoggedInUserHelper
-  layout "application_v2"
+  layout 'application_v2'
 
   skip_before_action :verify_authenticity_token, only: [:index, :search, :show]
 
@@ -16,7 +16,7 @@ class TranscriptsController < ApplicationController
   def index
     project = Project.getActive
     @project_settings = project[:data]
-    @transcripts = Transcript.get_for_homepage(params[:page], order: "id")
+    @transcripts = Transcript.get_for_homepage(params[:page], order: 'id')
   end
 
   # GET /search?sort_by=completeness&order=desc&collection_id=1&q=amy&page=1
@@ -45,19 +45,19 @@ class TranscriptsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @body_class = "body--transcript-edit"
+        @body_class = 'body--transcript-edit'
         @page_subtitle = @transcript.title
-        @secondary_navigation = "secondary_navigation"
+        @secondary_navigation = 'secondary_navigation'
       end
       format.json do
         @user_role = nil
         @user_edits = []
         @transcript_line_statuses = TranscriptLineStatus.allCached
         @transcript_speakers = TranscriptSpeaker.getByTranscriptId(@transcript.id)
-        @flag_types = FlagType.byCategory("error")
+        @flag_types = FlagType.byCategory('error')
         @user_flags = []
         @transcription_conventions = @transcript.transcription_conventions
-        @instructions = Page.find_by(page_type: "instructions").public_page.decorate
+        @instructions = Page.find_by(page_type: 'instructions').public_page.decorate
 
         user = logged_in_user
 

@@ -5,5 +5,5 @@
 class Admin::ApplicationController < ActionController::Base
   include Authentication
   before_action :authenticate_admin!
-  layout "cms"
+  layout 'cms'
 end

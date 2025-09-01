@@ -8,7 +8,7 @@ module ApplicationHelper
   # Generates paths for Gulp assets with optional minification.
   def gulp_asset(asset_type, asset_name, minified = false)
     if minified
-      fn = gulp_asset_plain(asset_type, asset_name, ".min")
+      fn = gulp_asset_plain(asset_type, asset_name, '.min')
       return fn if fn.length > 0
     end
     gulp_asset_plain(asset_type, asset_name)
@@ -16,14 +16,14 @@ module ApplicationHelper
 
   # Generates paths for Gulp assets.
   # Cached to ensure it stays around.
-  def gulp_asset_plain(asset_type, asset_name, suffix = "")
+  def gulp_asset_plain(asset_type, asset_name, suffix = '')
     Rails.cache.fetch("gulp_asset_plain:#{asset_type}:#{asset_name}:#{suffix}", expires_in: 12.hours) do
       globbed = Dir.glob(
         Rails.root.join('public', 'assets', asset_type, "#{asset_name}*#{suffix}.#{asset_type}")
       ).sort_by(&:length)
       first = globbed.first
-      return "" if first.nil?
-      first.gsub(Rails.root.join('public').to_s, "")
+      return '' if first.nil?
+      first.gsub(Rails.root.join('public').to_s, '')
     end
   end
 
@@ -33,12 +33,12 @@ module ApplicationHelper
 
   def current_user_edits
     return unless current_user
-    number = number_to_human(current_user.total_edits, format: "%n%u", units: { thousand: "K+" })
-    content_tag :span, number, class: "select-active__admin-score"
+    number = number_to_human(current_user.total_edits, format: '%n%u', units: { thousand: 'K+' })
+    content_tag :span, number, class: 'select-active__admin-score'
   end
 
   def time_display(start_time)
-    time = Time.at((start_time / 1000)).utc.strftime("%M:%S")
+    time = Time.at((start_time / 1000)).utc.strftime('%M:%S')
     time
   end
 
@@ -51,14 +51,14 @@ module ApplicationHelper
   end
 
   def gtm_id
-    ENV["GOOGLE_TAG_MANAGER_ID"] if ENV.key?("GOOGLE_TAG_MANAGER_ID")
+    ENV['GOOGLE_TAG_MANAGER_ID'] if ENV.key?('GOOGLE_TAG_MANAGER_ID')
   end
 
   # NOTE: format we need
   #       if the title is empty -> 'Amplify'
   #       if the title is not empty -> '<title> | Amplify'
   def page_title
-    title = "Amplify"
+    title = 'Amplify'
     title.prepend("#{@page_title} | ") if @page_title
     title
   end
@@ -83,7 +83,7 @@ module ApplicationHelper
   def conditional_separator(collection, index)
     return unless collection[index + 1] # in case it's the last element
 
-    "/" if display_separator?(collection, index)
+    '/' if display_separator?(collection, index)
   end
 
   def display_separator?(collection, index)

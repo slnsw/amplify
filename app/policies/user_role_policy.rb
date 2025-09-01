@@ -9,12 +9,12 @@ class UserRolePolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       case @user.user_role.name
-      when "admin"
+      when 'admin'
         UserRole.all
-      when "moderator"
-        UserRole.where(name: ["moderator"])
-      when "content_editor"
-        UserRole.where(name: ["guest", "user", "moderator", "content_editor"])
+      when 'moderator'
+        UserRole.where(name: ['moderator'])
+      when 'content_editor'
+        UserRole.where(name: ['guest', 'user', 'moderator', 'content_editor'])
       else
         UserRole.none
       end

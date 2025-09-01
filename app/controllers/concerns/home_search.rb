@@ -29,7 +29,7 @@ module HomeSearch
                       Institution.published.joins(:collections).order(name: :asc).uniq
                     else
                       Institution.published.order(name: :asc).joins(:collections).
-                        where("collections.title in (?)", sort_params[:collections])
+                        where('collections.title in (?)', sort_params[:collections])
                     end
   end
 
@@ -40,8 +40,8 @@ module HomeSearch
                     collection
                   else
                     collection.joins(:institution).
-                      where("institutions.slug in (?)", sort_params[:institution]).
-                      where("institutions.hidden = false")
+                      where('institutions.slug in (?)', sort_params[:institution]).
+                      where('institutions.hidden = false')
                   end
   end
 end

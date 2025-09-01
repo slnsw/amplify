@@ -8,7 +8,7 @@ namespace :transcripts do
 
   # Usage rake transcripts:export['oral-history']
   task :export, [:project_key, :host, :collection_uid, :target] => :environment do |task, args|
-    args.with_defaults host: "http://localhost:3000", target: "exports", collection_uid: false
+    args.with_defaults host: 'http://localhost:3000', target: 'exports', collection_uid: false
 
     # export_path = Rails.root.join('exports', args[:project_key])
     # FileUtils.mkdir_p(export_path) unless File.directory?(export_path)
@@ -16,11 +16,11 @@ namespace :transcripts do
     transcripts = Transcript.getForExport(args[:project_key], args[:collection_uid])
 
     formats = [
-      {id: "text", label: "Text", urlExt: ".text", fileType: ".txt"},
-      {id: "text_with_timestamps", label: "Text With Timestamps", urlExt: ".text?timestamps=1", fileType: ".txt"},
-      {id: "webvtt", label: "WebVTT (Captions)", urlExt: ".vtt", fileType: ".vtt"},
-      {id: "json", label: "JSON", urlExt: ".json", fileType: ".json"},
-      {id: "json_with_edits", label: "JSON With Edits", urlExt: ".json?edits=1", fileType: ".json"}
+      {id: 'text', label: 'Text', urlExt: '.text', fileType: '.txt'},
+      {id: 'text_with_timestamps', label: 'Text With Timestamps', urlExt: '.text?timestamps=1', fileType: '.txt'},
+      {id: 'webvtt', label: 'WebVTT (Captions)', urlExt: '.vtt', fileType: '.vtt'},
+      {id: 'json', label: 'JSON', urlExt: '.json', fileType: '.json'},
+      {id: 'json_with_edits', label: 'JSON With Edits', urlExt: '.json?edits=1', fileType: '.json'}
     ]
 
     transcripts.each do |transcript|
@@ -28,7 +28,7 @@ namespace :transcripts do
         url = "#{args[:host]}/transcript_files/#{transcript[:uid]}#{frmt[:urlExt]}"
 
         # Ensure dirs exist
-        collection_dir = "other"
+        collection_dir = 'other'
         collection_dir = transcript[:collection_uid] unless transcript[:collection_uid].blank?
         export_path = Rails.root.join('exports', args[:project_key], collection_dir, frmt[:id])
         FileUtils.mkdir_p(export_path) unless File.directory?(export_path)
@@ -45,7 +45,7 @@ namespace :transcripts do
   end
 
   # Usage rake transcripts:load['oral-history','transcripts_seeds.csv']
-  desc "Load transcripts by project key and csv file"
+  desc 'Load transcripts by project key and csv file'
   task :load, [:project_key, :filename] => :environment do |task, args|
 
     # Validate project
@@ -96,7 +96,7 @@ namespace :transcripts do
   end
 
   # Usage rake transcripts:reset_status['adrian-wagner-nxr3fk','1']
-  desc "Reset all lines in a single transcript"
+  desc 'Reset all lines in a single transcript'
   task :reset_status, [:transcript_uid, :status_id] => :environment do |task, args|
     args.with_defaults transcript_uid: false
     args.with_defaults status_id: 1
@@ -121,7 +121,7 @@ namespace :transcripts do
   # Usage:
   #     rake transcripts:recalculate['adrian-wagner-nxr3fk']
   #     rake transcripts:recalculate
-  desc "Recalculate a transcript, or all transcript"
+  desc 'Recalculate a transcript, or all transcript'
   task :recalculate, [:transcript_uid] => :environment do |task, args|
     args.with_defaults transcript_uid: false
 
@@ -141,7 +141,7 @@ namespace :transcripts do
   end
 
   # Usage rake transcripts:update_file['oral-history','transcripts_seeds.csv']
-  desc "Update a csv file based on data in database"
+  desc 'Update a csv file based on data in database'
   task :update_file, [:project_key, :filename] => :environment do |task, args|
 
     # Validate project
@@ -175,7 +175,7 @@ namespace :transcripts do
   end
 
   # Usage rake transcripts:download_audio['oral-history','transcripts_seeds.csv']
-  desc "Download audio files by project key and csv file"
+  desc 'Download audio files by project key and csv file'
   task :download_audio, [:project_key, :filename] => :environment do |task, args|
 
     # Validate project
@@ -247,7 +247,7 @@ namespace :transcripts do
   end
 
   def update_transcripts_to_file(file_path, transcripts)
-    CSV.open(file_path, "wb") do |csv|
+    CSV.open(file_path, 'wb') do |csv|
       csv << transcripts.first.keys # adds the attributes name on the first line
       transcripts.each do |hash|
         csv << hash.values

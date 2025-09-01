@@ -11,8 +11,8 @@ class User < ApplicationRecord
 
   attr_accessor :total_edits
 
-  scope :only_public_users, -> { where("user_role_id < ?", UserRole::MIN_STAFF_LEVEL) }
-  scope :only_staff_users, -> { where("user_role_id >= ?", UserRole::MIN_STAFF_LEVEL) }
+  scope :only_public_users, -> { where('user_role_id < ?', UserRole::MIN_STAFF_LEVEL) }
+  scope :only_staff_users, -> { where('user_role_id >= ?', UserRole::MIN_STAFF_LEVEL) }
 
   def incrementLinesEdited(amount=1)
     update(lines_edited: lines_edited + amount)
@@ -36,28 +36,28 @@ class User < ApplicationRecord
   def isAdmin?
     role = user_role
     role = UserRole.find user_role_id if !role && user_role_id > 0
-    role && role.name == "admin"
+    role && role.name == 'admin'
   end
 
   # new admin check
   def admin?
-    user_role.try(:name) == "admin"
+    user_role.try(:name) == 'admin'
   end
 
   # depriciated method
   def isModerator?
     role = user_role
     role = UserRole.find user_role_id if !role && user_role_id > 0
-    role && (role.name == "moderator" || role.name == "admin")
+    role && (role.name == 'moderator' || role.name == 'admin')
   end
 
   # new method
   def moderator?
-    user_role.try(:name) == "moderator"
+    user_role.try(:name) == 'moderator'
   end
 
   def content_editor?
-    user_role.try(:name) == "content_editor"
+    user_role.try(:name) == 'content_editor'
   end
 
 
@@ -77,7 +77,7 @@ class User < ApplicationRecord
   end
 
   def self.orderByInstitution
-    self.includes(:institution).order("institutions.name ASC NULLS FIRST").limit(1000)
+    self.includes(:institution).order('institutions.name ASC NULLS FIRST').limit(1000)
   end
 
   def self.getStatsByDay

@@ -27,11 +27,11 @@ class Institution < ApplicationRecord
   validate :image_size_restriction
 
   HUMANIZED_ATTRIBUTES = {
-    :slug => "UID"
+    :slug => 'UID'
   }
 
-  scope :order_asc, -> { order("LOWER(institutions.name)") }
-  scope :slugged, -> { where.not(slug: ["", nil]) }
+  scope :order_asc, -> { order('LOWER(institutions.name)') }
+  scope :slugged, -> { where.not(slug: ['', nil]) }
   scope :published, -> { where.not(hidden: true) }
 
   def self.human_attribute_name(attr, options = {})
@@ -49,11 +49,11 @@ class Institution < ApplicationRecord
   end
 
   def self.state_library_nsw
-    find_by(name: "State Library of New South Wales")
+    find_by(name: 'State Library of New South Wales')
   end
 
   def published_transcripts
-    transcripts.published.where("collections.published_at IS NOT NULL")
+    transcripts.published.where('collections.published_at IS NOT NULL')
   end
 
   after_create do
@@ -70,7 +70,7 @@ class Institution < ApplicationRecord
   end
 
   def self.all_institution_disk_usage
-    Rails.cache.fetch("Institution:disk_usage:all", expires_in: 48.hours) do
+    Rails.cache.fetch('Institution:disk_usage:all', expires_in: 48.hours) do
       Institution.all.map { |i| i.disk_usage }
         .inject({ image: 0, audio: 0, script: 0 }) do |memo, tu|
           memo[:image] += tu[:image]
@@ -101,14 +101,14 @@ class Institution < ApplicationRecord
 
   def self.default_links
     [
-      InstitutionLink.new(title: "Disclaimer", url: "https://www.sl.nsw.gov.au/disclaimer", position: 0),
-      InstitutionLink.new(title: "Privacy", url: "https://www.sl.nsw.gov.au/privacy", position: 1),
-      InstitutionLink.new(title: "Copyright", url: "https://www.sl.nsw.gov.au/copyright", position: 2),
-      InstitutionLink.new(title: "Right to Information", url: "https://www.sl.nsw.gov.au/right-to-information", position: 3),
-      InstitutionLink.new(title: "Website Accessibility", url: "https://www.sl.nsw.gov.au/website-accessibility", position: 4),
-      InstitutionLink.new(title: "Contact Us", url: "https://amplify.sl.nsw.gov.au/page/about", position: 5),
-      InstitutionLink.new(title: "Feedback", url: "https://www.sl.nsw.gov.au/feedback", position: 6),
-      InstitutionLink.new(title: "", url: "", position: 7),
+      InstitutionLink.new(title: 'Disclaimer', url: 'https://www.sl.nsw.gov.au/disclaimer', position: 0),
+      InstitutionLink.new(title: 'Privacy', url: 'https://www.sl.nsw.gov.au/privacy', position: 1),
+      InstitutionLink.new(title: 'Copyright', url: 'https://www.sl.nsw.gov.au/copyright', position: 2),
+      InstitutionLink.new(title: 'Right to Information', url: 'https://www.sl.nsw.gov.au/right-to-information', position: 3),
+      InstitutionLink.new(title: 'Website Accessibility', url: 'https://www.sl.nsw.gov.au/website-accessibility', position: 4),
+      InstitutionLink.new(title: 'Contact Us', url: 'https://amplify.sl.nsw.gov.au/page/about', position: 5),
+      InstitutionLink.new(title: 'Feedback', url: 'https://www.sl.nsw.gov.au/feedback', position: 6),
+      InstitutionLink.new(title: '', url: '', position: 7),
     ]
   end
 end

@@ -1,14 +1,14 @@
 namespace :cache do
 
   # Usage rake cache:clear
-  desc "Clear a cache fragment"
+  desc 'Clear a cache fragment'
   task :clear => :environment do |task, args|
 
     puts "Clearing all cache: #{Rails.cache.clear}"
   end
 
   # Usage rake cache:clear_fragment['oral-history/transcripts/1/1000/title']
-  desc "Clear cache fragment(s)"
+  desc 'Clear cache fragment(s)'
   task :clear_fragment, [:keys] => :environment do |task, args|
     keys = [args[:keys].split(':')].flatten.uniq
 
@@ -23,7 +23,7 @@ namespace :cache do
   end
 
   # Usage rake cache:read['oral-history/transcripts/1/1000/title']
-  desc "Read cache fragment(s)"
+  desc 'Read cache fragment(s)'
   task :read, [:keys] => :environment do |task, args|
     keys = [args[:keys].split(':')].flatten.uniq
 

@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe FlagDecorator do
   let(:institution) { create :institution }
@@ -8,8 +8,8 @@ RSpec.describe FlagDecorator do
 
   let(:flag_decorator) { flag.decorate }
 
-  context "with institution" do
-    it "shows the institution" do
+  context 'with institution' do
+    it 'shows the institution' do
       expect(flag_decorator.institution).to eq(institution)
     end
   end

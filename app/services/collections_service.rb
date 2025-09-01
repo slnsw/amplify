@@ -14,6 +14,6 @@ class CollectionsService
       with_published_institution.
       order(title: :asc).
       joins(:institution).
-      where("institutions.slug in (?)", institution_slug)
+      where('institutions.slug in (?)', institution_slug)
   end
 end

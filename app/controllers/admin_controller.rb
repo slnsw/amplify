@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
   include Pundit
-  layout "admin"
+  layout 'admin'
 
   def authenticate_staff!
     redirect_to root_url unless current_user&.staff?

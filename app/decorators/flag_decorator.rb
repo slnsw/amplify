@@ -12,7 +12,7 @@ class FlagDecorator < ApplicationDecorator
       INNER JOIN transcripts on transcripts.collection_id = collections.id
       INNER JOIN flags on flags.transcript_id = transcripts.id"
     )
-    institutions.where("flags.id = ?", object.id).first
+    institutions.where('flags.id = ?', object.id).first
     # rubocop:enable Style/TrailingCommaInArguments
   end
 end

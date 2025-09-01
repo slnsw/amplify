@@ -27,7 +27,7 @@ class TranscriptService
   def self.find_by_uid(uid)
     Transcript.published.
       joins(:collection).
-      where("collections.published_at is not null").
+      where('collections.published_at is not null').
       find_by(uid: uid) || Transcript.new
   end
 

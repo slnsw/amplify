@@ -2,7 +2,7 @@ class Admin::ThemesController < AdminController
   before_action :set_theme, only: [:edit, :update, :destroy]
 
   def index
-    @themes = policy_scope(Theme).order("LOWER(name)")
+    @themes = policy_scope(Theme).order('LOWER(name)')
   end
 
   def new

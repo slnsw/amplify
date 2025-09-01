@@ -9,10 +9,10 @@ RSpec.describe TranscriptsController, type: :controller do
   let!(:collection) { create(:collection, institution: institution, publish: true) }
   let!(:transcript) { create(:transcript, collection: collection, publish: true, lines: 1) }
 
-  describe "GET #show" do
+  describe 'GET #show' do
     let(:action) { get :show, params: { id: transcript.uid }, format: :json }
 
-    it "is successful" do
+    it 'is successful' do
       action
       expect(response).to have_http_status(:ok)
     end

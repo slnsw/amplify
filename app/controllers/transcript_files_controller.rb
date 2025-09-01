@@ -21,7 +21,7 @@ class TranscriptFilesController < ApplicationController
     @transcript_edits = []
     @opt = transcript_file_params
 
-    if params[:format] == "json"
+    if params[:format] == 'json'
       @transcript_line_statuses = TranscriptLineStatus.allCached
       @transcript_speakers = TranscriptSpeaker.getByTranscriptId(@transcript.id)
       @transcript_edits = TranscriptEdit.getByTranscript(@transcript.id) if @opt[:edits]
