@@ -144,7 +144,7 @@ group :development, :test do
   # DISABLED: Rails 8.0 debug gem conflicts with Pry - use Pry instead
   # gem "debug", platforms: [:mri, :mingw, :x64_mingw]
 
-  gem 'byebug', '~> 11.0.0', platforms: %i[mri mingw x64_mingw]
+  gem 'byebug', '~> 12.0.0'
   gem 'factory_bot_rails', '~> 5.0.2'
   gem 'faker'
   gem 'pry', '~> 0.15.0'
