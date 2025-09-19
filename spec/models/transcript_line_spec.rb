@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 RSpec.describe TranscriptLine, type: :model do
   describe '#recalculate' do
     let(:admin) { create(:user, :admin) }

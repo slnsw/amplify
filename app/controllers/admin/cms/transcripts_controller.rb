@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class Admin::Cms::TranscriptsController < AdminController
   # Deals with publishing, unpublishing, and deleting multiple transcripts.
   include UpdateMultipleTranscriptsConcern

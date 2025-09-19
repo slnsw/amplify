@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class Page < ApplicationRecord
   has_paper_trail
   has_one :public_page, dependent: :destroy

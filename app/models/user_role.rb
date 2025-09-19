@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class UserRole < ApplicationRecord
   has_paper_trail
   # any user role that is >= 3 consider as staff

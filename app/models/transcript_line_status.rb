@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class TranscriptLineStatus < ApplicationRecord
   has_paper_trail
 

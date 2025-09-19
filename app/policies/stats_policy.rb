@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class StatsPolicy < Struct.new(:user, :stats)
 
   attr_reader :user, :stats

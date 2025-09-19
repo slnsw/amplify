@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 module SearchHelper
 
   def item_tag(transcript, query)

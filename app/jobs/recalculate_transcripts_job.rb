@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class RecalculateTranscriptsJob < ApplicationJob
   queue_as :default
 

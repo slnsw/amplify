@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 # public institutions controller
 class InstitutionsController < ApplicationController
   skip_before_action :verify_authenticity_token

@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class TranscriptLineDecorator < Draper::Decorator
   delegate_all
 

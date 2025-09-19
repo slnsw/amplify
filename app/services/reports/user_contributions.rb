@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 # app/services/reports/user_activity.rb
 require 'csv'
 

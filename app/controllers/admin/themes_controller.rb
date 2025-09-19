@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class Admin::ThemesController < AdminController
   before_action :set_theme, only: [:edit, :update, :destroy]
 

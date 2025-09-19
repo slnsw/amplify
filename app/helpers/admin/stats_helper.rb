@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 module Admin::StatsHelper
   def display_name(key)
     key.to_s.humanize

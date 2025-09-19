@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 class ImageUploader < CarrierWave::Uploader::Base
   include S3Identifier
 

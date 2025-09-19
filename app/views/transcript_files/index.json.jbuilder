@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 json.entries @transcripts do |transcript|
   json.id transcript[:uid]
   json.collection_id transcript[:collection_uid]

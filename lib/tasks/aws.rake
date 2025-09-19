@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 namespace :aws do
   # Usage: rake aws:upload_files['nsw-state-library-amplify','ap-southeast-2','slnsw-amplify','collections/rainbow_archives/audio']
   desc 'Upload files in the specified directory to AWS S3'

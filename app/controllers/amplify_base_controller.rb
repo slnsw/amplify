@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 # NOTE: since we are moving the frontend from backbone to rails, it will be easier to
 #       have a seperate base controller for standard rails views
 #
