@@ -21,6 +21,9 @@ Rails/UnknownEnv:
     - test
     - staging
 
+RSpec/NestedGroups:
+  Max: 4
+
 # Common overrides for Rails applications
 Style/Documentation:
   Enabled: false

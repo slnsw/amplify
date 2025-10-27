@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # public institutions controller
 class InstitutionsController < ApplicationController
   skip_before_action :verify_authenticity_token
@@ -13,7 +14,7 @@ class InstitutionsController < ApplicationController
 
   def index
     @transcripts = TranscriptService.search(@build_params)
-    @themes = Theme.all.order(name: :asc)
+    @themes = Theme.order(name: :asc)
     @sort_list = SortList.list
     @form_url = institution_path(path: params[:path])
     @disabled = true
@@ -39,9 +40,9 @@ class InstitutionsController < ApplicationController
       @collection = [collection.find_by(uid: params_list[:collection_id])]
       @build_params[:collections] = [@collection.first.title]
     else
-      @collection = collection.
-        joins(:institution).
-        where('institutions.slug in (?)', params_list[:institution_id])
+      @collection = collection
+                    .joins(:institution)
+                    .where('institutions.slug in (?)', params_list[:institution_id])
     end
   end
 
@@ -66,6 +67,6 @@ class InstitutionsController < ApplicationController
   end
 
   def filter_requests
-    return head :not_found if (params[:format] && params[:format] != 'html')
+    head :not_found if params[:format] && params[:format] != 'html'
   end
 end
