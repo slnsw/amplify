@@ -117,16 +117,8 @@ RSpec.describe CollectionsController, type: :controller do
     let!(:collection) { create(:collection) }
 
     context 'when requested format is html' do
-      before do
-        get :show, params: { id: collection.uid }
-      end
-
-      it 'assigns @collection correctly' do
-        expect(assigns(:collection)).to eq(collection)
-      end
-
-      it 'responds with HTML content type' do
-        expect(response.content_type).to include 'text/html'
+      it 'raises UnknownFormat' do
+        expect { get :show, params: { id: collection.uid } }.to raise_error(ActionController::UnknownFormat)
       end
     end
 

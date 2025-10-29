@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Api::CspReportsController < ActionController::Base
   skip_before_action :verify_authenticity_token
 

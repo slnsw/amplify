@@ -1,10 +1,10 @@
 # frozen_string_literal: true
+
 class TranscriptEditsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   before_action :authenticate_user, only: [:create]
 
-
-  before_action :set_transcript_edit, only: [:show, :update, :destroy]
+  before_action :set_transcript_edit, only: %i[show update destroy]
 
   # GET /transcript_edits.json?transcript_line_id=1
   def index
@@ -69,18 +69,16 @@ class TranscriptEditsController < ApplicationController
       end
 
     # This is an existing edit
-    else
-      if @transcript_edit.update(transcript_edit_params)
-        line.recalculate(nil, project)
-        head :no_content
-        success = true
-      end
+    elsif @transcript_edit.update(transcript_edit_params)
+      line.recalculate(nil, project)
+      head :no_content
+      success = true
     end
 
     # An error occurred
-    unless success
-      render json: @transcript_edit.errors, status: :unprocessable_entity
-    end
+    return if success
+
+    render json: @transcript_edit.errors, status: :unprocessable_entity
   end
 
   # PATCH/PUT /transcript_edits/1.json
@@ -103,11 +101,12 @@ class TranscriptEditsController < ApplicationController
 
   private
 
-    def set_transcript_edit
-      @transcript_edit = TranscriptEdit.find(params[:id])
-    end
+  def set_transcript_edit
+    @transcript_edit = TranscriptEdit.find(params[:id])
+  end
 
-    def transcript_edit_params
-      params.require(:transcript_edit).permit(:transcript_id, :transcript_line_id, :user_id, :session_id, :text, :is_deleted)
-    end
+  def transcript_edit_params
+    params.require(:transcript_edit).permit(:transcript_id, :transcript_line_id, :user_id, :session_id, :text,
+                                            :is_deleted)
+  end
 end

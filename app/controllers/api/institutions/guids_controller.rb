@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Api::Institutions::GuidsController < ActionController::Base
   before_action :authenticate_request
 
@@ -12,9 +13,9 @@ class Api::Institutions::GuidsController < ActionController::Base
 
   def authenticate_request
     token = extract_bearer_token
-    if token != ENV['LOOKER_STUDIO_EXTERNAL_SECRET']
-      render json: { error: 'Unauthorized' }, status: :unauthorized
-    end
+    return unless token != ENV['LOOKER_STUDIO_EXTERNAL_SECRET']
+
+    render json: { error: 'Unauthorized' }, status: :unauthorized
   end
 
   def extract_bearer_token
