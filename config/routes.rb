@@ -3,6 +3,7 @@ require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
   post "/csp-violation-report-endpoint", to: "api/csp_reports#create"
+  get "/health", to: "health#show"
 
   namespace :api do
     namespace :institutions do
@@ -120,4 +121,5 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   match '*path' => "institutions#index", via: [:get], as: :institution
+
 end
