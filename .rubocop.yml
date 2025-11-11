@@ -21,6 +21,12 @@ Rails/UnknownEnv:
     - test
     - staging
 
+RSpec/ImplicitSubject:
+  EnforcedStyle: require_implicit
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+
 RSpec/NestedGroups:
   Max: 4
 

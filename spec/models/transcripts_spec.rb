@@ -1,84 +1,48 @@
 # frozen_string_literal: true
+
 RSpec.describe Transcript, type: :model do
-  describe 'associations' do
-    it { is_expected.to have_many :transcript_lines }
-    it { is_expected.to have_many :transcript_edits }
-    it { is_expected.to have_many :transcript_speakers }
-    it { is_expected.to belong_to :collection }
-    it { is_expected.to belong_to :transcript_status }
-    it { is_expected.to belong_to :vendor }
-  end
+  let(:factory_name) { :transcript }
 
-  describe 'validations' do
-    it { is_expected.to validate_presence_of :uid }
-    it { is_expected.to validate_presence_of :vendor }
-    it { is_expected.to validate_uniqueness_of :uid }
+  it_behaves_like 'publishable'
+  it_behaves_like 'uid_validatable'
+  it_behaves_like 'uid_not_updatable'
 
-    it { is_expected.to validate_length_of(:uid).is_at_most(50) }
+  it { is_expected.to have_many :transcript_lines }
+  it { is_expected.to have_many :transcript_edits }
+  it { is_expected.to have_many :transcript_speakers }
+  it { is_expected.to belong_to(:collection).optional }
+  it { is_expected.to belong_to(:transcript_status).optional }
+  # NOTE: vendor has `optional: true` but also `validates :vendor, presence: true`
+  # This is inconsistent in the model, so we test the presence validation instead
 
-    it { is_expected.to allow_value('abc_def').for(:uid) }
-    it { is_expected.to allow_value('abc_d_e-f').for(:uid) }
+  it { is_expected.to validate_presence_of :uid }
+  it { is_expected.to validate_presence_of :vendor }
+  it { is_expected.to validate_uniqueness_of :uid }
 
-    it { is_expected.not_to allow_value('abc def').for(:uid) }
-    it { is_expected.not_to allow_value('').for(:uid) }
-    it { is_expected.not_to allow_value('ab&ef').for(:uid) }
+  it { is_expected.to define_enum_for(:transcript_type).with_values(voicebase: 0, manual: 1, azure: 2) }
+
+  it do
+    expect(subject).to define_enum_for(:process_status)
+      .with_values(started: 'started', completed: 'completed', failed: 'failed')
+      .with_prefix(:process)
+      .backed_by_column_of_type(:string)
   end
 
   describe '#crop_image' do
     let(:transcript) { create :transcript }
 
     it 'recreates image versions when crop_x changes' do
-      allow(transcript).to receive(:image_changed?).and_return(false)
-      allow(transcript).to receive(:crop_x_changed?).and_return(true)
+      allow(transcript).to receive_messages(image_changed?: false, crop_x_changed?: true)
       expect(transcript.image).to receive(:recreate_versions!)
 
       transcript.crop_image
     end
 
     it 'does not recreate versions when image changed' do
-      allow(transcript).to receive(:image_changed?).and_return(true)
-      allow(transcript).to receive(:crop_x_changed?).and_return(true)
+      allow(transcript).to receive_messages(image_changed?: true, crop_x_changed?: true)
       expect(transcript.image).not_to receive(:recreate_versions!)
 
       transcript.crop_image
-    end
-  end
-
-  describe 'enum transcript_type' do
-    let(:transcript) { create :transcript }
-
-    it 'defines voicebase type' do
-      transcript.voicebase!
-      expect(transcript.voicebase?).to be true
-    end
-
-    it 'defines manual type' do
-      transcript.manual!
-      expect(transcript.manual?).to be true
-    end
-
-    it 'defines azure type' do
-      transcript.azure!
-      expect(transcript.azure?).to be true
-    end
-  end
-
-  describe 'enum process_status' do
-    let(:transcript) { create :transcript }
-
-    it 'defines started status' do
-      transcript.process_started!
-      expect(transcript.process_started?).to be true
-    end
-
-    it 'defines completed status' do
-      transcript.process_completed!
-      expect(transcript.process_completed?).to be true
-    end
-
-    it 'defines failed status' do
-      transcript.process_failed!
-      expect(transcript.process_failed?).to be true
     end
   end
 
@@ -124,7 +88,9 @@ RSpec.describe Transcript, type: :model do
 
     describe '.voicebase_processing_pending' do
       let!(:pending_transcript) { create :transcript, transcript_type: :voicebase, process_completed_at: nil }
-      let!(:completed_transcript) { create :transcript, transcript_type: :voicebase, process_completed_at: Time.current }
+      let!(:completed_transcript) do
+        create :transcript, transcript_type: :voicebase, process_completed_at: Time.current
+      end
 
       it 'returns voicebase transcripts without process_completed_at' do
         expect(described_class.voicebase_processing_pending).to include(pending_transcript)
@@ -143,25 +109,42 @@ RSpec.describe Transcript, type: :model do
     end
   end
 
-  describe 'validate uid does not change after create' do
-    let(:vendor) { Vendor.create!(uid: 'voice_base', name: 'VoiceBase') }
-    let(:transcript) do
-      Transcript.new(
-        uid: 'transcript_test',
-        vendor_id: vendor.id,
-      )
+  describe 'scopes' do
+    let!(:completed_trasncript) { create :transcript, percent_completed: 100 }
+    let!(:reviewing_trasncript) { create :transcript, percent_reviewing: 37 }
+    let!(:not_completed_trasncript) { create :transcript, percent_edited: 37 }
+
+    it 'gets completed' do
+      expect(described_class.completed.to_a).to eq([completed_trasncript])
     end
 
-    context 'when transcript is created' do
-      it 'considers the transcript to be valid' do
-        expect(transcript.save).to be true
+    it 'gets reviewing' do
+      expect(described_class.reviewing.to_a).to eq([reviewing_trasncript])
+    end
+
+    it 'gets pending' do
+      expect(described_class.pending.to_a).to eq([not_completed_trasncript])
+    end
+
+    describe '.voicebase_processing_pending' do
+      let!(:pending_transcript) { create :transcript, transcript_type: :voicebase, process_completed_at: nil }
+      let!(:completed_transcript) do
+        create :transcript, transcript_type: :voicebase, process_completed_at: Time.current
+      end
+
+      it 'returns voicebase transcripts without process_completed_at' do
+        expect(described_class.voicebase_processing_pending).to include(pending_transcript)
+        expect(described_class.voicebase_processing_pending).not_to include(completed_transcript)
       end
     end
 
-    context 'when transcript is updated' do
-      it 'considers the transcript to be invalid' do
-        transcript.save
-        expect(transcript.update(uid: 'bad')).to be false
+    describe '.not_picked_up_for_voicebase_processing' do
+      let!(:picked_up_transcript) { create :transcript, transcript_type: :voicebase, process_started_at: Time.current }
+      let!(:not_picked_up_transcript) { create :transcript, transcript_type: :voicebase, process_started_at: nil }
+
+      it 'returns voicebase transcripts that have been picked up for processing' do
+        expect(described_class.not_picked_up_for_voicebase_processing).to include(picked_up_transcript)
+        expect(described_class.not_picked_up_for_voicebase_processing).not_to include(not_picked_up_transcript)
       end
     end
   end
@@ -176,14 +159,14 @@ RSpec.describe Transcript, type: :model do
         uid: 'collection-uid',
         title: "The collection's title",
         vendor: vendor,
-        institution_id: institution.id,
+        institution_id: institution.id
       )
     end
     let(:transcript) do
-      Transcript.create!(
+      described_class.create!(
         uid: 'test_transcript',
         vendor: vendor,
-        collection: collection,
+        collection: collection
       )
     end
 
@@ -208,59 +191,20 @@ RSpec.describe Transcript, type: :model do
     end
   end
 
-  # rubocop:disable RSpec/PredicateMatcher
-  describe '#publish' do
-    let(:publish) { nil }
-    let!(:transcript) { FactoryBot.create :transcript, publish: publish }
-
-    context 'when default transcripts are unpublished' do
-      it 'checks the default transcript status' do
-        expect(transcript.published?).to be_falsy
-      end
-    end
-
-    context 'when saving with publish true makes the:transcript to publish' do
-      let!(:publish) { 1 }
-
-      it 'publishes the transcript' do
-        expect(transcript.published?).to be_truthy
-        expect(transcript.publish).to be_truthy
-        expect(transcript.published_at).not_to be_nil
-      end
-    end
-
-    context 'when calling publish! makes the:transcript to publish' do
-      it 'publishes the transcript' do
-        expect { transcript.publish! }.
-          to change(transcript, :published?).from(false).to(true)
-      end
-    end
-  end
-
-  describe '#unpublish' do
-    let!(:transcript) { FactoryBot.create :transcript, :published }
-
-    it 'unpublishes the transcript' do
-      expect { transcript.unpublish! }.
-        to change(transcript, :published?).from(true).to(false)
-    end
-  end
-  # rubocop:enable RSpec/PredicateMatcher
-
   describe '#get_for_home_page' do
     let(:collection) { create :collection, :published }
     let(:params) do
       { collections: [collection.title], sort_by: sort_by,
-      search: '', institution: nil, theme: [''] }
+        search: '', institution: nil, theme: [''] }
     end
 
     before do
       %w[B A].each do |title|
         create :transcript, :published,
-          title: title,
-          collection: collection,
-          project_uid: 'nsw-state-library-amplify',
-          lines: 1
+               title: title,
+               collection: collection,
+               project_uid: 'nsw-state-library-amplify',
+               lines: 1
       end
     end
 
@@ -268,8 +212,8 @@ RSpec.describe Transcript, type: :model do
       let!(:sort_by) { 'title_asc' }
 
       it 'sorts the records' do
-        expect(described_class.get_for_home_page(params).map(&:title)).
-          to eq(['A', 'B'])
+        expect(described_class.get_for_home_page(params).map(&:title))
+          .to eq(%w[A B])
       end
     end
 
@@ -277,7 +221,7 @@ RSpec.describe Transcript, type: :model do
       let!(:sort_by) { '' } # blank means random
 
       it 'return random records' do
-        expect(Transcript).to receive(:randomize_list)
+        expect(described_class).to receive(:randomize_list)
         described_class.get_for_home_page(params)
       end
     end
@@ -300,7 +244,7 @@ RSpec.describe Transcript, type: :model do
       it 'shows only the filtered trasncripts' do
         expect(described_class.search(
           collection_id: [collection1.id],
-          institution_id: institution1.id,
+          institution_id: institution1.id
         ).count).to eq(1)
       end
     end
@@ -319,8 +263,8 @@ RSpec.describe Transcript, type: :model do
 
       it 'shows theme1 records' do
         expect(described_class.search({
-          theme: ['theme1'],
-        })).to eq([transcript2])
+                                        theme: ['theme1']
+                                      })).to eq([transcript2])
       end
     end
   end
@@ -345,7 +289,10 @@ RSpec.describe Transcript, type: :model do
   describe '.get_for_download_by_vendor' do
     let(:vendor) { create :vendor, uid: 'test_vendor' }
     let(:collection) { create :collection, vendor: vendor, vendor_identifier: '123' }
-    let!(:transcript) { create :transcript, vendor: vendor, collection: collection, vendor_identifier: '456', lines: 0, project_uid: 'test' }
+    let!(:transcript) do
+      create :transcript, vendor: vendor, collection: collection, vendor_identifier: '456', lines: 0,
+                          project_uid: 'test'
+    end
 
     it 'returns transcripts for download by vendor' do
       result = described_class.get_for_download_by_vendor('test_vendor', 'test')
@@ -356,7 +303,9 @@ RSpec.describe Transcript, type: :model do
   describe '.get_for_update_by_vendor' do
     let(:vendor) { create :vendor, uid: 'test_vendor' }
     let(:collection) { create :collection, vendor: vendor, vendor_identifier: '123' }
-    let!(:transcript) { create :transcript, vendor: vendor, collection: collection, vendor_identifier: '456', project_uid: 'test' }
+    let!(:transcript) do
+      create :transcript, vendor: vendor, collection: collection, vendor_identifier: '456', project_uid: 'test'
+    end
 
     it 'returns transcripts for update by vendor' do
       result = described_class.get_for_update_by_vendor('test_vendor', 'test')
@@ -367,7 +316,9 @@ RSpec.describe Transcript, type: :model do
   describe '.get_for_upload_by_vendor' do
     let(:vendor) { create :vendor, uid: 'test_vendor' }
     let(:collection) { create :collection, vendor: vendor, vendor_identifier: '123' }
-    let!(:transcript) { create :transcript, vendor: vendor, collection: collection, vendor_identifier: '', lines: 0, project_uid: 'test' }
+    let!(:transcript) do
+      create :transcript, vendor: vendor, collection: collection, vendor_identifier: '', lines: 0, project_uid: 'test'
+    end
 
     it 'returns transcripts for upload by vendor' do
       result = described_class.get_for_upload_by_vendor('test_vendor', 'test')
@@ -376,8 +327,14 @@ RSpec.describe Transcript, type: :model do
   end
 
   describe '.get_updated_after' do
-    let!(:old_transcript) { create :transcript, project_uid: ENV.fetch('PROJECT_ID', 'test'), lines: 5, is_published: true, updated_at: 2.days.ago }
-    let!(:new_transcript) { create :transcript, project_uid: ENV.fetch('PROJECT_ID', 'test'), lines: 5, is_published: true, updated_at: 1.hour.ago }
+    let!(:old_transcript) do
+      create :transcript, project_uid: ENV.fetch('PROJECT_ID', 'test'), lines: 5, is_published: true,
+                          updated_at: 2.days.ago
+    end
+    let!(:new_transcript) do
+      create :transcript, project_uid: ENV.fetch('PROJECT_ID', 'test'), lines: 5, is_published: true,
+                          updated_at: 1.hour.ago
+    end
 
     before do
       allow(Project).to receive(:getActive).and_return({ data: { 'transcriptsPerPage' => '10' } })
@@ -469,7 +426,9 @@ RSpec.describe Transcript, type: :model do
   describe '.get_for_export' do
     let(:project_uid) { 'test-project' }
     let(:collection) { create :collection, uid: 'test-collection' }
-    let!(:transcript) { create :transcript, project_uid: project_uid, collection: collection, lines: 5, is_published: true }
+    let!(:transcript) do
+      create :transcript, project_uid: project_uid, collection: collection, lines: 5, is_published: true
+    end
 
     context 'with collection_uid provided' do
       it 'calls get_for_export_with_collection' do
@@ -596,12 +555,12 @@ RSpec.describe Transcript, type: :model do
 
       it 'does not change transcript' do
         expect { transcript.load_from_hash(contents) }
-          .not_to change { transcript.reload.attributes }
+          .not_to(change { transcript.reload.attributes })
       end
     end
   end
 
-  describe 'versioning', versioning: true do
+  describe 'versioning', :versioning do
     let(:transcript) { create :transcript, percent_completed: 100 }
 
     describe 'have_a_version_with matcher' do

@@ -197,7 +197,7 @@ group :test do
   gem 'launchy', '~> 2.4.0'
   gem 'pundit-matchers', '~> 1.6.0'
   gem 'rails-controller-testing', '~> 1.0.4'
-  gem 'shoulda-matchers', '~> 3.1', require: false
+  gem 'shoulda-matchers', '~> 7.0', require: false
   gem 'simplecov', '~> 0.16.1'
 end
 

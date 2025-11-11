@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe TranscriptLine, type: :model do
   describe '#recalculate' do
     let(:admin) { create(:user, :admin) }
@@ -23,18 +24,17 @@ RSpec.describe TranscriptLine, type: :model do
     let(:project) { Project.getActive(collection.id) }
 
     let!(:statues) do
-      # rubocop:disable Metrics/LineLength
       [
         { name: 'initialized', progress: 0, description: 'Line contains unedited computer-generated text' },
         { name: 'editing', progress: 25, description: 'Line has been edited by others' },
         { name: 'reviewing', progress: 50, description: 'Line is being reviewed' },
         { name: 'completed', progress: 100, description: 'Line has been completed' },
         { name: 'flagged', progress: 150, description: 'Line has been marked as incorrect or problematic' },
-        { name: 'archived', progress: 200, description: 'Line has been archived' },
+        { name: 'archived', progress: 200, description: 'Line has been archived' }
       ].each do |item|
-        TranscriptLineStatus.create(name: item[:name], progress: item[:progress], description: item['description'])
+        TranscriptLineStatus.create(name: item[:name], progress: item[:progress],
+                                    description: item['description'])
       end
-      # rubocop:enable Metrics/LineLength
     end
 
     # rubocop:disable RSpec/ExampleLength: Example has too many lines
@@ -59,7 +59,8 @@ RSpec.describe TranscriptLine, type: :model do
       let(:admin) { create(:user, :admin_with_admin_transcribing_role) }
 
       it 'bypass concensus, status is set to completed' do
-        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'first', user_id: admin.id
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'first',
+                                            user_id: admin.id
         re_calculate
         expect(transcript_line.transcript_line_status.name).to eq('completed')
       end
@@ -70,7 +71,8 @@ RSpec.describe TranscriptLine, type: :model do
       let(:admin) { create(:user, :admin_with_registed_user_transcribing_role) }
 
       it 'bypass concensus, status is set to completed' do
-        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'first', user_id: admin.id
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'first',
+                                            user_id: admin.id
         re_calculate
         expect(transcript_line.transcript_line_status.name).to eq('editing')
       end
@@ -93,15 +95,18 @@ RSpec.describe TranscriptLine, type: :model do
         create_edit_and_recalculate('second')
         expect(transcript_line.text).to eq('second')
 
-        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'third', user_id: admin.id
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'third',
+                                            user_id: admin.id
         re_calculate
         expect(transcript_line.text).to eq('third')
 
-        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'first', user_id: admin.id
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'first',
+                                            user_id: admin.id
         re_calculate
         expect(transcript_line.text).to eq('first')
 
-        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'fourth', user_id: admin.id
+        FactoryBot.create :transcript_edit, transcript: transcript, transcript_line: transcript_line, text: 'fourth',
+                                            user_id: admin.id
         re_calculate
         expect(transcript_line.text).to eq('fourth')
       end
@@ -175,7 +180,7 @@ RSpec.describe TranscriptLine, type: :model do
 
   describe 'scopes' do
     describe '#fuzzy_search' do
-      subject(:fuzzy_search) { TranscriptLine.fuzzy_search(keyword) }
+      subject(:fuzzy_search) { described_class.fuzzy_search(keyword) }
 
       let!(:jenna) do
         FactoryBot.create :transcript_line, original_text: 'And Jenna bent.'
