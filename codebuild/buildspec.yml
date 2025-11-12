@@ -2,7 +2,6 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_TAG: "latest"
     AWS_DEFAULT_REGION: "ap-southeast-2"
     ECS_CONTAINER_NAME: "web"
 
@@ -18,18 +17,22 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
-      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo Building Docker image with tags: latest and $CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker build --no-cache -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION .
 
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the Docker images to ECR...
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Pushing Docker images to ECR...
+      - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - echo Writing image definitions file...
-      - printf '[{"name":"%s","imageUri":"%s"}]' "${ECS_CONTAINER_NAME}" "$REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
+      - echo Writing imagedefinitions.json for ECS deployment...
+      - printf '[{"name":"%s","imageUri":"%s"}]' \
+        "${ECS_CONTAINER_NAME}" \
+        "$REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION" \
+        > imagedefinitions.json
+      - echo imagedefinitions.json generated:
+      - cat imagedefinitions.json
 
 artifacts:
   files:
