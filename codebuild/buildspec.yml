@@ -17,7 +17,7 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - echo Building Docker image with tags: latest and $CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo Building Docker image with tags latest and $CODEBUILD_RESOLVED_SOURCE_VERSION
       - docker build --no-cache -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION .
 
   post_build:
@@ -27,11 +27,8 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Writing imagedefinitions.json for ECS deployment...
-      - printf '[{"name":"%s","imageUri":"%s"}]' \
-        "${ECS_CONTAINER_NAME}" \
-        "$REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION" \
-        > imagedefinitions.json
-      - echo imagedefinitions.json generated:
+      - printf '[{"name":"%s","imageUri":"%s"}]' "${ECS_CONTAINER_NAME}" "$REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION" > imagedefinitions.json
+      - echo imagedefinitions.json generated
       - cat imagedefinitions.json
 
 artifacts:
