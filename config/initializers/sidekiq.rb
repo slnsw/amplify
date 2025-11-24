@@ -10,7 +10,7 @@ Sidekiq.configure_client do |config|
   }
 end
 
-unless %w(test development staging).include?(Rails.env)
+unless %w(test development).include?(Rails.env)
   Sidekiq::Cron::Job.create(
     name: "Cache Analytics data - at 4PM UTC",
     cron: "0 16 * * *",
