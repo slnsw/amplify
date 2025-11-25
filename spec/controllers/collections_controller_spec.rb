@@ -134,6 +134,18 @@ RSpec.describe CollectionsController, type: :controller do
       it 'responds with json content type' do
         expect(response.content_type).to include 'application/json'
       end
+
+      it 'responds with success status' do
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'when collection does not exist' do
+      it 'sets collection to nil' do
+        get :show, params: { id: 'nonexistent' }, as: :json
+        expect(assigns(:collection)).to be_nil
+        expect(response).to have_http_status(:success)
+      end
     end
   end
 end

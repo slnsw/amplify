@@ -146,5 +146,33 @@ RSpec.describe User, type: :model do
         end
       end
     end
+
+    describe '#recalculate' do
+      let(:user) { create(:user) }
+      let(:transcript) { create(:transcript) }
+      let(:transcript_line) { create(:transcript_line, transcript: transcript) }
+      let!(:edit1) do
+        create(:transcript_edit, user_id: user.id, transcript: transcript, transcript_line: transcript_line)
+      end
+      let!(:edit2) do
+        create(:transcript_edit, user_id: user.id, transcript: transcript, transcript_line: transcript_line)
+      end
+
+      it 'updates lines_edited count' do
+        expect { user.recalculate }
+          .to change { user.reload.lines_edited }.to(2)
+      end
+    end
+
+    describe '#isAdmin?' do
+      context 'when user has admin role' do
+        let(:admin_role) { create(:user_role, name: 'admin') }
+        let(:user) { create(:user, user_role: admin_role) }
+
+        it 'returns true (deprecated method)' do
+          expect(user.isAdmin?).to be true
+        end
+      end
+    end
   end
 end

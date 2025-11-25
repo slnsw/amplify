@@ -22,7 +22,7 @@ RSpec.describe Transcript, type: :model do
   it { is_expected.to define_enum_for(:transcript_type).with_values(voicebase: 0, manual: 1, azure: 2) }
 
   it do
-    expect(subject).to define_enum_for(:process_status)
+    is_expected.to define_enum_for(:process_status)
       .with_values(started: 'started', completed: 'completed', failed: 'failed')
       .with_prefix(:process)
       .backed_by_column_of_type(:string)
@@ -468,6 +468,17 @@ RSpec.describe Transcript, type: :model do
   describe '.sortable_fields' do
     it 'returns the correct sortable fields' do
       expect(described_class.sortable_fields).to eq(%w[percent_completed duration title collection_id])
+    end
+  end
+
+  describe '#disk_usage' do
+    let(:transcript) { create(:transcript) }
+
+    it 'caches and returns disk usage information' do
+      allow(Rails.cache).to receive(:fetch).and_call_original
+      transcript.disk_usage
+      expect(Rails.cache).to have_received(:fetch)
+        .with("Transcript:disk_usage:#{transcript.id}", expires_in: 23.hours)
     end
   end
 

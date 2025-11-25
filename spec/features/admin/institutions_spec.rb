@@ -33,6 +33,8 @@ RSpec.feature 'Institution Page' do
     end
 
     context 'when editing an institution' do
+      let!(:institution_link) { create(:institution_link, institution: institution1, title: 'Original Link', url: 'http://original.com') }
+
       before do
         sign_in admin
         visit edit_admin_institution_path(institution1)
