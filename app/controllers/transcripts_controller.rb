@@ -1,14 +1,16 @@
 # frozen_string_literal: true
+
 class TranscriptsController < ApplicationController
   include LoggedInUserHelper
+
   layout 'application_v2'
 
-  skip_before_action :verify_authenticity_token, only: [:index, :search, :show]
+  skip_before_action :verify_authenticity_token, only: %i[index search show]
 
   include ActionController::MimeResponds
   include IndexTemplate
 
-  before_action :set_transcript, only: [:update, :destroy]
+  before_action :set_transcript, only: %i[update destroy]
   before_action :set_transcript_for_show, only: [:show]
   before_action :load_institution_footer, only: [:show]
   before_action :load_institution, only: [:show]
@@ -113,7 +115,8 @@ class TranscriptsController < ApplicationController
   end
 
   def transcript_params
-    params.require(:transcript).permit(:title, :description, :url, :audio_url, :image_url, :collection_id, :notes, :transcript_status_id)
+    params.require(:transcript).permit(:title, :description, :url, :audio_url, :image_url, :collection_id, :notes,
+                                       :transcript_status_id)
   end
 
   def search_params

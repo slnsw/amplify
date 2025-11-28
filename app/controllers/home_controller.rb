@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class HomeController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!, except: [:index]
@@ -11,7 +12,7 @@ class HomeController < ApplicationController
   def index
     @build_params = build_params
     @transcripts = TranscriptService.search(build_params)
-    @themes = Theme.all.order(name: :asc)
+    @themes = Theme.order(name: :asc)
     @sort_list = SortList.list
     @form_url = root_path
   end

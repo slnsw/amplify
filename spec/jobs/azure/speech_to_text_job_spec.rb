@@ -21,6 +21,9 @@ RSpec.describe Azure::SpeechToTextJob do
     end
 
     it 'returns the lines' do
+      # Mock ffprobe command execution
+      allow_any_instance_of(Kernel).to receive(:`).with(anything).and_return('10')
+      
       stub_azure_speech_to_text status: status
       expect_any_instance_of(Transcript).to receive(:update).with(audio: wav_file)
       expect(transcript.transcript_lines.count).to eq 0

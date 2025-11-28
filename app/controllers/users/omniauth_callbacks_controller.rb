@@ -13,7 +13,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         is_navigational_format?
     else
       session['devise.facebook_data'] = request.env['omniauth.auth']
-      redirect_to new_user_registration_url
+      redirect_to new_user_registration_url and return
     end
 
     redirect_to redirect_url
@@ -29,7 +29,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         is_navigational_format?
     else
       session['devise.google_data'] = request.env['omniauth.auth']
-      redirect_to new_user_registration_url
+      redirect_to new_user_registration_url and return
     end
 
     redirect_to redirect_url

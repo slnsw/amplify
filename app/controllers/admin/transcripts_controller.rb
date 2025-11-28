@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Admin::TranscriptsController < ApplicationController
   include ActionController::MimeResponds
 
@@ -8,13 +9,12 @@ class Admin::TranscriptsController < ApplicationController
   # GET /admin/transcripts.json
   def index
     respond_to do |format|
-      format.html {
-        render :file => environment_admin_file
-      }
-      format.json {
+      format.html do
+        render file: environment_file('admin')
+      end
+      format.json do
         @transcripts = []
-      }
+      end
     end
   end
-
 end

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
-require 'rails_helper'
 
 RSpec.describe SiteAlert, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it {
+    is_expected.to define_enum_for(:level)
+      .with_values(status: 'status', warning: 'warning', error: 'error')
+      .backed_by_column_of_type(:string)
+  }
 end

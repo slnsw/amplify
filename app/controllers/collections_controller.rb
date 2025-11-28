@@ -1,11 +1,11 @@
 # frozen_string_literal: true
+
 class CollectionsController < ApplicationController
   include ActionController::MimeResponds
-  include IndexTemplate
 
   layout 'application_v2', only: [:index]
 
-  before_action :set_collection, only: [:show, :update, :destroy]
+  before_action :set_collection, only: %i[show update destroy]
 
   # GET /collections.json
   def index
