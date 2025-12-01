@@ -25,10 +25,6 @@ RUN npm install
 
 # For temporary testing in ECS
 ENV NEW_RELIC_AGENT_ENABLED=false
-ENV SECRET_KEY_BASE=9c8f6df3f71e3f0f3b6219a9a65bcb1c9a2e3720d3914f22cf
-ENV AWS_S3_ACCESS_KEY_ID=xxx
-ENV AWS_S3_SECRET_ACCESS_KEY=xxx
-ENV AWS_S3_REGION=ap-southeast-2
 
 # Copy the full Rails app codebase
 COPY . .
