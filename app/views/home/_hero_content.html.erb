@@ -8,7 +8,8 @@
       background_image_url = institution.hero_image_url.to_s
       title_text = institution.introductory_text
       logo = institution.image_url(:logo).to_s
-      url = institution.url
+      # Only allow http/https URLs to prevent javascript: and other XSS vectors
+      url = institution.url if institution.url.to_s.match?(/\A(https?:\/\/|\/)/i)
       logo_alt = "#{institution.name} logo"
     elsif defined?(app_config) && app_config.present?
       background_image_url = app_config.image_url.to_s
@@ -27,7 +28,7 @@
       <% end %>
 
       <h1 class="main_hero__title">
-        <%= raw title_text %>
+        <%= sanitize title_text, tags: %w(br strong em i b), attributes: [] %>
       </h1>
       <%= link_to "Powered by the State Library of NSW",
             "https://www.sl.nsw.gov.au/",

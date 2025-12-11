@@ -40,8 +40,10 @@ You will need to have the following installed to run this project on your machin
 
 - [Git](https://git-scm.com/)
 - [FFmpeg](https://ffmpeg.org/) - convert the file and process the transcript using azure cognitive service
-- [Ruby](https://www.ruby-lang.org/en/) - this app has been developed using 3.0.0. Older versions may not work
-- [PostgreSQL](http://www.postgresql.org/)
+- [Ruby](https://www.ruby-lang.org/en/) - this app requires Ruby 3.4.4
+- [Rails](https://rubyonrails.org/) - version 8.0.2.1
+- [PostgreSQL](http://www.postgresql.org/) - version 9.5 or greater
+- [Bundler](https://bundler.io/) - for managing Ruby gem dependencies
 
 For local development:
 
@@ -50,6 +52,11 @@ For local development:
   - Recommended that you use [nvm](https://github.com/nvm-sh/nvm) to manage your Node.JS versions
 - [Gulp](https://gulpjs.com/) version 4
   - Installed using npm
+
+For security scanning:
+
+- [Bundle Audit](https://github.com/rubysec/bundler-audit) - scans for known vulnerabilities in dependencies
+- [Brakeman](https://brakemanscanner.org/) - static analysis security scanner for Rails
 
 If installing on, say, Ubuntu, the following system packages are required.
 
@@ -226,6 +233,69 @@ http://localhost:9090
 
 * `A server is already running. Check /app/tmp/pids/server.pid`  
   Shut down the Docker container, empty out the `tmp/` directory, and restart.
+
+### Security Scanning
+
+The project uses two security scanning tools to identify and prevent vulnerabilities. Both tools are configured to run as part of the development workflow.
+
+#### Bundle Audit
+
+Bundle Audit scans the `Gemfile.lock` for known security vulnerabilities in Ruby gem dependencies.
+
+**Run a security audit:**
+```bash
+bundle audit
+```
+
+**Update the vulnerability database:**
+```bash
+bundle audit update
+```
+
+**Expected output:**
+```bash
+No vulnerabilities found
+```
+
+**Configuration:** `.bundler-audit.yml` - Contains documented exceptions for withdrawn CVEs or false positives. Each ignored advisory includes a comment explaining why it's safe to ignore.
+
+#### Brakeman
+
+Brakeman performs static analysis security scanning on the Rails application code to identify common security issues including SQL injection, XSS, unsafe redirects, and more.
+
+**Run a security scan:**
+```bash
+bundle exec brakeman
+```
+
+**For detailed output:**
+```bash
+bundle exec brakeman --no-pager
+```
+
+**For interactive ignore management:**
+```bash
+bundle exec brakeman -I
+```
+
+**Expected output:**
+```
+Security Warnings: 0
+Ignored Warnings: 8 (all documented)
+```
+
+**Configuration:** `config/brakeman.ignore` - Contains documented exceptions for verified false positives. Each ignored warning includes a detailed note explaining why it's not a security risk.
+
+#### Security Best Practices
+
+- ✅ Run `bundle audit` before deploying to production
+- ✅ Run `brakeman` as part of your development workflow
+- ✅ Both tools should show **zero active warnings**
+- ✅ Any ignored warnings must be documented with clear explanations
+- ✅ Review security scan results when updating dependencies
+- ✅ Keep security scanning tools up to date
+
+**Note:** CI/CD pipelines should include both security scans and fail builds if active warnings are found.
 
 ## Generating your transcripts
 
@@ -664,10 +734,11 @@ there, please follow the NYPL's guide.
 The EC2 servers run the following:
 
 * Nginx
-* PostgreSQL 9.5
+* PostgreSQL 9.5 or greater
 * Puma
 * RVM
-* Ruby 2.3.0
+* Ruby 3.4.4
+* Rails 8.0.2.1
 * ImageMagick
 * Nodejs
 * FFmpeg

@@ -24,7 +24,11 @@ module Azure
       # Hence, No changes are required in the Azure::SpeechToTextService class
       speech_to_text = Azure::SpeechToTextService.new(file: file.path).recognize
       lines = speech_to_text.lines
-      wav_file = File.open(speech_to_text.wav_file_path)
+      
+      # Validate the wav file path is safe (in /tmp directory) before opening
+      wav_path = Pathname.new(speech_to_text.wav_file_path).realpath
+      raise "Invalid wav file path" unless wav_path.to_s.start_with?('/tmp/')
+      wav_file = File.open(wav_path)
 
       if transcript.transcript_lines.count == 0
         ActiveRecord::Base.transaction do

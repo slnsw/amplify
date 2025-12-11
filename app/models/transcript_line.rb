@@ -105,7 +105,7 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
     end
 
     # Super users override all others
-    if status_id <= 1 && best_edit&.dig(:edit)
+    if best_edit&.dig(:edit)
       transcript_edit = best_edit[:edit]
       is_admin_transcribing_role = transcript_edit[:transcribing_role] == 'admin'
 
@@ -228,9 +228,9 @@ pg_search_scope :fuzzy_search, against: [:original_text, :guess_text],
       end
     end
 
-    # Init to selecting the first
-    best_group = { text: edits[0].normalizedText, count: 1 } if edits.length > 0
-    best_edit = edits[0] if edits.length > 0
+    # Init to selecting the first (only if not already set by priority user logic)
+    best_group = { text: edits[0].normalizedText, count: 1 } if edits.length > 0 && best_group.nil?
+    best_edit = edits[0] if edits.length > 0 && best_edit.nil?
 
     if edits.length > 1 && edits_priority.blank?
       # Group the edits by normalized text

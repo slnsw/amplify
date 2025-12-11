@@ -26,7 +26,7 @@
   </div>
 
   <div class="card-body">
-    <%= raw @collection.description %>
+    <%= sanitize @collection.description, tags: %w(p br strong em i b u a ul ol li h1 h2 h3 h4 h5 h6 blockquote), attributes: %w(href target) %>
   </div>
 
   <div class="card-footer">

@@ -20,8 +20,8 @@ gem 'uri'
 gem 'rails', '8.0.2.1'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem 'sprockets-rails'
 gem 'erb', '~> 5.0' # Pin to 5.x to avoid Sprockets 3.x incompatibility with ERB 6.0
+gem 'sprockets-rails'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 6.0'

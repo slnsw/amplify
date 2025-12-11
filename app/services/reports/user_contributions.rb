@@ -47,23 +47,55 @@ module Reports
     end
 
     def base_filters
-      filters = []
-      filters << "transcript_edits.updated_at >= #{quoted(:start_date)}" if params[:start_date].present?
-      filters << "transcript_edits.updated_at <= #{quoted(:end_date)}" if params[:end_date].present?
-      filters << "collections.id = #{params[:collection_id]}" if params[:collection_id].present?
-      filters << "institutions.id = #{params[:institution_id]}" if params[:institution_id].present?
-      filters.any? ? "WHERE #{filters.join(' AND ')}" : ''
+      conditions = []
+      binds = {}
+      
+      if params[:start_date].present?
+        conditions << "transcript_edits.updated_at >= :start_date"
+        binds[:start_date] = params[:start_date]
+      end
+      
+      if params[:end_date].present?
+        conditions << "transcript_edits.updated_at <= :end_date"
+        binds[:end_date] = params[:end_date]
+      end
+      
+      if params[:collection_id].present?
+        conditions << "collections.id = :collection_id"
+        binds[:collection_id] = params[:collection_id].to_i
+      end
+      
+      if params[:institution_id].present?
+        conditions << "institutions.id = :institution_id"
+        binds[:institution_id] = params[:institution_id].to_i
+      end
+      
+      {
+        where_clause: conditions.any? ? "WHERE #{conditions.join(' AND ')}" : '',
+        binds: binds
+      }
     end
 
     def fetch_rows
-      ActiveRecord::Base.connection.exec_query(main_query(limit: @per_page, offset: offset)).to_a
+      filters = base_filters
+      ActiveRecord::Base.connection.exec_query(
+        main_query(limit: @per_page, offset: offset, where_clause: filters[:where_clause]),
+        'SQL',
+        filters[:binds].map { |k, v| [k, v] }
+      ).to_a
     end
 
     def fetch_all
-      ActiveRecord::Base.connection.exec_query(main_query).to_a
+      filters = base_filters
+      ActiveRecord::Base.connection.exec_query(
+        main_query(where_clause: filters[:where_clause]),
+        'SQL',
+        filters[:binds].map { |k, v| [k, v] }
+      ).to_a
     end
 
     def total_count
+      filters = base_filters
       sql = <<-SQL
         SELECT COUNT(DISTINCT users.id) AS count
         FROM users
@@ -72,13 +104,17 @@ module Reports
         LEFT JOIN transcripts ON transcripts.id = transcript_lines.transcript_id
         LEFT JOIN collections ON collections.id = transcripts.collection_id
         LEFT JOIN institutions ON institutions.id = collections.institution_id
-        #{base_filters}
+        #{filters[:where_clause]}
       SQL
 
-      ActiveRecord::Base.connection.exec_query(sql).first['count'].to_i
+      ActiveRecord::Base.connection.exec_query(
+        sql,
+        'SQL',
+        filters[:binds].map { |k, v| [k, v] }
+      ).first['count'].to_i
     end
 
-    def main_query(limit: nil, offset: nil)
+    def main_query(limit: nil, offset: nil, where_clause: '')
       seconds_per_line = Transcript.seconds_per_line
 
       <<-SQL
@@ -97,7 +133,7 @@ module Reports
         LEFT JOIN transcripts ON transcripts.id = transcript_lines.transcript_id
         LEFT JOIN collections ON collections.id = transcripts.collection_id
         LEFT JOIN institutions ON institutions.id = collections.institution_id
-        #{base_filters}
+        #{where_clause}
         GROUP BY users.id
         ORDER BY edit_count DESC
         #{'LIMIT %d OFFSET %d' % [limit, offset] if limit && offset}
@@ -106,10 +142,6 @@ module Reports
 
     def offset
       (@page - 1) * @per_page
-    end
-
-    def quoted(key)
-      ActiveRecord::Base.connection.quote(params[key])
     end
   end
 end
