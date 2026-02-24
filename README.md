@@ -1,301 +1,322 @@
 # Amplify
 
-This is an open-source, web-based tool for the correction of
-computer-generated transcripts that are delivered in pairing with
-their original audio file. The tool is built to integrate with
-speech-to-text software services such as [VoiceBase](http://voicebase.com),
-or through the manual upload of transcript files.
-Amplify is a customised version of the
-[New York Public Library](http://nypl.org)'s
-[Transcript Editor](https://github.com/NYPL/transcript-editor/) and
-without NYPL's dedication to innovation and contribution to the
-open-source community globally, this project would not have
-been possible.
+Amplify is a web-based transcript correction platform used to upload, review, and improve machine-generated transcripts alongside source audio.
 
-This platform is designed to allow digital volunteers, members
-of the public and staff alike to assist in the correction of
-transcripts associated with collections belonging to the
-State Library.
+It is designed for collaboration between staff, volunteers, and public contributors, and supports project-based content management (collections, transcripts, pages, and custom configuration). This codebase is a customised implementation derived from the NYPL Transcript Editor.
 
-## TOC
+---
 
-1. [Setting up your own project](#setting-up-your-own-project)
-2. [Generating your transcripts](#generating-your-transcripts)
-3. [Creating a manifest file](#creating-a-manifest-file)
-4. [Making collections/groups](#making-collections-groups)
-5. [Importing existing transcripts](#importing-existing-transcripts)
-6. [Customizing your project](#customizing-your-project)
-7. [Transcript Consensus](#transcript-consensus)
-8. [Deploying your project](#deploying-your-project-to-production)
-9. [Managing your project](#managing-your-project)
-10. [Retrieving your finished transcripts](#retrieving-your-finished-transcripts)
-11. [License](#license)
-12. [Attribution](#attribution)
+## Table of Contents
 
-## Setting up your own project
+1. [Overview](#overview)
+2. [Complete Tech Stack](#complete-tech-stack)
+3. [Services Required to Run Amplify](#services-required-to-run-amplify)
+4. [Quick Start (New Developer Setup)](#quick-start-new-developer-setup)
+5. [Daily Developer Workflow](#daily-developer-workflow)
+6. [Third-Party Integrations](#third-party-integrations)
+7. [Security Scanning](#security-scanning)
+8. [Detailed Feature & Operations Guides](#detailed-feature--operations-guides)
+9. [License](#license)
+10. [Attribution](#attribution)
 
-### Requirements
+---
 
-You will need to have the following installed to run this project on your machine.
+## Overview
 
-- [Git](https://git-scm.com/)
-- [FFmpeg](https://ffmpeg.org/) - convert the file and process the transcript using azure cognitive service
-- [Ruby](https://www.ruby-lang.org/en/) - this app requires Ruby 3.4.4
-- [Rails](https://rubyonrails.org/) - version 8.0.2.1
-- [PostgreSQL](http://www.postgresql.org/) - version 9.5 or greater
-- [Bundler](https://bundler.io/) - for managing Ruby gem dependencies
+Core platform capabilities:
 
-For local development:
+- **Transcript correction workflow**: Ingest audio + machine transcripts, edit line-by-line, and export in multiple formats.
+- **Project-driven customization**: Configure pages, menus, modals, themes, and consensus behavior per project (`project/<project-id>/project.json`).
+- **Collection/content management**: Load and update collections, transcripts, speakers, and related metadata via rake tasks and CSV manifests.
+- **Consensus-based quality control**: Collaborative editing with configurable voting/review thresholds.
+- **Background processing**: Sidekiq jobs for transcription and import pipelines.
 
-- [Node.JS](https://nodejs.org/en/) version 12 or greater
-  - npm version 6 or greater
-  - Recommended that you use [nvm](https://github.com/nvm-sh/nvm) to manage your Node.JS versions
-- [Gulp](https://gulpjs.com/) version 4
-  - Installed using npm
+---
 
-For security scanning:
+## Complete Tech Stack
 
-- [Bundle Audit](https://github.com/rubysec/bundler-audit) - scans for known vulnerabilities in dependencies
-- [Brakeman](https://brakemanscanner.org/) - static analysis security scanner for Rails
+| Component | Technology | Version / Notes |
+| --- | --- | --- |
+| **Backend Framework** | Ruby on Rails | `8.0.2.1` |
+| **Language Runtime** | Ruby | `3.4.4` |
+| **Database** | PostgreSQL | Development/test + hosted environments |
+| **Web Server** | Puma | `~> 6.0` |
+| **Background Jobs** | Sidekiq | Redis-backed queue processing |
+| **Frontend Rendering** | Rails views | Primarily ERB templates |
+| **Assets / JS Pipeline** | Sprockets + jQuery + CoffeeScript + Gulp | Includes legacy gulp-based JS/CSS build paths |
+| **UI Libraries** | Bootstrap 4, Select2, Summernote, Font Awesome | Existing stack |
+| **Authentication** | Devise + OmniAuth providers | Google, Facebook, Email; SAML configuration supported |
+| **Storage / Uploads** | CarrierWave + fog-aws | S3-backed uploads in hosted environments |
+| **Search / Querying** | pg_search | PostgreSQL full-text support |
+| **Data Migrations** | `seed_migration` | Uses `db/data` + `seed:migrate` tasks |
+| **Monitoring / Error Tracking** | Bugsnag + New Relic | Runtime visibility |
+| **Testing** | RSpec, Capybara, FactoryBot, Shoulda, SimpleCov | In `spec/` |
+| **Code Quality** | RuboCop, Brakeman, bundler-audit | Static analysis + vulnerability scanning |
+| **Deployment** | Capistrano | Puma + Sidekiq + seed migrations |
 
-If installing on, say, Ubuntu, the following system packages are required.
+---
 
-* `libxml2-dev`
-* `libcurl4-openssl-dev` (or another `libcurl4-*-dev` package)
-* `libpq-dev`
+## Services Required to Run Amplify
 
-If installing on macOS, try installing XCode and running the following before
-you do a `bundle install`:
+Required for local development:
 
-`xcode-select --install`
+1. **PostgreSQL**
+2. **Ruby 3.4.4 + Bundler**
+3. **Node.js + npm** (for gulp-based frontend workflows)
+4. **FFmpeg** (audio conversion/transcription flow support)
 
-Once everything is installed, clone this repository:
+Strongly recommended / required for full workflow behavior:
 
+5. **Redis** (Sidekiq + background processing)
+6. **Git**
+
+Environment/config-driven dependencies:
+
+7. **SMTP provider** (email delivery; SES/SMTP settings in `config/application.yml`)
+8. **Speech-to-Text credentials** (`SPEECH_TO_TEXT_KEY`, `SPEECH_TO_TEXT_REGION`)
+9. **VoiceBase credentials** (if using VoiceBase pipeline)
+10. **S3 credentials** for hosted uploads
+
+Optional platform/runtime services:
+
+- Bugsnag / New Relic
+- Google/Facebook OAuth and/or SAML identity provider
+- Docker + Docker Compose (if using containerized local workflow)
+
+System package notes (Linux environments):
+
+- `libxml2-dev`
+- `libcurl4-openssl-dev` (or another `libcurl4-*-dev`)
+- `libpq-dev`
+
+On macOS, install Xcode tools before `bundle install`:
+
+```bash
+xcode-select --install
 ```
-cd /my/projects/folder
-git clone https://github.com/NYPL/transcript-editor.git
-cd transcript-editor
+
+---
+
+## Quick Start (New Developer Setup)
+
+### Prerequisites
+
+- Ruby `3.4.4`
+- Bundler
+- PostgreSQL
+- Node.js + npm
+- FFmpeg
+
+### 1) Clone repository
+
+```bash
+git clone https://github.com/slnsw/amplify.git
+cd amplify
 ```
 
-If you forked this repository, replace the URL with your repository
+### 2) Configure application files
 
-### Configure Your Project
+Create local config files from samples:
 
-1. Create `config/database.yml` based on [config/database.sample.yml](config/database.sample.yml) - update this file with your own database credentials
-2. Create `config/application.yml` based on [config/application.sample.yml](config/application.sample.yml) - this file contains all your private config credentials such as Voicebase or Google accounts. The only required configuration to start is:
-  - **SECRET_KEY_BASE**. You can generate this value by running `rake secret`
-  - **PROJECT_ID**. A project id that will be used to identify this project (e.g. my-project). Must be alphanumeric; no spaces or periods; underscores and dashes okay
-3. Copy the folder `project/sample-project` and rename it to the **PROJECT_ID** from the previous step (e.g. `project/my-project`).  This folder will contain all the configuration, content, and language for your project.
+```bash
+cp config/database.sample.yml config/database.yml
+cp config/application.sample.yml config/application.yml
+```
 
-To speed up installation, especially on local development machines,
-here's a script you can run to populate your configuration files.
+Optional helper (interactive setup):
 
 ```bash
 bundle exec bin/install-amplify
 ```
 
-#### Configure Your Project Details
+### 3) Configure project content folder
 
-Your project folder has the following structure:
+Set `PROJECT_ID` in `config/application.yml`.
 
-```
- my-project/
- +-- assets/
- |  +-- css/
- |  +-- img/
- |  +-- js/
- +-- data/
- +-- layouts/
- +-- pages/
- +-- transcripts/
- +-- project.json
- +-- speech-to-text.js
- ```
-
-The primary place for project configuration the file `project.json`. For now, we can keep everything as defaults. We will cover the details of this folder in later steps.
-
-### Setup and run the app
-
-- Run `bundle` - this will install all the necessary gems for this app.
-- Run `npm install` - this will install all the necessary npm packages for this app.
-- Make sure ffmpeg is installed, or you could install it by `sudo apt-get install ffmpeg`.
-- Run `rake db:setup` to setup the database based on `config/database.yml`.
-- Get a database copy from staging and restore it to your local database.
-  ```sh
-  ssh ubuntu@stage.amplify.gov.au "pg_dump -U amplify amplify_staging -h localhost" \ >> latest.dump
-  psql -d amplify_development < latest.dump
-  ```
-- Run `rake project:load['my-project']` to load your project folder (replace *my-project* with your project name).
-- Run `rake cache:clear` to clear your cache if you've used Amplify previously.
-- Run `foreman start` to start your server. Go to [http://localhost:5000/](http://localhost:5000/) to view your project.
-
-Your project should load, but since there's no transcripts, all you'll see is a header and blank screen! The next step is to seed the app with some transcripts
-
-#### Local development
-
-When developing locally, if doing any front-end changes to the transcript editor,
-you'll need to use Node.JS and Gulp to update any of the remaining editing app
-SASS and Javascript files that are managed by Gulp.
-
-The source files can be found in `gulp/js/`, and branch off `gulp/js/default.js`.
-To get set up to update these files:
+If creating a new project instance, copy sample content:
 
 ```bash
-npm i
+cp -R project/sample-project project/<your-project-id>
+```
+
+### 4) Install dependencies
+
+```bash
+bundle install
+npm install
+```
+
+### 5) Prepare database
+
+```bash
+bundle exec rake db:setup
+bundle exec rake db:migrate
+bundle exec rake seed:migrate
+```
+
+### 6) Load project config into app
+
+```bash
+bundle exec rake project:load['<your-project-id>']
+bundle exec rake cache:clear
+```
+
+If using default sample project:
+
+```bash
+bundle exec rake project:load['sample-project']
+```
+
+### 7) Start application
+
+```bash
+foreman start
+```
+
+App URL (Foreman default):
+
+- `http://localhost:5000`
+
+Alternative Rails server command:
+
+```bash
+bin/rails server
+```
+
+### 8) Verification checklist
+
+- App boots without startup errors
+- Database migrations + seed migrations complete successfully
+- Project loads via `project:load`
+- Home and transcript pages render
+- Background jobs can run (with Redis configured)
+
+### Local frontend build workflow (legacy gulp-managed assets)
+
+```bash
 npm i -g gulp
+gulp          # watch mode
+gulp sass js  # run once
 ```
 
-To update the files:
+Commit generated changes in `public/assets/css` and `public/assets/js` when applicable.
+
+### Optional Docker workflow
+
+Use the included compose setup for local development:
 
 ```bash
-gulp # Keeps running and watching for changes
-gulp sass js # Runs once
-```
-
-Be sure to commit the changes to `public/assets/css` and
-`public/assets/js`.
-
-### Setting up with Docker
-
-This instruction assumes that you have installed docker successfully.
-Visit https://docs.docker.com/engine/install/ if you haven't
-
-#### Set up your environment variables and database.yml
-
-```bash
-# setup .env file
-cp .env.sample .env
-cp database.docker.sample.yml database.yml
-```
-
-##### place your db dump file right outside your project directory and name the directory as dump and the file as dump.sql
-
-```bash
-##### from project root
-cd ../
-mkdir dump
-cp <path to you dump file> dump/dump.sql
-```
-
-##### Back to your project root path. Build the containers
-
-```bash
-# build the containers
 docker compose -f docker-compose.dev.yml up --build -d
 ```
 
-##### create and populate the database
+Default app URL in Docker:
+
+- `http://localhost:9090`
+
+For DB import workflow, use either manual compose commands or `./bin/import-db dump/dump.sql`.
+
+---
+
+## Daily Developer Workflow
+
+Typical local development commands:
 
 ```bash
-docker compose -f docker-compose.dev.yml exec amplify rake db:create
-docker compose -f docker-compose.dev.yml exec postgres psql -U postgres amplify-development < /dump/dump.sql
+# Run app + worker from Procfile
+foreman start
 
-# make sure you are in the latest schema
-docker compose -f docker-compose.dev.yml exec amplify rake db:migrate
-```
+# Run test suite
+bundle exec rspec
 
-Or, run this script (on your local dev):
+# Run linting
+bundle exec rubocop
 
-```bash
-./bin/import-db dump/dump.sql
-```
-
-#### setup test environment
-
-```bash
-cp .env.sample .env.test
-docker compose -f docker-compose.dev.yml exec -e RAILS_ENV=test amplify rake db:create
-docker compose -f docker-compose.dev.yml exec -e amplify rake db:test:load
-```
-
-#### Run rspec
-
-```bash
-docker compose -f docker-compose.dev.yml --env-file .env.test exec -e RAILS_ENV=test amplify rspec
-```
-
-##### Check the containers by running
-
-```bash
-docker ps -a
-```
-
-If you need to check for container logs:
-
-```bash
-docker container logs <id of the container> --follow
-```
-
-If everything is done and working you are able to visit
-http://localhost:9090
-
-#### Troubleshooting
-
-* `A server is already running. Check /app/tmp/pids/server.pid`  
-  Shut down the Docker container, empty out the `tmp/` directory, and restart.
-
-### Security Scanning
-
-The project uses two security scanning tools to identify and prevent vulnerabilities. Both tools are configured to run as part of the development workflow.
-
-#### Bundle Audit
-
-Bundle Audit scans the `Gemfile.lock` for known security vulnerabilities in Ruby gem dependencies.
-
-**Run a security audit:**
-```bash
+# Run security checks
 bundle audit
-```
-
-**Update the vulnerability database:**
-```bash
-bundle audit update
-```
-
-**Expected output:**
-```bash
-No vulnerabilities found
-```
-
-**Configuration:** `.bundler-audit.yml` - Contains documented exceptions for withdrawn CVEs or false positives. Each ignored advisory includes a comment explaining why it's safe to ignore.
-
-#### Brakeman
-
-Brakeman performs static analysis security scanning on the Rails application code to identify common security issues including SQL injection, XSS, unsafe redirects, and more.
-
-**Run a security scan:**
-```bash
 bundle exec brakeman
 ```
 
-**For detailed output:**
+Database/content workflows used regularly:
+
 ```bash
-bundle exec brakeman --no-pager
+# Apply schema + data migrations
+bundle exec rake db:migrate
+bundle exec rake seed:migrate
+
+# Reload project config/content after project/* changes
+bundle exec rake project:load['<project-id>']
+bundle exec rake cache:clear
 ```
 
-**For interactive ignore management:**
+When changing gulp-managed frontend assets:
+
 ```bash
-bundle exec brakeman -I
+gulp          # watch mode
+gulp sass js  # run once
 ```
 
-**Expected output:**
+---
+
+## Third-Party Integrations
+
+### Azure Cognitive Speech-to-Text
+
+- Used for automated transcript generation (`speech-to-text.js`, background jobs)
+- Required variables: `SPEECH_TO_TEXT_KEY`, `SPEECH_TO_TEXT_REGION`
+
+### VoiceBase
+
+- Legacy/alternative transcription ingestion and transcript import pipeline
+- Related credentials: `VOICEBASE_CLIENT_ID`, `VOICEBASE_CLIENT_SECRET`, `VOICEBASE_API_KEY`
+
+### AWS S3
+
+- Media and file storage in hosted environments
+- Related variables: `AWS_S3_ACCESS_KEY_ID`, `AWS_S3_SECRET_ACCESS_KEY`, `AWS_S3_BUCKET`
+
+### Authentication providers
+
+- **Google OAuth2** (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`)
+- **Facebook OAuth** (`FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`)
+- **SAML provider support** (works with Azure AD setups when configured)
+
+### Email / SMTP
+
+- Transactional email via SMTP/SES settings (`SMTP_URI`, `SMTP_PORT`, `SES_SMTP_USERNAME`, `SES_SMTP_PASSWORD`)
+
+### Monitoring / observability
+
+- **Bugsnag** for error tracking
+- **New Relic** for application monitoring
+
+### Other external integrations
+
+- **Google Tag Manager** (`GOOGLE_TAG_MANAGER_ID`)
+
+---
+
+## Security Scanning
+
+Run dependency and static security checks regularly:
+
+```bash
+bundle audit
+bundle exec brakeman
 ```
-Security Warnings: 0
-Ignored Warnings: 8 (all documented)
-```
 
-**Configuration:** `config/brakeman.ignore` - Contains documented exceptions for verified false positives. Each ignored warning includes a detailed note explaining why it's not a security risk.
+Use `config/brakeman.ignore` and `.bundler-audit.yml` for documented false positives/exceptions.
 
-#### Security Best Practices
+---
 
-- ✅ Run `bundle audit` before deploying to production
-- ✅ Run `brakeman` as part of your development workflow
-- ✅ Both tools should show **zero active warnings**
-- ✅ Any ignored warnings must be documented with clear explanations
-- ✅ Review security scan results when updating dependencies
-- ✅ Keep security scanning tools up to date
+## Detailed Feature & Operations Guides
 
-**Note:** CI/CD pipelines should include both security scans and fail builds if active warnings are found.
+The detailed operational documentation below is intentionally preserved and remains valid for:
+
+- transcript generation/import flows
+- manifest formats and rake task workflows
+- project customisation (pages, menus, assets, consensus)
+- deployment/import operations
+- user role management and transcript retrieval
 
 ## Generating your transcripts
 
