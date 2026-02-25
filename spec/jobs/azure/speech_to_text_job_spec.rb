@@ -10,14 +10,13 @@ RSpec.describe Azure::SpeechToTextJob do
   describe '#recognize' do
     before do
       stub_audio_file_convert
+      allow_any_instance_of(Pathname).to receive(:realpath).and_return(Pathname.new('/tmp/aboutSpeechSdk.wav'))
       allow(File).to receive(:open).and_call_original
-      allow(File).to receive(:open).with(
-        a_string_including('.wav')
-      ).and_return(wav_file)
+      allow(File).to receive(:open).with(instance_of(Pathname)).and_return(wav_file)
 
       # Mock the download_via_open_uri method to avoid actual file downloads
       allow_any_instance_of(Azure::SpeechToTextJob).to receive(:download_via_open_uri).and_return(temp_file)
-      allow(temp_file).to receive(:path).and_return(File.join(Rails.root, 'spec/fixtures/files/speech_to_text/aboutSpeechSdk.mp3'))
+      allow(temp_file).to receive(:path).and_return('/tmp/aboutSpeechSdk.mp3')
     end
 
     it 'returns the lines' do

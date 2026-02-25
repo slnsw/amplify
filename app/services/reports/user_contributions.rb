@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # app/services/reports/user_activity.rb
 require 'csv'
 
@@ -32,7 +33,6 @@ module Reports
             row['institution_count'],
             row['time_spent']
           ]
-
         end
       end
     end
@@ -49,27 +49,27 @@ module Reports
     def base_filters
       conditions = []
       binds = {}
-      
+
       if params[:start_date].present?
-        conditions << "transcript_edits.updated_at >= :start_date"
+        conditions << 'transcript_edits.updated_at >= :start_date'
         binds[:start_date] = params[:start_date]
       end
-      
+
       if params[:end_date].present?
-        conditions << "transcript_edits.updated_at <= :end_date"
+        conditions << 'transcript_edits.updated_at <= :end_date'
         binds[:end_date] = params[:end_date]
       end
-      
+
       if params[:collection_id].present?
-        conditions << "collections.id = :collection_id"
+        conditions << 'collections.id = :collection_id'
         binds[:collection_id] = params[:collection_id].to_i
       end
-      
+
       if params[:institution_id].present?
-        conditions << "institutions.id = :institution_id"
+        conditions << 'institutions.id = :institution_id'
         binds[:institution_id] = params[:institution_id].to_i
       end
-      
+
       {
         where_clause: conditions.any? ? "WHERE #{conditions.join(' AND ')}" : '',
         binds: binds
@@ -136,7 +136,7 @@ module Reports
         #{where_clause}
         GROUP BY users.id
         ORDER BY edit_count DESC
-        #{'LIMIT %d OFFSET %d' % [limit, offset] if limit && offset}
+        #{format('LIMIT %d OFFSET %d', limit, offset) if limit && offset}
       SQL
     end
 

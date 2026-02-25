@@ -232,8 +232,10 @@ bundle exec rspec
 bundle exec rubocop
 
 # Run security checks
+bundle audit update
 bundle audit
-bundle exec brakeman
+bundle exec brakeman --no-pager
+npm audit
 ```
 
 Database/content workflows used regularly:
@@ -300,9 +302,13 @@ gulp sass js  # run once
 Run dependency and static security checks regularly:
 
 ```bash
+bundle audit update
 bundle audit
-bundle exec brakeman
+bundle exec brakeman --no-pager
+npm audit
 ```
+
+This repository currently uses `npm` + `package-lock.json` (no `yarn.lock`), so use `npm audit` for JavaScript dependency checks.
 
 Use `config/brakeman.ignore` and `.bundler-audit.yml` for documented false positives/exceptions.
 

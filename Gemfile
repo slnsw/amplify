@@ -184,7 +184,7 @@ group :development do
   gem 'bcrypt_pbkdf', '~> 1.1'
   gem 'ed25519', '~> 1.2'
 
-  gem 'brakeman'
+  gem 'brakeman', '~> 8.0'
   gem 'dotenv-rails', '~> 2.7.1'
   gem 'letter_opener', '~> 1.7.0'
 end

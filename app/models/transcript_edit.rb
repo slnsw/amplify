@@ -24,6 +24,7 @@ class TranscriptEdit < ApplicationRecord
       .joins('LEFT OUTER JOIN users ON users.id = transcript_edits.user_id
               LEFT OUTER JOIN user_roles ON user_roles.id = users.user_role_id')
       .where(transcript_line_id: transcript_line_id, is_deleted: 0)
+      .order(updated_at: :desc, id: :desc)
   end
 
   def self.getByUser(user_id)
