@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# app/services/reports/user_activity.rb
+# app/services/reports/user_contributions.rb
 require 'csv'
 
 module Reports
@@ -26,8 +26,8 @@ module Reports
           csv << [
             row['user_id'],
             row['name'],
-            row['line_count'],
             row['edit_count'],
+            row['line_count'],
             row['transcript_count'],
             row['collection_count'],
             row['institution_count'],
@@ -48,31 +48,44 @@ module Reports
 
     def base_filters
       conditions = []
-      binds = {}
+      bind_values = []
+      bind_index = 0
 
       if params[:start_date].present?
-        conditions << 'transcript_edits.updated_at >= :start_date'
-        binds[:start_date] = params[:start_date]
+        bind_index += 1
+        conditions << "transcript_edits.updated_at >= $#{bind_index}"
+        bind_values << ActiveRecord::Relation::QueryAttribute.new(
+          'start_date', params[:start_date].to_s, ActiveRecord::Type::DateTime.new
+        )
       end
 
       if params[:end_date].present?
-        conditions << 'transcript_edits.updated_at <= :end_date'
-        binds[:end_date] = params[:end_date]
+        bind_index += 1
+        conditions << "transcript_edits.updated_at <= $#{bind_index}"
+        bind_values << ActiveRecord::Relation::QueryAttribute.new(
+          'end_date', params[:end_date].to_s, ActiveRecord::Type::DateTime.new
+        )
       end
 
-      if params[:collection_id].present?
-        conditions << 'collections.id = :collection_id'
-        binds[:collection_id] = params[:collection_id].to_i
+      if params[:collection_id].to_s.match?(/\A\d+\z/)
+        bind_index += 1
+        conditions << "collections.id = $#{bind_index}"
+        bind_values << ActiveRecord::Relation::QueryAttribute.new(
+          'collection_id', params[:collection_id].to_i, ActiveRecord::Type::Integer.new
+        )
       end
 
-      if params[:institution_id].present?
-        conditions << 'institutions.id = :institution_id'
-        binds[:institution_id] = params[:institution_id].to_i
+      if params[:institution_id].to_s.match?(/\A\d+\z/)
+        bind_index += 1
+        conditions << "institutions.id = $#{bind_index}"
+        bind_values << ActiveRecord::Relation::QueryAttribute.new(
+          'institution_id', params[:institution_id].to_i, ActiveRecord::Type::Integer.new
+        )
       end
 
       {
         where_clause: conditions.any? ? "WHERE #{conditions.join(' AND ')}" : '',
-        binds: binds
+        binds: bind_values
       }
     end
 
@@ -81,7 +94,7 @@ module Reports
       ActiveRecord::Base.connection.exec_query(
         main_query(limit: @per_page, offset: offset, where_clause: filters[:where_clause]),
         'SQL',
-        filters[:binds].map { |k, v| [k, v] }
+        filters[:binds]
       ).to_a
     end
 
@@ -90,7 +103,7 @@ module Reports
       ActiveRecord::Base.connection.exec_query(
         main_query(where_clause: filters[:where_clause]),
         'SQL',
-        filters[:binds].map { |k, v| [k, v] }
+        filters[:binds]
       ).to_a
     end
 
@@ -110,7 +123,7 @@ module Reports
       ActiveRecord::Base.connection.exec_query(
         sql,
         'SQL',
-        filters[:binds].map { |k, v| [k, v] }
+        filters[:binds]
       ).first['count'].to_i
     end
 

@@ -3,13 +3,14 @@
     title_text = "Bringing the stories of New South Wales<br> together for you to listen, transcribe and enrich."
     logo = "Amplify_logo_WHITE_COLOUR"
     logo_alt = "Amplify logo"
+    url = nil
 
     if defined?(institution) && institution.present?
       background_image_url = institution.hero_image_url.to_s
       title_text = institution.introductory_text
       logo = institution.image_url(:logo).to_s
-      # Only allow http/https URLs to prevent javascript: and other XSS vectors
-      url = institution.url if institution.url.to_s.match?(/\A(https?:\/\/|\/)/i)
+      # Only allow http/https or single-slash relative paths; reject protocol-relative (//), javascript:, etc.
+      url = institution.url if institution.url.to_s.match?(/\A(https?:\/\/|\/[^\/])/i)
       logo_alt = "#{institution.name} logo"
     elsif defined?(app_config) && app_config.present?
       background_image_url = app_config.image_url.to_s
@@ -20,7 +21,7 @@
   <article class="main_hero__content">
     <header class="main_hero__header">
       <% if url.present? %>
-        <%= link_to url, target: :_blank do %>
+        <%= link_to url, target: :_blank, rel: 'noopener noreferrer' do %>
           <%= image_tag logo, alt: logo_alt, width: 300 if logo.present? %>
         <% end %>
       <% else %>

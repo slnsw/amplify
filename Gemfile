@@ -92,7 +92,7 @@ gem 'figaro'
 # We have to force the version of OAuth because omniauth-google-oauth2 v0.6
 # requires jwt v2.0 or better.
 # Facebook's gem is a bit behind.
-gem 'devise', '~> 4.9.4'
+gem 'devise', '~> 5.0', '>= 5.0.3'
 gem 'jwt'
 # gem 'devise-security'
 gem 'oauth2', github: 'oauth-xx/oauth2', ref: 'v2.0.1'

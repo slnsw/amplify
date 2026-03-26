@@ -235,7 +235,7 @@ bundle exec rubocop
 bundle audit update
 bundle audit
 bundle exec brakeman --no-pager
-npm audit
+npm audit --omit=dev
 ```
 
 Database/content workflows used regularly:
@@ -305,7 +305,7 @@ Run dependency and static security checks regularly:
 bundle audit update
 bundle audit
 bundle exec brakeman --no-pager
-npm audit
+npm audit --omit=dev
 ```
 
 This repository currently uses `npm` + `package-lock.json` (no `yarn.lock`), so use `npm audit` for JavaScript dependency checks.
@@ -761,7 +761,7 @@ there, please follow the NYPL's guide.
 The EC2 servers run the following:
 
 * Nginx
-* PostgreSQL 9.5 or greater
+* PostgreSQL 14 or greater (9.5 is EOL; 14+ recommended for production)
 * Puma
 * RVM
 * Ruby 3.4.4

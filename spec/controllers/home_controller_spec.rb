@@ -63,4 +63,21 @@ RSpec.describe HomeController, type: :controller do
       end
     end
   end
+
+  describe '#index with rendered views (hero content url=nil guard)' do
+    render_views
+
+    before do
+      allow(controller).to receive(:build_params).and_return({})
+      allow(TranscriptService).to receive(:search).and_return([])
+      allow(Theme).to receive(:order).with(name: :asc).and_return([])
+      allow(SortList).to receive(:list).and_return([])
+    end
+
+    it 'renders without NameError when institution is nil (url not defined)' do
+      # home/index renders _hero_content with institution: nil — url must be initialized
+      expect { get :index }.not_to raise_error
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class TranscriptEdit < ApplicationRecord
   has_paper_trail
   belongs_to :transcript
@@ -48,7 +49,7 @@ class TranscriptEdit < ApplicationRecord
   end
 
   def self.getStatsByDay
-    Rails.cache.fetch("#{ENV['PROJECT_ID']}/transcript_edits/stats", expires_in: 10.minutes) do
+    Rails.cache.fetch("#{ENV.fetch('PROJECT_ID', nil)}/transcript_edits/stats", expires_in: 10.minutes) do
       TranscriptEdit
         .select('DATE(created_at) AS date, COUNT(*) AS count')
         .group('DATE(created_at)')
