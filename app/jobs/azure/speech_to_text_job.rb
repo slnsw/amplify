@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'open-uri'
 require 'shellwords'
 require 'tempfile'
@@ -24,7 +25,13 @@ module Azure
       # Hence, No changes are required in the Azure::SpeechToTextService class
       speech_to_text = Azure::SpeechToTextService.new(file: file.path).recognize
       lines = speech_to_text.lines
-      wav_file = File.open(speech_to_text.wav_file_path)
+
+      # Validate the wav file path is safe (in /tmp directory) before opening
+      wav_path = Pathname.new(speech_to_text.wav_file_path).realpath
+      tmp_realpath = Pathname.new('/tmp').realpath.to_s
+      raise 'Invalid wav file path' unless wav_path.to_s.start_with?("#{tmp_realpath}/")
+
+      wav_file = File.open(wav_path)
 
       if transcript.transcript_lines.count == 0
         ActiveRecord::Base.transaction do
@@ -45,13 +52,18 @@ module Azure
         process_message: nil,
         process_completed_at: Time.current
       )
-    rescue Exception => e
+    rescue ActiveRecord::RecordNotFound
+      # Job retried after record was deleted — nothing to update, re-raise so the retry system handles it
+      raise
+    rescue StandardError => e
       transcript.update_columns(
         process_status: :failed,
         process_message: e.message
       )
       Bugsnag.notify e
     ensure
+      wav_file.close unless wav_file.nil? || wav_file.closed?
+
       if file&.respond_to?(:close) && file.respond_to?(:unlink)
         file.close unless file.closed?
         file.unlink

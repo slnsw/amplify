@@ -51,6 +51,22 @@ RSpec.describe TranscriptEdit, type: :model do
       expect(result).to include(edit1, edit2)
       expect(result).not_to include(deleted_edit)
     end
+
+    it 'returns edits ordered by updated_at DESC then id DESC' do
+      edit1.update_columns(updated_at: 2.hours.ago)
+      edit2.update_columns(updated_at: 1.hour.ago)
+      result = described_class.getByLine(transcript_line.id).to_a
+      expect(result.first).to eq(edit2)
+      expect(result.last).to eq(edit1)
+    end
+
+    it 'uses id DESC as tiebreaker when updated_at is equal' do
+      time = 1.hour.ago
+      edit1.update_columns(updated_at: time)
+      edit2.update_columns(updated_at: time)
+      result = described_class.getByLine(transcript_line.id).to_a
+      expect(result.first.id).to be > result.last.id
+    end
   end
 
   describe '.getByUser' do

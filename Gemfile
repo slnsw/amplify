@@ -17,9 +17,10 @@ gem 'time'
 gem 'uri'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 8.0.2'
+gem 'rails', '8.0.2.1'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem 'erb', '~> 5.0' # Pin to 5.x to avoid Sprockets 3.x incompatibility with ERB 6.0
 gem 'sprockets-rails'
 
 # Use the Puma web server [https://github.com/puma/puma]
@@ -70,9 +71,9 @@ gem 'will_paginate', '~> 3.3.0'
 gem 'dalli', '~> 3.0'
 
 # Disabling assets; replaced with Gulp
-gem 'autoprefixer-rails', '~> 8.6', '>= 8.6.5'
+gem 'autoprefixer-rails', '>= 9.1.0'
 # TODO: Upgrade to Bootstrap 5.x.x to fix vulnerabilities
-gem 'bootstrap', '~> 4.1.1'
+gem 'bootstrap', '~> 4.3.1'
 gem 'coffee-rails', '~> 4.2'
 gem 'font-awesome-rails', '~> 4.7.0'
 gem 'jquery-rails', '~> 4.6.0'
@@ -91,7 +92,7 @@ gem 'figaro'
 # We have to force the version of OAuth because omniauth-google-oauth2 v0.6
 # requires jwt v2.0 or better.
 # Facebook's gem is a bit behind.
-gem 'devise', '~> 4.9.4'
+gem 'devise', '~> 5.0', '>= 5.0.3'
 gem 'jwt'
 # gem 'devise-security'
 gem 'oauth2', github: 'oauth-xx/oauth2', ref: 'v2.0.1'
@@ -183,7 +184,7 @@ group :development do
   gem 'bcrypt_pbkdf', '~> 1.1'
   gem 'ed25519', '~> 1.2'
 
-  gem 'brakeman'
+  gem 'brakeman', '~> 8.0'
   gem 'dotenv-rails', '~> 2.7.1'
   gem 'letter_opener', '~> 1.7.0'
 end
@@ -208,7 +209,7 @@ end
 # tracking errors
 gem 'bugsnag'
 gem 'draper', '~> 4.0.2'
-gem 'nokogiri', '~> 1.15'
+gem 'nokogiri', '~> 1.18', '>= 1.18.9'
 gem 'sanitize', '~> 6.0.0'
 
 gem 'acts_as_singleton', '~> 0.0.8'

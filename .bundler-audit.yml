@@ -1,0 +1,6 @@
+---
+ignore:
+  # CVE-2024-6531 was withdrawn on October 10, 2024
+  # https://github.com/advisories/GHSA-vc8w-jr9v-vj7f
+  # "This advisory is withdrawn because it was not a security issue in Bootstrap"
+  - GHSA-vc8w-jr9v-vj7f

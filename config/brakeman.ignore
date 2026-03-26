@@ -3,13 +3,13 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
-      "fingerprint": "051162aab0db546c3b87124f0410bc25d8ec270f34606660f4bf40029e95d05e",
+      "fingerprint": "da142c5ef0fda037f1bb945eff8c75341144500eae54d5017459089829bb33aa",
       "check_name": "LinkToHref",
       "message": "Potentially unsafe model attribute in `link_to` href",
       "file": "app/views/home/_hero_content.html.erb",
-      "line": 22,
+      "line": 24,
       "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
-      "code": "link_to(Institution.friendly.find(params_list[:institution_id]).url, :target => :_blank)",
+      "code": "link_to((nil or Institution.friendly.find(params_list[:institution_id]).url), :target => :_blank, :rel => \"noopener noreferrer\")",
       "render_path": [
         {
           "type": "controller",
@@ -42,108 +42,7 @@
       "cwe_id": [
         79
       ],
-      "note": "this is   false positive"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "07890e885a3c5d10a0471d162d647c629de1b8bdaa5deab9f616f75635c0bea5",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/home/_hero_content.html.erb",
-      "line": 30,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "AppConfig.instance.main_title",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "HomeController",
-          "method": "index",
-          "line": 16,
-          "file": "app/controllers/home_controller.rb",
-          "rendered": {
-            "name": "home/index",
-            "file": "app/views/home/index.html.erb"
-          }
-        },
-        {
-          "type": "template",
-          "name": "home/index",
-          "line": 16,
-          "file": "app/views/home/index.html.erb",
-          "rendered": {
-            "name": "home/_hero_content",
-            "file": "app/views/home/_hero_content.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "home/_hero_content"
-      },
-      "user_input": null,
-      "confidence": "Medium",
-      "cwe_id": [
-        79
-      ],
-      "note": "this is a false positive"
-    },
-    {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "07ce493dae8c013b2a80e1ab6bead48fd9b8be6525b4e7c7462bdc3d0081315b",
-      "check_name": "FileAccess",
-      "message": "Model attribute used in file name",
-      "file": "app/jobs/azure/speech_to_text_job.rb",
-      "line": 23,
-      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "File.open(Azure::SpeechToTextService.new(:file => download(Transcript.find(transcript_id).audio)).recognize.wav_file_path)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Azure::SpeechToTextJob",
-        "method": "perform"
-      },
-      "user_input": "Transcript.find(transcript_id).audio",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": "this is a false positive"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "1348142a619862e2005f2247d8dfaad3243a8afd343e95d5dfd90a30558c860d",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/admin/cms/collections/show.html.erb",
-      "line": 29,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Collection.find_by(:uid => params[:id]).description",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::Cms::CollectionsController",
-          "method": "show",
-          "line": 9,
-          "file": "app/controllers/admin/cms/collections_controller.rb",
-          "rendered": {
-            "name": "admin/cms/collections/show",
-            "file": "app/views/admin/cms/collections/show.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/cms/collections/show"
-      },
-      "user_input": null,
-      "confidence": "Medium",
-      "cwe_id": [
-        79
-      ],
-      "note": "this is a false positive"
+      "note": "False positive: URL is validated against http/https/relative-path-only allowlist before rendering. Protocol-relative URLs (//evil) are also rejected."
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -346,23 +245,50 @@
       "note": "this is a false positive"
     },
     {
-      "warning_type": "Unmaintained Dependency",
-      "warning_code": 121,
-      "fingerprint": "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
-      "check_name": "EOLRuby",
-      "message": "Support for Ruby 3.0.0 ended on 2024-03-31",
-      "file": ".ruby-version",
-      "line": 1,
-      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
-      "code": null,
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "cd06f7f6192d64f947015823c7fd5908428a253b69bf0a175e7968a61f394014",
+      "check_name": "FileAccess",
+      "message": "Model attribute used in file name",
+      "file": "app/jobs/azure/speech_to_text_job.rb",
+      "line": 31,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.open(Pathname.new(Azure::SpeechToTextService.new(:file => download_via_open_uri(Transcript.find(transcript_id).audio).path).recognize.wav_file_path).realpath)",
       "render_path": null,
-      "location": null,
-      "user_input": null,
-      "confidence": "High",
+      "location": {
+        "type": "method",
+        "class": "Azure::SpeechToTextJob",
+        "method": "perform"
+      },
+      "user_input": "Transcript.find(transcript_id).audio",
+      "confidence": "Weak",
       "cwe_id": [
-        1104
+        22
       ],
-      "note": ""
+      "note": "False positive: File path is internally generated by Azure::SpeechToTextService using SecureRandom.uuid in /tmp directory. Path is validated via Pathname#realpath against Pathname.new('/tmp').realpath (handles macOS /private/tmp symlink). Not controllable by user input."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "234dabac5021f08bb3377277604c18834f57d3b9dffd111d05d74897f3b61e14",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/services/reports/user_contributions.rb",
+      "line": 124,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.exec_query(\"        SELECT COUNT(DISTINCT users.id) AS count\\n        FROM users\\n        LEFT JOIN transcript_edits ON transcript_edits.user_id = users.id\\n        LEFT JOIN transcript_lines ON transcript_lines.id = transcript_edits.transcript_line_id\\n        LEFT JOIN transcripts ON transcripts.id = transcript_lines.transcript_id\\n        LEFT JOIN collections ON collections.id = transcripts.collection_id\\n        LEFT JOIN institutions ON institutions.id = collections.institution_id\\n        #{base_filters[:where_clause]}\\n\", \"SQL\", base_filters[:binds])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Reports::UserContributions",
+        "method": "total_count"
+      },
+      "user_input": "base_filters[:where_clause]",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "False positive: Uses positional $N placeholders with typed QueryAttribute bind parameters. The WHERE clause is constructed from a whitelist of conditions with all user input passed via bind parameters. Integer IDs (collection_id, institution_id) are validated with /\\A\\d+\\z/ before binding — invalid values skip the filter entirely rather than being coerced. Dates are typed as DateTime."
     }
   ],
   "updated": "2024-04-03 03:53:58 +0800",

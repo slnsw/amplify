@@ -11261,6 +11261,8 @@ var n="object"==typeof self&&self.self===self&&self||"object"==typeof global&&gl
                     // * Rinse & repeat.
                     for ( ; i <= keys_last; i++ ) {
                         key = keys[i] === '' ? cur.length : keys[i];
+                        // Prevent prototype pollution (GHSA-xg68-chx2-253g)
+                        if ( key === '__proto__' || key === 'constructor' || key === 'prototype' ) { break; }
                         cur = cur[key] = i < keys_last
                         ? cur[key] || ( keys[i+1] && isNaN( keys[i+1] ) ? {} : [] )
                         : val;

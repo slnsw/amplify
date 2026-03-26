@@ -52,9 +52,8 @@ RSpec.feature 'Institution Page' do
           fill_in('institution[institution_links][][url]', with: 'http://www.mylink.com')
         end
         click_button('Save')
+        expect(page).to have_current_path(admin_institutions_path, wait: 10)
 
-        # The controller may redirect back to the list or re-render the edit page
-        # depending on implementation details; assert the underlying data changed.
         institution1.reload
 
         # slug behavior can vary (friendly_id/guid). Assert the link was saved instead.
