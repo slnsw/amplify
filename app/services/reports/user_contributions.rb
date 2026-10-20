@@ -71,7 +71,10 @@ module Reports
         bind_index += 1
         conditions << "collections.id = $#{bind_index}"
         bind_values << ActiveRecord::Relation::QueryAttribute.new(
-          'collection_id', params[:collection_id].to_i, ActiveRecord::Type::Integer.new
+          # Use the column's own type: a default Integer type is 4 bytes and
+          # raises ActiveModel::RangeError for ids above 2^31-1, which the
+          # bigint id columns can legitimately hold.
+          'collection_id', params[:collection_id].to_i, Collection.type_for_attribute('id')
         )
       end
 
@@ -79,7 +82,7 @@ module Reports
         bind_index += 1
         conditions << "institutions.id = $#{bind_index}"
         bind_values << ActiveRecord::Relation::QueryAttribute.new(
-          'institution_id', params[:institution_id].to_i, ActiveRecord::Type::Integer.new
+          'institution_id', params[:institution_id].to_i, Institution.type_for_attribute('id')
         )
       end
 

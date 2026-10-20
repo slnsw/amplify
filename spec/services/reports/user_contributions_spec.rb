@@ -78,6 +78,22 @@ RSpec.describe Reports::UserContributions do
       end
     end
 
+    context 'with a filter id larger than the 32-bit integer range' do
+      before { create_edit }
+
+      # collections.id and institutions.id are bigint, so these ids are valid
+      # column values even though they overflow a default 4-byte Integer bind.
+      it 'accepts a bigint collection_id without raising' do
+        rows = CSV.parse(described_class.new(collection_id: '2147483648').to_csv, headers: true)
+        expect(rows).to be_empty
+      end
+
+      it 'accepts a bigint institution_id without raising' do
+        rows = CSV.parse(described_class.new(institution_id: '2147483648').to_csv, headers: true)
+        expect(rows).to be_empty
+      end
+    end
+
     context 'with SQL injection attempt in collection_id' do
       subject(:service) { described_class.new(collection_id: '1; DROP TABLE collections;--') }
 
@@ -174,20 +190,18 @@ RSpec.describe Reports::UserContributions do
       expect(user_ids).to include(user.id)
     end
 
-    it 'aligns data values with header labels (Edits before Lines)' do
-      # A second edit on the same line makes the two columns distinguishable:
-      # edit_count becomes 2 while line_count stays 1, so swapping the columns
-      # would fail this assertion.
+    # A second edit on the same line makes the two columns distinguishable:
+    # edit_count becomes 2 while line_count stays 1, so swapping the columns
+    # fails one of these examples.
+    it 'reports both edits on a line under the Edits header' do
       create_edit
-      rows = CSV.parse(service.to_csv, headers: true)
-      row = rows.find { |r| r['User ID'].to_i == user.id }
+      row = CSV.parse(service.to_csv, headers: true).find { |r| r['User ID'].to_i == user.id }
       expect(row['Edits'].to_i).to eq(2)
-      expect(row['Lines'].to_i).to eq(1)
     end
 
-    it 'reports correct line count under the Lines header' do
-      rows = CSV.parse(service.to_csv, headers: true)
-      row = rows.find { |r| r['User ID'].to_i == user.id }
+    it 'reports the distinct line count under the Lines header' do
+      create_edit
+      row = CSV.parse(service.to_csv, headers: true).find { |r| r['User ID'].to_i == user.id }
       expect(row['Lines'].to_i).to eq(1)
     end
   end
