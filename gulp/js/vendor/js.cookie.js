@@ -30,6 +30,14 @@
 		for (; i < arguments.length; i++) {
 			var attributes = arguments[ i ];
 			for (var key in attributes) {
+				// CVE-2026-46625 / GHSA-qjx8-664m-686j: a JSON-parsed object can
+				// carry an own enumerable "__proto__" key. Assigning it onto a
+				// plain object fires the prototype setter and lets an attacker
+				// inject arbitrary cookie attributes (domain/secure/samesite/...).
+				// Skip prototype-mutating keys entirely.
+				if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+					continue;
+				}
 				result[key] = attributes[key];
 			}
 		}

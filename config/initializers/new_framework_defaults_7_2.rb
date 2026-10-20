@@ -22,9 +22,6 @@
 # Prevent jobs from being scheduled within transactions
 # Rails.application.config.active_job.enqueue_after_transaction_commit = :default
 
-# Fix Rails 8.1 deprecation warning about timezone preservation
-Rails.application.config.active_support.to_time_preserves_timezone = :zone
-
 # No longer add autoloaded paths to $LOAD_PATH. This means that you won't be able
 # to manually require files that are managed by the autoloader, which you shouldn't do anyway.
 # This will reduce the size of the $LOAD_PATH and avoid some Ruby warnings.

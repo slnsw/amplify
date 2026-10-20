@@ -2,10 +2,10 @@
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'selenium/webdriver'
-require 'webdrivers'
 
-# Remove hardcoded driver path - webdrivers gem will manage this automatically
-# Selenium::WebDriver::Chrome::Service.driver_path = ENV.fetch('CHROME_DRIVER_PATH', '/usr/bin/chromedriver')
+# Selenium 4.6+ ships Selenium Manager, which locates/downloads the correct
+# chromedriver automatically. The deprecated `webdrivers` gem is no longer
+# required (and it pinned rubyzip to a vulnerable version).
 
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new app,
