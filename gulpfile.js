@@ -40,8 +40,12 @@ gulp.task('js-cleanup', () => {
 
 const buildJsBase = () => {
   return gulp.src(config.include.src)
-    .pipe(hash())
-    .pipe(include(config.include.opt).on('error', console.error.bind(console)));
+    .pipe(include(config.include.opt).on('error', console.error.bind(console)))
+    // Hash AFTER the `//=include` directives are expanded. Hashing the
+    // entrypoint first only digests the include directives, so patching a
+    // vendored file would leave the published URL unchanged and keep serving
+    // the vulnerable copy from caches.
+    .pipe(hash());
 };
 
 gulp.task('js-unminified', gulp.series('js-deps', () => {

@@ -175,10 +175,14 @@ RSpec.describe Reports::UserContributions do
     end
 
     it 'aligns data values with header labels (Edits before Lines)' do
+      # A second edit on the same line makes the two columns distinguishable:
+      # edit_count becomes 2 while line_count stays 1, so swapping the columns
+      # would fail this assertion.
+      create_edit
       rows = CSV.parse(service.to_csv, headers: true)
       row = rows.find { |r| r['User ID'].to_i == user.id }
-      # The edit we created counts as 1 edit on 1 distinct line
-      expect(row['Edits'].to_i).to eq(1)
+      expect(row['Edits'].to_i).to eq(2)
+      expect(row['Lines'].to_i).to eq(1)
     end
 
     it 'reports correct line count under the Lines header' do
