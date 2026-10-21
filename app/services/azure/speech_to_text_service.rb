@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 require 'open3'
 
 module Azure
   class SpeechToTextService
     include ActiveModel::Model
+
     attr_accessor :file
 
     def recognize
@@ -14,9 +16,9 @@ module Azure
       result.wav_file_path = wav_file
 
       result
-    rescue Exception => e
+    rescue StandardError
       cleanup
-      raise e
+      raise
     end
 
     protected
@@ -42,11 +44,12 @@ module Azure
     # Convert the file to what azure speech-to-text javascript SDK requires
     # @see speech-to-text.js
     def convert_audio_to_wav
-      stdout, stderr, status =
+      _stdout, stderr, status =
         Open3.capture3('ffmpeg', '-i', file.to_s, '-ac', '1', '-ar', '16000', wav_file)
-      raise Exception, stderr.to_s unless status.success?
+      raise stderr.to_s unless status.success?
+
       Rails.logger.debug('--- convert_audio_to_wav ---')
-      Rails.logger.debug(File.size wav_file) if File.exist? wav_file
+      Rails.logger.debug(File.size(wav_file)) if File.exist? wav_file
     end
 
     def transcripts_from_sdk
@@ -59,7 +62,8 @@ module Azure
       Rails.logger.debug(stdout)
       Rails.logger.debug(stderr)
       error_message = (stderr.presence || stdout).to_s
-      raise Exception, error_message unless status.success?
+      raise error_message unless status.success?
+
       stdout
     end
 

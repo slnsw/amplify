@@ -78,8 +78,5 @@ module TranscriptEditor
 
     # Don't generate system test files.
     config.generators.system_tests = nil
-
-    # Fix Rails 8.1 deprecation warning about timezone preservation
-    config.active_support.to_time_preserves_timezone = :zone
   end
 end

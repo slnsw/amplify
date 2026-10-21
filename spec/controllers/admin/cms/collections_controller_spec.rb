@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::Cms::CollectionsController, type: :controller do
@@ -21,7 +22,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:action) { get :show, params: { id: collection.uid  } }
+    let(:action) { get :show, params: { id: collection.uid } }
 
     it 'is successful' do
       action
@@ -56,13 +57,13 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
           title: 'New collection title',
           description: 'New description of collection',
           url: 'new_collection_catalogue_reference',
-          image: File.open(Rails.root.join('spec', 'fixtures', 'image.jpg')),
+          image: fixture_file_upload(Rails.root.join('spec/fixtures/image.jpg'), 'image/jpeg'),
           vendor_id: vendor.id,
           institution_id: institution.id,
           theme_ids: ['']
         }
       end
-      let(:action) { post :create, params: { collection: params  } }
+      let(:action) { post :create, params: { collection: params } }
 
       it 'is successful' do
         action
@@ -77,7 +78,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
 
     context 'invalid request' do
       let(:params) { { uid: '', theme_ids: [''] } }
-      let(:action) { post :create, params: { collection: params  } }
+      let(:action) { post :create, params: { collection: params } }
 
       it 'responds with a bad request status' do
         action
@@ -92,7 +93,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
       it 'does not create a new collection' do
         expect do
           action
-        end.to_not change { Collection.count }
+        end.not_to(change { Collection.count })
       end
     end
   end
@@ -138,7 +139,7 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
 
     context 'invalid update request' do
       let(:params) { { uid: '', theme_ids: [''] } }
-      let(:action) { put :update, params: { id: collection.uid, collection: params  } }
+      let(:action) { put :update, params: { id: collection.uid, collection: params } }
 
       it 'responds with a bad request status' do
         action
@@ -153,7 +154,43 @@ RSpec.describe Admin::Cms::CollectionsController, type: :controller do
       it 'does not update the collection' do
         expect do
           action
-        end.to_not change { collection.reload.uid }
+        end.not_to(change { collection.reload.uid })
+      end
+    end
+  end
+
+  describe 'XSS prevention in description (GET #show)' do
+    render_views
+
+    context 'when description contains a script tag' do
+      before do
+        collection.update_columns(description: '<script>xss_injection_marker()</script><p>Safe content here</p>')
+      end
+
+      it 'strips the script element (leaving only harmless text)' do
+        get :show, params: { id: collection.uid }
+        # sanitize strips the <script> tag; the inner text remains but cannot execute
+        expect(response.body).not_to include('<script>xss_injection_marker()')
+        expect(response.body).to include('Safe content here')
+      end
+    end
+
+    context 'when description contains a target attribute on a link' do
+      before { collection.update_columns(description: '<a href="http://example.com" target="xss-blank">Link</a>') }
+
+      it 'strips the target attribute to prevent reverse-tabnabbing' do
+        get :show, params: { id: collection.uid }
+        expect(response.body).not_to include('target="xss-blank"')
+        expect(response.body).to include('href="http://example.com"')
+      end
+    end
+
+    context 'when description contains an onclick attribute' do
+      before { collection.update_columns(description: '<p onclick="xss_payload()">Text</p>') }
+
+      it 'strips event handler attributes' do
+        get :show, params: { id: collection.uid }
+        expect(response.body).not_to include('xss_payload()')
       end
     end
   end
