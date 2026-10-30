@@ -7,10 +7,4 @@ class Api::CspReportsController < ActionController::Base
     CSP_LOGGER.info("CSP Violation: #{request.body.read}")
     head :ok
   end
-
-  private
-
-  def report_params
-    params.permit!
-  end
 end

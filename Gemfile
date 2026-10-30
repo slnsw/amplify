@@ -17,13 +17,16 @@ gem 'time'
 gem 'uri'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 8.0.2'
+gem 'rails', '~> 8.1', '>= 8.1.4'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+# Pin to the patched 4.x line: Sprockets 3.x uses ERB's positional constructor
+# arguments, which ERB 5.x deprecates and ERB 6.x removes.
+gem 'erb', '~> 4.0', '>= 4.0.4.1'
 gem 'sprockets-rails'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem 'puma', '~> 6.0'
+gem 'puma', '~> 8.0', '>= 8.0.2'
 gem 'puma-daemon', '~> 0.5', require: false
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
@@ -70,9 +73,9 @@ gem 'will_paginate', '~> 3.3.0'
 gem 'dalli', '~> 3.0'
 
 # Disabling assets; replaced with Gulp
-gem 'autoprefixer-rails', '~> 8.6', '>= 8.6.5'
+gem 'autoprefixer-rails', '>= 9.1.0'
 # TODO: Upgrade to Bootstrap 5.x.x to fix vulnerabilities
-gem 'bootstrap', '~> 4.1.1'
+gem 'bootstrap', '~> 4.3.1'
 gem 'coffee-rails', '~> 4.2'
 gem 'font-awesome-rails', '~> 4.7.0'
 gem 'jquery-rails', '~> 4.6.0'
@@ -91,13 +94,13 @@ gem 'figaro'
 # We have to force the version of OAuth because omniauth-google-oauth2 v0.6
 # requires jwt v2.0 or better.
 # Facebook's gem is a bit behind.
-gem 'devise', '~> 4.9.4'
+gem 'devise', '~> 5.0', '>= 5.0.4'
 gem 'jwt'
 # gem 'devise-security'
-gem 'oauth2', github: 'oauth-xx/oauth2', ref: 'v2.0.1'
+gem 'oauth2', '~> 2.0', '>= 2.0.22'
 gem 'omniauth-facebook', '~> 9.0.0'
 gem 'omniauth-google-oauth2', '< 1.1.1'
-gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-rails_csrf_protection', '~> 2.0'
 
 # Beef up security.
 gem 'invisible_captcha', '~> 0.12.0'
@@ -122,8 +125,10 @@ gem 'carrierwave', '~> 3.0'
 # this is to allow fog get installed with ovirt-engine-sdk
 # gem "fog", "~> 2.3.0"
 # Using specific providers to avoid ovirt-engine-sdk compatibility issues with Ruby 3.4
-gem 'fog-aws'
-gem 'fog-core'
+# fog-aws 3.x pulls in fog-core 2.x, which is required for excon >= 1.5
+# (fog-core 1.x caps excon at ~> 0.58, which has an open advisory)
+gem 'fog-aws', '~> 3.0'
+gem 'fog-core', '~> 2.1'
 gem 'fog-local'
 gem 'mini_magick', '~> 4.8'
 
@@ -183,7 +188,7 @@ group :development do
   gem 'bcrypt_pbkdf', '~> 1.1'
   gem 'ed25519', '~> 1.2'
 
-  gem 'brakeman'
+  gem 'brakeman', '~> 8.0'
   gem 'dotenv-rails', '~> 2.7.1'
   gem 'letter_opener', '~> 1.7.0'
 end
@@ -191,8 +196,9 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
-  gem 'selenium-webdriver'
-  gem 'webdrivers'
+  # Selenium 4.6+ ships Selenium Manager, which downloads/brokers drivers itself.
+  # The `webdrivers` gem is deprecated and pins rubyzip to < 3 (CVE-2026-85396).
+  gem 'selenium-webdriver', '>= 4.14.0'
 
   gem 'launchy', '~> 2.4.0'
   gem 'pundit-matchers', '~> 1.6.0'
@@ -208,11 +214,11 @@ end
 # tracking errors
 gem 'bugsnag'
 gem 'draper', '~> 4.0.2'
-gem 'nokogiri', '~> 1.15'
+gem 'nokogiri', '~> 1.18', '>= 1.18.9'
 gem 'sanitize', '~> 6.0.0'
 
 gem 'acts_as_singleton', '~> 0.0.8'
-gem 'acts-as-taggable-on', '~> 12.0'
+gem 'acts-as-taggable-on', '~> 13.0'
 gem 'chartkick', '~> 5.0.1'
 gem 'formdata', '~> 0.1.2'
 gem 'friendly_id', '~> 5.2.0'
@@ -223,7 +229,7 @@ gem 'sidekiq', '~> 7.0'
 gem 'sidekiq-cron', '~> 2.3'
 
 # Track object changes
-gem 'paper_trail', '~> 16.0'
+gem 'paper_trail', '~> 17.0'
 
 # Sitemap generator'
 gem 'sitemap_generator', '~> 6.3.0'

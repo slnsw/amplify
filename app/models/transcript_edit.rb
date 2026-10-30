@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class TranscriptEdit < ApplicationRecord
   has_paper_trail
   belongs_to :transcript
@@ -24,6 +25,7 @@ class TranscriptEdit < ApplicationRecord
       .joins('LEFT OUTER JOIN users ON users.id = transcript_edits.user_id
               LEFT OUTER JOIN user_roles ON user_roles.id = users.user_role_id')
       .where(transcript_line_id: transcript_line_id, is_deleted: 0)
+      .order(updated_at: :desc, id: :desc)
   end
 
   def self.getByUser(user_id)
@@ -47,7 +49,7 @@ class TranscriptEdit < ApplicationRecord
   end
 
   def self.getStatsByDay
-    Rails.cache.fetch("#{ENV['PROJECT_ID']}/transcript_edits/stats", expires_in: 10.minutes) do
+    Rails.cache.fetch("#{ENV.fetch('PROJECT_ID', nil)}/transcript_edits/stats", expires_in: 10.minutes) do
       TranscriptEdit
         .select('DATE(created_at) AS date, COUNT(*) AS count')
         .group('DATE(created_at)')

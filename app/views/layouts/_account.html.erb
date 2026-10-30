@@ -18,19 +18,19 @@
     </div>
     <div class="select-options account-menu menu" role="menu" aria-hidden="true" aria-labelledby="sign-in-label">
       <%= link_to "Sign in w/ Email", new_user_session_path,
-          method: :get, data-provider: 'email',
+          method: :get, data: { provider: 'email', active: 'Signing In...' },
           class: "auth-link select-option menu-item",
-          data-active: 'Signing In...', role: 'menuitem'
+          role: 'menuitem'
         %>
       <%= button_to "Sign in w/ Google", user_google_oauth2_omniauth_authorize_path,
-          method: :post, data-provider: 'google',
+          method: :post, data: { provider: 'google', active: 'Signing In...' },
           class: 'auth-link select-option menu-item',
-          data-active: 'Signing In...', role: 'menuitem'
+          role: 'menuitem'
           %>
       <%= button_to "Sign in w/ Facebook", user_facebook_omniauth_authorize_path,
-          method: :post, data-provider: 'facebook',
+          method: :post, data: { provider: 'facebook', active: 'Signing In...' },
           class: 'auth-link select-option menu-item',
-          data-active: 'Signing In...', role: 'menuitem'
+          role: 'menuitem'
           %>
     </div>
   <% end %>
