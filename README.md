@@ -38,7 +38,7 @@ Core platform capabilities:
 | Component | Technology | Version / Notes |
 | --- | --- | --- |
 | **Backend Framework** | Ruby on Rails | `8.0.2.1` |
-| **Language Runtime** | Ruby | `3.4.4` |
+| **Language Runtime** | Ruby | `3.4.13` |
 | **Database** | PostgreSQL | Development/test + hosted environments |
 | **Web Server** | Puma | `~> 6.0` |
 | **Background Jobs** | Sidekiq | Redis-backed queue processing |
@@ -61,7 +61,7 @@ Core platform capabilities:
 Required for local development:
 
 1. **PostgreSQL**
-2. **Ruby 3.4.4 + Bundler**
+2. **Ruby 3.4.13 + Bundler**
 3. **Node.js + npm** (for gulp-based frontend workflows)
 4. **FFmpeg** (audio conversion/transcription flow support)
 
@@ -101,7 +101,7 @@ xcode-select --install
 
 ### Prerequisites
 
-- Ruby `3.4.4`
+- Ruby `3.4.13`
 - Bundler
 - PostgreSQL
 - Node.js + npm
@@ -764,7 +764,7 @@ The EC2 servers run the following:
 * PostgreSQL 14 or greater (9.5 is EOL; 14+ recommended for production)
 * Puma
 * RVM
-* Ruby 3.4.4
+* Ruby 3.4.13
 * Rails 8.0.2.1
 * ImageMagick
 * Nodejs

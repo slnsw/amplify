@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.4.4'
+ruby '3.4.13'
 
 # Standard library gems removed for Ruby 3.4+, thus, needs to be installed separately
 gem 'abbrev'

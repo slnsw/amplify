@@ -6,7 +6,7 @@ Amplify is a Rails 8.0 transcript correction platform for collaborative editing 
 
 ## Tech Stack
 
-- **Ruby** 3.4.4, **Rails** 8.0.2.1
+- **Ruby** 3.4.13, **Rails** 8.0.2.1
 - **PostgreSQL** with pg_search (trigram + full-text)
 - **Sidekiq** 7.x on Redis for background jobs
 - **Devise** 5.x for authentication (Google/Facebook OAuth + email)
