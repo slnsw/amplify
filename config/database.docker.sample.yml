@@ -21,6 +21,10 @@ test:
   password: null
   database: <%= ENV.fetch('DBNAME', 'amplify_test') %>
 
+staging:
+  <<: *default
+  database: <%= ENV.fetch('DBNAME', 'amplify_staging') %>
+
 production:
   <<: *default
   database: <%= ENV.fetch('DBNAME', 'amplify_production') %>
