@@ -22,8 +22,9 @@ test:
   database: <%= ENV.fetch('DBNAME', 'amplify_test') %>
 
 staging:
-  <<: *default
-  database: <%= ENV.fetch('DBNAME', 'amplify_staging') %>
+  url: <%= "postgres://#{ENV['DB_USER']}:#{ENV['DB_PASSWORD']}@#{ENV['DB_HOST']}/#{ENV['DB_NAME']}" %>
+  # <<: *default
+  # database: <%= ENV.fetch('DBNAME', 'amplify_staging') %>
 
 production:
   <<: *default
