@@ -2,6 +2,9 @@ require 'sidekiq/web'
 require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
+  # ALB target group health check (ECS). Built-in controller: no DB, skips ApplicationController filters.
+  get "health" => "rails/health#show", as: :rails_health_check
+
   post "/csp-violation-report-endpoint", to: "api/csp_reports#create"
 
   namespace :api do
