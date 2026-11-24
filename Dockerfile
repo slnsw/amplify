@@ -32,7 +32,6 @@ ENV AWS_S3_REGION=ap-southeast-2
 
 # Copy the full Rails app codebase
 COPY . .
-COPY config/database.docker.sample.yml config/database.yml
 
 # Precompile all assets
 # RUN bundle exec rake assets:precompile

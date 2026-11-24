@@ -1,0 +1,40 @@
+# Database config for all environments. Contains no secrets: values come from ENV.
+#
+# - ECS (dev/staging): DB_HOST, DB_USER, DB_PASS come from Secrets Manager;
+#   DB_NAME, DB_PORT come from the infra tfvars.
+# - Capistrano (classic prod EC2): this file is replaced at deploy time by the
+#   symlinked shared/config/database.yml (see linked_files in config/deploy.rb).
+# - Local: works against a local Postgres with no ENV set; override with DB_* if needed.
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: <%= ENV["DB_USER"] %>
+  password: <%= ENV["DB_PASS"] %>
+  pool: <%= ENV.fetch("DB_POOL") { ENV.fetch("RAILS_MAX_THREADS", 5) } %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "amplify_development") %>
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+# Deliberately not DB_NAME, so a dev DB_NAME can't point the test run at it.
+test:
+  <<: *default
+  database: <%= ENV.fetch("DB_TEST_NAME", "amplify_test") %>
+
+# No localhost/name fallbacks: an unset DB_HOST/DB_NAME fails to connect
+# instead of silently using a local DB. (Don't use ENV.fetch without a default
+# here: ERB is rendered for every environment, so it would break dev/test.)
+staging:
+  <<: *default
+  host: <%= ENV["DB_HOST"] %>
+  database: <%= ENV["DB_NAME"] %>
+
+production:
+  <<: *default
+  host: <%= ENV["DB_HOST"] %>
+  database: <%= ENV["DB_NAME"] %>
