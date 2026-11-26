@@ -4,11 +4,18 @@ require 'rails_helper'
 
 RSpec.feature 'Search' do
   describe 'the search page', :js do
-    scenario 'finds a transcript by its line text' do
-      world = build_content_world
-      SearchPage.new.search_for(world.transcript_lines.first.original_text)
+    # The content world gives every line the text "Transcript line N original
+    # text.", so searching a whole line matched all three and proved only that
+    # the transcript came back — anything the trigram threshold did would not have
+    # been visible. One line gets a phrase no other line is similar to, so the
+    # query has exactly one answer and the example fails if the deep search stops
+    # matching line text.
+    scenario 'finds a transcript by its line text', :aggregate_failures do
+      world = build_content_world(line_overrides: { 0 => { original_text: 'Wombat crossing survey' } })
+      search_page = SearchPage.new.search_for('Wombat crossing survey')
 
-      expect(page).to have_css(SearchPage::RESULT_TITLES, text: world.transcript.title)
+      expect(search_page.result_titles).to eq([world.transcript.title])
+      expect(page).to have_text('Wombat crossing survey')
     end
 
     scenario 'shows the empty state for a term that matches nothing' do

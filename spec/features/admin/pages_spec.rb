@@ -58,7 +58,10 @@ RSpec.feature 'CMS pages' do
 
       pages.visit_index.delete('Faq')
 
-      expect(pages.page_types).to be_empty
+      # Retrying matcher: the row goes when the delete response replaces the list,
+      # and a plain array comparison can read the row the browser is about to
+      # remove.
+      expect(page).to have_no_css(AdminPagesPage::ROWS, text: 'Faq')
       page.refresh
       expect(pages.page_types).to be_empty
     end
