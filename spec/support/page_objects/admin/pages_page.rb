@@ -9,6 +9,8 @@ require_relative 'rich_text'
 # It deliberately has no assertions and no factory/DB dependency, so the remote
 # staging layer (spec/staging) could drive it against a real host.
 class AdminPagesPage
+  include ListTexts
+
   include AdminRichText
 
   INDEX_PATH = '/admin/pages'
@@ -27,7 +29,7 @@ class AdminPagesPage
     self
   end
 
-  def page_types = page.all("#{ROWS} #{TYPE_CELL}").map(&:text)
+  def page_types = texts_for("#{ROWS} #{TYPE_CELL}")
 
   def open_new
     page.click_link('New Page')

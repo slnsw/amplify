@@ -8,6 +8,8 @@ require_relative 'rich_text'
 # It deliberately has no assertions and no factory/DB dependency, so the remote
 # staging layer (spec/staging) could drive it against a real host.
 class AdminCmsCollectionsPage
+  include ListTexts
+
   include AdminRichText
 
   INDEX_PATH = '/admin/cms'
@@ -24,7 +26,7 @@ class AdminCmsCollectionsPage
     self
   end
 
-  def titles = page.all("#{ROWS} #{TITLE_CELL}").map(&:text)
+  def titles = texts_for("#{ROWS} #{TITLE_CELL}")
 
   def open_new
     page.click_button('Create a new collection')
@@ -40,6 +42,7 @@ class AdminCmsCollectionsPage
     page.select(institution, from: 'collection_institution_id')
     page.attach_file('collection_image', image) if image
     page.click_button('Save')
+    wait_for_index
     self
   end
 
@@ -51,12 +54,17 @@ class AdminCmsCollectionsPage
   def retitle(to:)
     page.fill_in('collection_title', with: to)
     page.click_button('Save')
+    wait_for_index
     self
   end
 
   def image_preview? = page.has_css?(IMAGE_PREVIEW)
 
   private
+
+  # Saving returns to the index; waiting for its "Create a new collection" button
+  # keeps the next read from racing the redirect and seeing the form's empty page.
+  def wait_for_index = page.find_button('Create a new collection')
 
   def page
     Capybara.current_session

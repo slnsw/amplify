@@ -7,6 +7,8 @@ require 'uri'
 # remote staging layer (spec/staging) can drive the same object against a real
 # host.
 class SearchPage
+  include ListTexts
+
   RESULT_TITLES = '.search_item__title'
   EMPTY_STATE = '.search_results .cms'
   SEARCH_FIELD = 'search'
@@ -28,7 +30,7 @@ class SearchPage
   end
 
   def result_titles
-    page.all(RESULT_TITLES).map(&:text)
+    texts_for(RESULT_TITLES)
   end
 
   def empty_state

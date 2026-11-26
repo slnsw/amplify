@@ -17,6 +17,8 @@ require 'rbconfig'
 # host: the transcript it is handed only has to expose `uid`, `collection.uid`,
 # `collection.institution.slug` and the audio sources the editor loads.
 class TranscriptEditorPage
+  include ListTexts
+
   include Waits
   include EditorMediaRequests
 
@@ -80,9 +82,7 @@ class TranscriptEditorPage
     self
   end
 
-  def line_texts
-    page.all(LINE_TEXT).map(&:text)
-  end
+  def line_texts = texts_for(LINE_TEXT)
 
   def line_count
     page.all(LINES).size

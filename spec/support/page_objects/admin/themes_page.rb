@@ -6,6 +6,8 @@
 # It deliberately has no assertions and no factory/DB dependency, so the remote
 # staging layer (spec/staging) could drive it against a real host.
 class AdminThemesPage
+  include ListTexts
+
   INDEX_PATH = '/admin/themes'
   ROWS = 'table tbody tr'
   # The list heading every save redirects back to.
@@ -19,7 +21,7 @@ class AdminThemesPage
     self
   end
 
-  def names = page.all("#{ROWS} #{NAME_CELL}").map(&:text)
+  def names = texts_for("#{ROWS} #{NAME_CELL}")
 
   def open_new
     page.click_link('New Theme')

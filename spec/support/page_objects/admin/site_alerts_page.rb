@@ -8,6 +8,8 @@ require_relative 'rich_text'
 # It deliberately has no assertions and no factory/DB dependency, so the remote
 # staging layer (spec/staging) could drive it against a real host.
 class AdminSiteAlertsPage
+  include ListTexts
+
   include AdminRichText
 
   INDEX_PATH = '/admin/site_alerts'
@@ -24,9 +26,9 @@ class AdminSiteAlertsPage
     self
   end
 
-  def levels = page.all("#{ROWS} #{LEVEL_CELL}").map(&:text)
+  def levels = texts_for("#{ROWS} #{LEVEL_CELL}")
 
-  def messages = page.all("#{ROWS} #{MESSAGE_CELL}").map(&:text)
+  def messages = texts_for("#{ROWS} #{MESSAGE_CELL}")
 
   def open_new
     page.click_link('New Site Alert')

@@ -8,6 +8,8 @@
 # staging layer (spec/staging) could drive it against a real host: the
 # institution it is handed only has to expose `slug`.
 class AdminInstitutionPage
+  include ListTexts
+
   INDEX_PATH = '/admin/institutions'
   ROWS = 'table tbody tr'
   # The list renders name, slug and url, then the icon columns.
@@ -18,6 +20,8 @@ class AdminInstitutionPage
   # The footer-link rows are keyed by position; the first is index 0.
   FIRST_FOOTER_LINK = '#institution-link-0'
   FOOTER_LINK_TITLES = '#institution-links input[name$="[title]"]'
+  # The list's only "New ..." link; the form itself renders "New record".
+  CONVENTIONS_LINK = 'New Transcription Convention'
   CONVENTION_KEY_CELL = 'td:nth-child(1)'
   CONVENTION_TEXT_CELL = 'td:nth-child(2)'
 
@@ -26,7 +30,7 @@ class AdminInstitutionPage
     self
   end
 
-  def names = page.all("#{ROWS} #{NAME_CELL}").map(&:text)
+  def names = texts_for("#{ROWS} #{NAME_CELL}")
 
   def url_of(name) = row(name).find(URL_CELL).text
 
@@ -62,16 +66,17 @@ class AdminInstitutionPage
     self
   end
 
-  def convention_keys = page.all("#{ROWS} #{CONVENTION_KEY_CELL}").map(&:text)
+  def convention_keys = texts_for("#{ROWS} #{CONVENTION_KEY_CELL}")
 
   def convention_text_for(key) = row(key).find(CONVENTION_TEXT_CELL).text
 
   def create_convention(key:, text:, example:)
-    page.click_link('New Transcription Convention')
+    page.click_link(CONVENTIONS_LINK)
     page.fill_in('Convention key', with: key)
     page.fill_in('Convention text', with: text)
     page.fill_in('Example', with: example)
     page.click_button('Save')
+    wait_for_conventions
     self
   end
 
@@ -79,10 +84,15 @@ class AdminInstitutionPage
     row(key).find(EDIT_LINK).click
     page.fill_in('Convention text', with: text)
     page.click_button('Save')
+    wait_for_conventions
     self
   end
 
   private
+
+  # Saving returns to the conventions list; waiting for its "New ..." link keeps the
+  # next read from racing the redirect and seeing the form's empty table.
+  def wait_for_conventions = page.find_link(CONVENTIONS_LINK)
 
   def row(text) = page.find(ROWS, text: text)
 

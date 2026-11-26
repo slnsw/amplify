@@ -9,6 +9,8 @@ require 'csv'
 # It deliberately has no assertions and no factory/DB dependency, so the remote
 # staging layer (spec/staging) could drive it against a real host.
 class AdminReportsPage
+  include ListTexts
+
   INDEX_PATH = '/admin/reports'
   USERS_PATH = '/admin/reports/users'
   USERS_CSV_PATH = '/admin/reports/users.csv'
@@ -28,7 +30,7 @@ class AdminReportsPage
     self
   end
 
-  def contributor_names = page.all("#{ROWS} #{NAME_CELL}").map(&:text)
+  def contributor_names = texts_for("#{ROWS} #{NAME_CELL}")
 
   def lines_for(name) = cell(name, LINES_CELL)
 

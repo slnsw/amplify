@@ -7,6 +7,8 @@
 # dependency, so the remote staging layer (spec/staging) can drive the same
 # object against a real host.
 class CollectionPage
+  include ListTexts
+
   LISTED_COLLECTION_TITLES = '.collect-list .collection-item h3'
   TRANSCRIPT_TITLES = '.transcript_item__title'
   COLLECTION_FILTER = '#collection-filter'
@@ -33,7 +35,7 @@ class CollectionPage
   end
 
   def transcript_titles
-    page.all(TRANSCRIPT_TITLES).map(&:text)
+    texts_for(TRANSCRIPT_TITLES)
   end
 
   private

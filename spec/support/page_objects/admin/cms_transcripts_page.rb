@@ -12,6 +12,8 @@ require_relative 'rich_text'
 # staging layer (spec/staging) could drive it against a real host: the records it
 # is handed only have to expose `uid`.
 class AdminCmsTranscriptsPage
+  include ListTexts
+
   include AdminRichText
 
   COLLECTION_PATH = '/admin/cms/collections'
@@ -58,7 +60,7 @@ class AdminCmsTranscriptsPage
     self
   end
 
-  def item_titles = page.all("#{ROWS} #{ITEM_TITLE_CELL}").map(&:text)
+  def item_titles = texts_for("#{ROWS} #{ITEM_TITLE_CELL}")
 
   def published?(title) = item_row(title).has_css?(PUBLISHED_ICON)
 

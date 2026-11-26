@@ -5,6 +5,8 @@
 # Rails/factory/DB dependency, so the remote staging layer (spec/staging) can
 # drive the same object against a real host.
 class InstitutionPage
+  include ListTexts
+
   OG_TITLE = 'meta[property="og:title"]'
   HERO_TITLE = '.main_hero__title'
   TRANSCRIPT_TITLES = '.transcript_item__title'
@@ -33,7 +35,7 @@ class InstitutionPage
   end
 
   def transcript_titles
-    page.all(TRANSCRIPT_TITLES).map(&:text)
+    texts_for(TRANSCRIPT_TITLES)
   end
 
   def sort_transcripts(option_title)
@@ -41,8 +43,16 @@ class InstitutionPage
     self
   end
 
+  # The filter is a plain GET submit, so the click starts a navigation. Waiting for
+  # the reloaded list keeps the next read from answering from the document that is
+  # being replaced (which still shows the previous order).
   def apply_filters
+    previous_url = page.current_url
     page.click_button('Apply filters')
+    page.document.synchronize do
+      raise Capybara::ElementNotFound, 'the filtered page has not loaded' if page.current_url == previous_url
+    end
+    page.find(TRANSCRIPT_TITLES, match: :first)
     self
   end
 

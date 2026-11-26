@@ -7,6 +7,8 @@
 # It deliberately has no assertions and no factory/DB dependency, so the remote
 # staging layer (spec/staging) could drive it against a real host.
 class AdminFlagsPage
+  include ListTexts
+
   DASHBOARD_PATH = '/admin'
   FLAGS_HEADING = 'Unresolved Flags'
   ROWS = 'table tbody tr'
@@ -23,9 +25,9 @@ class AdminFlagsPage
 
   # The dashboard renders the table server-side, so the rows are final once the
   # page has loaded.
-  def pending_flags = page.all(ROWS).map(&:text)
+  def pending_flags = texts_for(ROWS)
 
-  def flag_types = page.all("#{ROWS} #{TYPE_CELL}").map(&:text)
+  def flag_types = texts_for("#{ROWS} #{TYPE_CELL}")
 
   private
 
