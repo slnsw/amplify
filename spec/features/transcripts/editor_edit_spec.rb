@@ -43,7 +43,8 @@ RSpec.feature 'Transcript editor editing' do
 
     scenario 'updates the existing edit instead of recording a second one' do
       editor.edit_line(0, first_text).edit_line(0, edited_text)
-      expect(stored_line_edits).to eq([edited_text])
+
+      expect(await_stored_line_edits).to eq([edited_text])
     end
   end
 
@@ -113,6 +114,20 @@ RSpec.feature 'Transcript editor editing' do
       expect(editor.line_text(0)).to eq(world.transcript_lines.first.original_text)
       editor.verify_line(0, submitted_texts.last).reload
       expect(editor.line_text(0)).to eq(submitted_texts.last)
+    end
+  end
+
+  private
+
+  # The second save is a POST the editor fires when the line loses focus, so the
+  # payload can be fetched before it lands - CI saw a run report the first text.
+  # Poll until the server reflects the edit, and name what it did report if it never does.
+  def await_stored_line_edits
+    page.document.synchronize do
+      edits = stored_line_edits
+      next edits if edits == [edited_text]
+
+      raise Capybara::ElementNotFound, "the editor payload still reports #{edits.inspect}"
     end
   end
 end

@@ -19,6 +19,11 @@ module FeatureCdnStub
   HOST = 's3.amazonaws.com'
   RESPONSE = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
   CERTIFICATE_DAYS = 1
+  # Chrome opens speculative connections that can sit idle, and the stub answers every
+  # media request a page makes, so a connection that never speaks must not hold the
+  # others up. These bound how long each stalled step keeps its own thread.
+  HANDSHAKE_TIMEOUT = 5
+  READ_TIMEOUT = 5
 
   class << self
     attr_reader :port
@@ -26,31 +31,47 @@ module FeatureCdnStub
     def start
       return self if @port
 
-      @server = OpenSSL::SSL::SSLServer.new(TCPServer.new('127.0.0.1', 0), ssl_context)
-      @port = @server.to_io.addr[1]
+      @tcp_server = TCPServer.new('127.0.0.1', 0)
+      @port = @tcp_server.addr[1]
       @thread = Thread.new { serve }
       self
     end
 
     private
 
+    # One thread per connection. The handshake happens inside `respond` rather than in
+    # `accept`, so a client that connects and says nothing occupies only its own thread.
     def serve
       loop do
-        socket = @server.accept
-        socket.gets # request line; every path is answered identically
-        socket.write(RESPONSE)
-        socket.close
-      rescue StandardError
-        next
+        connection = @tcp_server.accept
+        Thread.new(connection) { |client| respond(client) }
       end
     rescue IOError, Errno::EBADF
       nil # the server was closed after the suite
     end
 
+    def respond(connection)
+      socket = OpenSSL::SSL::SSLSocket.new(connection, ssl_context)
+      socket.sync_close = true
+      socket.timeout = HANDSHAKE_TIMEOUT
+      socket.accept
+      socket.timeout = READ_TIMEOUT
+      socket.gets # request line; every path is answered identically
+      socket.write(RESPONSE)
+    rescue StandardError
+      nil # a client that gives up mid-connection is answered by closing it
+    ensure
+      socket&.close
+      connection.close unless connection.closed?
+    end
+
+    # Built once: generating the key per connection would cost more than the request.
     def ssl_context
-      key = OpenSSL::PKey::RSA.new(2048)
-      OpenSSL::SSL::SSLContext.new.tap do |context|
-        context.cert, context.key = certificate(key)
+      @ssl_context ||= begin
+        key = OpenSSL::PKey::RSA.new(2048)
+        OpenSSL::SSL::SSLContext.new.tap do |context|
+          context.cert, context.key = certificate(key)
+        end
       end
     end
 
