@@ -19,9 +19,13 @@ class AdminProfilePage
   end
 
   def choose_registered_user_role
-    page.choose(REGISTERED_USER)
-    page.click_button(SAVE)
-    self
+    choose(REGISTERED_USER)
+  end
+
+  # `transcribing_role` defaults to `registered_user`, so this is the choice that
+  # changes the record.
+  def choose_admin_role
+    choose(ADMIN_USER)
   end
 
   def transcribing_role
@@ -31,6 +35,12 @@ class AdminProfilePage
   end
 
   private
+
+  def choose(role_id)
+    page.choose(role_id)
+    page.click_button(SAVE)
+    self
+  end
 
   def page
     Capybara.current_session
