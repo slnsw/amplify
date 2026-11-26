@@ -75,10 +75,10 @@ jobs:
           cp config/database.sample.yml config/database.yml
           sed 's/^PROJECT_ID: .*/PROJECT_ID: nsw-state-library-amplify/' \
             config/application.sample.yml > config/application.yml
-          # The sample carries a placeholder Google Tag Manager container. Figaro
-          # would export it, the layouts would render the tag (gtm_id treats any
-          # set value, including an empty one, as enabled), and every example would
-          # then depend on a container that does not exist.
+          # The sample ships GOOGLE_TAG_MANAGER_ID commented out. Drop it anyway: a
+          # set value makes the layouts render a container from a third-party host
+          # (gtm_id treats even an empty string as enabled), and CI must not depend
+          # on one.
           sed -i '/^GOOGLE_TAG_MANAGER_ID:/d' config/application.yml
 
       - name: Install Ruby and gems
