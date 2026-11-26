@@ -163,7 +163,9 @@ module Staging
     end
 
     # Every level Chrome logged, so a warning that explains a failure is not lost;
-    # the JS console hook only *fails* an example on SEVERE entries.
+    # the JS console hook only *fails* an example on SEVERE entries. A journey whose
+    # log could not be read is listed separately: an empty section must not read as
+    # evidence that the console was clean.
     def console_entries_section
       entries = @results.filter_map do |result|
         logged = Array(result[:example].metadata[:javascript_console_entries])
@@ -172,7 +174,21 @@ module Staging
         "- **#{result[:example].full_description}**\n#{logged.map { |entry| "  - #{entry}" }.join("\n")}"
       end
 
-      ['## Browser console entries (all levels)', '', entries.empty? ? NONE : entries.join("\n"), ''].join("\n")
+      sections = ['## Browser console entries (all levels)', '', entries.empty? ? NONE : entries.join("\n"), '']
+      sections += no_console_evidence_section
+      sections.join("\n")
+    end
+
+    def no_console_evidence_section
+      unavailable = @results.filter_map do |result|
+        reason = result[:example].metadata[:javascript_console_unavailable]
+        next unless reason
+
+        "- **#{result[:example].full_description}** — console log unavailable (#{reason})"
+      end
+      return [] if unavailable.empty?
+
+      ['', '### Journeys with no console evidence', '', unavailable.join("\n"), '']
     end
 
     def external_links_section

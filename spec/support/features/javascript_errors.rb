@@ -25,7 +25,12 @@ module JavascriptErrors
 
   # Warns once per run, naming the driver, when the browser's console log cannot
   # be read: the examples still run, but none of them is checked for JS errors.
+  # The reason is also recorded on the example so the staging report can say a
+  # journey had no console evidence rather than leaving an empty section that
+  # reads as a clean console (spec/staging/report_formatter.rb).
   def self.warn_log_unavailable(driver, reason)
+    example = RSpec.current_example
+    example&.metadata&.[]=(:javascript_console_unavailable, reason)
     @warned ||= {}
     return if @warned[driver]
 

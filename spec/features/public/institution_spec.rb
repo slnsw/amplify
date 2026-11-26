@@ -35,6 +35,18 @@ RSpec.feature 'Public institution journeys' do
       institution_page.sort_transcripts('Completeness (most to least)').apply_filters
       expect(institution_page.transcript_titles.first).to eq('Zulu interview')
     end
+
+    # Submitting the filters a second time reloads the URL the first submission
+    # produced, so waiting for the URL to differ would hang on a page that did
+    # exactly what was asked.
+    scenario 'keeps the list when the same filters are submitted again' do
+      world = world_with_two_transcripts
+      institution_page = InstitutionPage.new.visit_path(world.institution.slug)
+
+      institution_page.apply_filters.apply_filters
+
+      expect(institution_page.transcript_titles).to contain_exactly('Alpha interview', 'Zulu interview')
+    end
   end
 
   describe 'an unknown path' do

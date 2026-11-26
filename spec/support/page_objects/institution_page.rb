@@ -44,19 +44,32 @@ class InstitutionPage
   end
 
   # The filter is a plain GET submit, so the click starts a navigation. Waiting for
-  # the reloaded list keeps the next read from answering from the document that is
-  # being replaced (which still shows the previous order).
+  # the list to come from a new document keeps the next read from answering from the
+  # document that is being replaced (which still shows the previous order).
+  #
+  # A marker set on the current document is what distinguishes the two: submitting
+  # the same filters leaves the URL unchanged, so waiting for a different URL would
+  # hang on a page that reloaded correctly. The script failing because its context
+  # was destroyed is the navigation itself.
   def apply_filters
-    previous_url = page.current_url
+    page.execute_script('window.__filterMarker = true')
     page.click_button('Apply filters')
     page.document.synchronize do
-      raise Capybara::ElementNotFound, 'the filtered page has not loaded' if page.current_url == previous_url
+      raise Capybara::ElementNotFound, 'the filtered page has not loaded' if previous_document?
     end
     page.find(TRANSCRIPT_TITLES, match: :first)
     self
   end
 
   private
+
+  def previous_document?
+    page.evaluate_script('typeof window.__filterMarker !== "undefined"')
+  rescue Selenium::WebDriver::Error::JavascriptError => e
+    raise unless e.message.include?('Execution context was destroyed')
+
+    false
+  end
 
   def page
     Capybara.current_session
