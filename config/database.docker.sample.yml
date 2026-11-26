@@ -1,31 +1,53 @@
+# Database config is read from ENV only.
+#
+# ECS injects DB_HOST, DB_USER, DB_PASS (Secrets Manager) and DB_NAME, DB_PORT
+# (tfvars). Staging and production have no fallbacks, so a missing variable
+# raises KeyError at boot instead of quietly connecting to the wrong database.
+#
+# Capistrano (prod EC2) is unaffected: config/database.yml is a linked_file
+# there and is replaced by the shared copy on the box.
+#
+# Credentials are passed as separate keys rather than a URL (no URL-encoding
+# needed), and string values are emitted with .to_json so YAML-significant
+# characters in passwords (, [ ] { } # : * & ! ' " etc.) are quoted safely.
+
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: 5
-  host: <%= ENV.fetch('DBHOST', 'localhost') %>
-  username: <%= ENV.fetch('DBUSER', 'postgres') %>
-  password: <%= ENV.fetch('DBPASS', 'ABC12abc') %>
-  port: <%= ENV.fetch('DBPORT', 5432) %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+
+local: &local
+  <<: *default
+  host: <%= ENV.fetch("DB_HOST", "localhost").to_json %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: <%= ENV.fetch("DB_USER", "postgres").to_json %>
+  password: <%= ENV.fetch("DB_PASS", nil).to_json %>
 
 development:
-  <<: *default
-  username: postgres
-  password: null
-  database: <%= ENV.fetch('DBNAME', 'amplify_development') %>
+  <<: *local
+  database: <%= ENV.fetch("DB_NAME", "amplify_development").to_json %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
+  <<: *local
+  database: <%= ENV.fetch("DB_NAME", "amplify_test").to_json %>
+
+# The whole file is rendered as ERB before Rails picks an environment, so the
+# fallback-free fetches are only evaluated when running in staging/production.
+<% if %w[staging production].include?(Rails.env) %>
+deployed: &deployed
   <<: *default
-  password: null
-  database: <%= ENV.fetch('DBNAME', 'amplify_test') %>
+  host: <%= ENV.fetch("DB_HOST").to_json %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: <%= ENV.fetch("DB_USER").to_json %>
+  password: <%= ENV.fetch("DB_PASS").to_json %>
+  database: <%= ENV.fetch("DB_NAME").to_json %>
 
 staging:
-  url: <%= "postgres://#{URI.encode_www_form_component(ENV['DB_USER'])}:#{URI.encode_www_form_component(ENV['DB_PASS'])}@#{ENV['DB_HOST']}:#{ENV['DB_PORT']}/#{ENV['DB_NAME']}" %>
-  # <<: *default
-  # database: <%= ENV.fetch('DBNAME', 'amplify_staging') %>
+  <<: *deployed
 
 production:
-  <<: *default
-  database: <%= ENV.fetch('DBNAME', 'amplify_production') %>
+  <<: *deployed
+<% end %>

@@ -33,10 +33,11 @@ services:
     command: ["bundle", "exec", "puma", "-C", "config/puma.rb"]
     environment:
       RAILS_ENV: production
-      DBUSER: ${DBUSER}
-      DBPASS: ${DBPASS}
-      DBHOST: postgres
-      DBPORT: 5432
+      DB_USER: ${DBUSER}
+      DB_PASS: ${DBPASS}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: amplify-production
 
   sidekiq:
     build:
@@ -50,9 +51,11 @@ services:
       - .env
     command: bundle exec sidekiq -c 2 -C config/sidekiq.yml
     environment:
-      DBUSER: ${DBUSER}
-      DBPASS: ${DBPASS}
-      DBPORT: 5432
+      DB_USER: ${DBUSER}
+      DB_PASS: ${DBPASS}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: amplify-production
       REDIS_URL: "redis://redis:6379/1"
 
   nginx:
