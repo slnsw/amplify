@@ -92,11 +92,25 @@ RSpec.feature 'Summary Page' do
       it 'narrows the totals to the selected start date', :aggregate_failures do
         expect(page).to have_text('Total number of items: 2')
 
-        fill_in 'start_date', with: Date.current - 1.month
+        set_date_field('start_date', Date.current - 1.month)
 
         expect(page).to have_text('Total number of items: 1')
         expect(page).to have_text('Total duration of items: 00h 16m 40s')
       end
     end
+  end
+
+  private
+
+  # `fill_in` types a date input character by character, and summary.js starts a
+  # request on every change event. Those responses all replace `#summary-stats`
+  # without an ordering check, so an earlier one can land last and overwrite the
+  # final totals. Set the value once and fire a single change instead.
+  def set_date_field(id, value)
+    page.execute_script(<<~JS, id, value.to_s)
+      var field = document.getElementById(arguments[0]);
+      field.value = arguments[1];
+      field.dispatchEvent(new Event('change', { bubbles: true }));
+    JS
   end
 end
