@@ -4,7 +4,6 @@ env:
   variables:
     IMAGE_TAG: "latest"
     AWS_DEFAULT_REGION: "ap-southeast-2"
-    ECS_CONTAINER_NAME: "web"
 
 phases:
   pre_build:
@@ -28,9 +27,13 @@ phases:
       - echo Pushing the Docker images to ECR...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - docker push $REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - echo Writing image definitions file...
-      - printf '[{"name":"%s","imageUri":"%s"}]' "${ECS_CONTAINER_NAME}" "$REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
+      - echo Writing image definitions files...
+      # One file per ECS service; names must match FileName in the pipeline's Deploy actions
+      # and "name" must match the container name in each task definition.
+      - printf '[{"name":"web","imageUri":"%s"}]' "$REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION" > imagedefinitions-web.json
+      - printf '[{"name":"sidekiq","imageUri":"%s"}]' "$REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION" > imagedefinitions-sidekiq.json
 
 artifacts:
   files:
-    - imagedefinitions.json
+    - imagedefinitions-web.json
+    - imagedefinitions-sidekiq.json
