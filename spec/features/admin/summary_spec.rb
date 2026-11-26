@@ -91,8 +91,12 @@ RSpec.feature 'Summary Page' do
 
       # Asserted against #summary-stats and anchored, so a value cannot be satisfied by
       # a longer number or by text elsewhere on the page. The boot request is drained
-      # before the filter is applied, which leaves the filtered request as the only one
-      # that can write the totals the assertions then require.
+      # before the filter is applied, and the filtered request is drained after the
+      # assertions, which closes the ordering question at both ends: `loadSummary`
+      # replaces #summary-stats with whichever response arrives last and never
+      # compares requests, so a request still in flight could otherwise overwrite
+      # the totals the assertions had just seen.
+      # rubocop:disable RSpec/ExampleLength
       it 'narrows the totals to the selected start date', :aggregate_failures do
         expect(page).to have_css('#summary-stats h3', text: /\ATotal number of items: 2\z/)
         wait_for_ajax_settle
@@ -101,7 +105,11 @@ RSpec.feature 'Summary Page' do
 
         expect(page).to have_css('#summary-stats h3', text: /\ATotal number of items: 1\z/)
         expect(page).to have_css('#summary-stats p', text: /\ATotal duration of items: 00h 16m 40s\z/)
+
+        wait_for_ajax_settle
+        expect(page).to have_css('#summary-stats h3', text: /\ATotal number of items: 1\z/)
       end
+      # rubocop:enable RSpec/ExampleLength
     end
   end
 
