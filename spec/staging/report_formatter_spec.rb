@@ -53,4 +53,28 @@ RSpec.describe Staging::ReportFormatter do
       expect(section_for({})).not_to include('Journeys with no console evidence')
     end
   end
+
+  describe 'the run summary' do
+    subject(:formatter) { described_class.new(StringIO.new) }
+
+    def summary_with(errors_outside_examples:, failures: 0)
+      Struct.new(:example_count, :failure_count, :pending_count, :duration, :errors_outside_of_examples_count)
+            .new(3, failures, 1, 1.5, errors_outside_examples)
+    end
+
+    it 'counts the examples that ran' do
+      formatter.dump_summary(summary_with(errors_outside_examples: 0))
+
+      expect(formatter.send(:render)).to include('3 example(s): 2 passed, 0 failed, 1 skipped')
+    end
+
+    # A suite-level error runs no example, so it cannot appear in the results
+    # table: without this the report of a run that died in `before(:suite)` reads
+    # as a clean run of fewer examples.
+    it 'says when errors happened outside the examples' do
+      formatter.dump_summary(summary_with(errors_outside_examples: 2))
+
+      expect(formatter.send(:render)).to include('2 error(s) outside examples')
+    end
+  end
 end

@@ -50,10 +50,12 @@ RSpec.feature 'Deployed staging environment', :js, :staging do
 
   scenario 'returns results for a broad search over the transcript text', :aggregate_failures do
     editor = TranscriptEditorPage.new.visit_transcript(transcript_ref)
-    search = SearchPage.new.visit_path(search: broad_search_term(editor.line_texts))
+    terms = broad_search_terms(editor.line_texts)
+
+    results = terms.lazy.map { |term| SearchPage.new.visit_path(search: term).result_titles }.find(&:any?)
 
     expect(navigation_status).to be_between(200, 399)
-    expect(search.result_titles).not_to be_empty
+    expect(results).not_to be_nil, "no result for any of #{terms.inspect}"
   end
 
   scenario 'renders a transcript editor page without editing it', :aggregate_failures do

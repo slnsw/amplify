@@ -104,8 +104,13 @@ module Staging
     def result_counts
       return '_no examples ran_' if @summary.nil?
 
-      "#{@summary.example_count} example(s): #{passed_count} passed, " \
-        "#{@summary.failure_count} failed, #{@summary.pending_count} skipped"
+      counts = "#{@summary.example_count} example(s): #{passed_count} passed, " \
+               "#{@summary.failure_count} failed, #{@summary.pending_count} skipped"
+      errors = @summary.errors_outside_of_examples_count
+      # A suite-level error - a raise in a `before(:suite)`, a failing `after(:suite)`
+      # - runs no example, so it never reaches the results table. The header is the
+      # only place the report can say the run did not finish cleanly.
+      errors.positive? ? "#{counts} — #{errors} error(s) outside examples" : counts
     end
 
     # SummaryNotification reports counts for everything but the passes.

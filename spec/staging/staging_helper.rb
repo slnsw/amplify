@@ -141,16 +141,24 @@ module Staging
       expect(problems).to be_empty, "#{problems.size} of #{urls.size} links failed:\n#{problems.join("\n")}"
     end
 
-    # The word that appears in the most rendered lines (and is long enough for the
-    # deployment's trigram search to match it): searching for it must return the
-    # transcript it came from, whatever language the content happens to be in.
-    def broad_search_term(lines, minimum_length: 5)
-      words = lines.flat_map { |line| line.to_s.downcase.scan(/[[:alpha:]]+/) }
-      words = words.select { |word| word.length >= minimum_length }
-      term = words.tally.max_by { |word, count| [count, word.length] }&.first
-      raise "the transcript rendered no word of #{minimum_length}+ letters to search for" if term.nil?
+    # The words that appear in the most rendered lines (and are long enough for the
+    # deployment's trigram search to match), most frequent first.
+    #
+    # Several are returned because a rendered line is not necessarily an indexed
+    # one: `gulp/js/views/transcript.js` shows `transcripts.text` for a completed
+    # line and `original_text` otherwise, and the search indexes `original_text` and
+    # `guess_text` only. A word a human introduced therefore renders but cannot be
+    # found, and taking a single term made a healthy deployment fail whenever that
+    # word was the most common one on the page.
+    def broad_search_terms(lines, minimum_length: 5, limit: 5)
+      words = words_of(lines).select { |word| word.length >= minimum_length }
+      raise "the transcript rendered no word of #{minimum_length}+ letters to search for" if words.empty?
 
-      term
+      words.tally.sort_by { |word, count| [-count, -word.length] }.map(&:first).first(limit)
+    end
+
+    def words_of(lines)
+      lines.flat_map { |line| line.to_s.downcase.scan(/[[:alpha:]]+/) }
     end
 
     # A public transcript found on the deployment's own home page. Remote runs
