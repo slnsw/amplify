@@ -67,6 +67,19 @@ RSpec.feature 'Summary Page' do
 
         expect_settled_totals(items: 1, duration: '00h 33m 08s')
       end
+
+      # Switching rather than selecting once: the item count stays at 1, so only
+      # the duration moving from one institution's total to the other's shows the
+      # filter followed the second choice instead of staying on the first.
+      it 'follows the filter when a different institution is chosen' do
+        expect_settled_totals(items: 2, duration: '01h 06m 28s')
+
+        select institution.name, from: 'institution_id'
+        expect_settled_totals(items: 1, duration: '00h 33m 20s')
+
+        select another_institution.name, from: 'institution_id'
+        expect_settled_totals(items: 1, duration: '00h 33m 08s')
+      end
     end
 
     # StatsService filters on `transcripts.updated_at`, so the items have to be

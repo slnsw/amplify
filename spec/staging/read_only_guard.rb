@@ -39,7 +39,8 @@ module Staging
   #   policy. Failing on it would report a deployment's CSP bugs as writes;
   # * analytics beacons (Google Tag Manager is rendered by the `application_v2`
   #   and `admin` layouts), which are browser-generated and outside the
-  #   deployment entirely.
+  #   deployment entirely. Only a POST counts as a beacon: any other verb
+  #   aimed at those hosts is not one, and is reported.
   #
   # Everything else — including any S3 host, so a pre-signed bucket upload cannot
   # go unreported — raises.
@@ -152,9 +153,10 @@ module Staging
     end
 
     # The only non-GETs a run may send: session establishment, analytics beacons, and the two
-    # read-only POSTs, which must also be to this deployment.
+    # read-only POSTs, which must also be to this deployment. A beacon is a POST, so any other
+    # verb aimed at an analytics host falls through and is reported.
     def tolerated?(attempt, target)
-      return true if tolerated_post?(attempt, target) || analytics_request?(attempt)
+      return true if attempt.method == 'POST' && (tolerated_post?(attempt, target) || analytics_request?(attempt))
       return false unless attempt.method == 'POST' && same_origin?(attempt, target)
 
       READ_ONLY_POST_PATHS.any? { |pattern| pattern.match?(attempt.path) }

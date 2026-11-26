@@ -93,6 +93,16 @@ RSpec.describe Staging::ReadOnlyGuard do
       expect(described_class.assert_read_only!(logs, target: target)).to be_nil
     end
 
+    # The allowance exists for browser beacons, which are POSTs. Anything else
+    # aimed at an analytics host is not a beacon and must not slip through.
+    it 'does not accept a non-beacon write to an analytics host' do
+      logs = logs_for('PUT', 'https://region1.google-analytics.com/g/collect')
+
+      expect { described_class.assert_read_only!(logs, target: target) }
+        .to raise_error(Staging::ReadOnlyGuard::WriteAttempted,
+                        %r{PUT https://region1.google-analytics.com/g/collect})
+    end
+
     it 'flags a side-effecting GET with a format suffix' do
       logs = logs_for('GET', "#{target}/admin/cms/transcripts/1/sync.json")
 

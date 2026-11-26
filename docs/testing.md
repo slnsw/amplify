@@ -210,7 +210,7 @@ Behaviour that is deliberate and not a defect: `GET /collections/:id` is JSON-on
 
 `bin/staging-smoke` drives a deployed environment with a real browser through read-only page objects and writes the evidence. After every journey a guard (`spec/staging/read_only_guard.rb`) reads Chrome's network log and **detects and fails the run on** any request that can change the deployment:
 
-- any non-GET except the documented sign-in POST, the browser's report-only CSP post, analytics beacons, and two POSTs that only read: `POST /authenticate.json` (the editor asks who is signed in as it boots) and `POST /collections/list` (the institution selector asks for that institution's collections). Both must go to the deployment itself; a same-named path on another host still fails the run (`ReadOnlyGuard::READ_ONLY_POST_PATHS`);
+- any non-GET except the documented sign-in POST, the browser's report-only CSP post, analytics beacons (POSTs to `google-analytics.com`/`googletagmanager.com` — any other verb aimed there is reported), and two POSTs that only read: `POST /authenticate.json` (the editor asks who is signed in as it boots) and `POST /collections/list` (the institution selector asks for that institution's collections). Both must go to the deployment itself; a same-named path on another host still fails the run (`ReadOnlyGuard::READ_ONLY_POST_PATHS`);
 - a GET with side effects. GET is *not* read-only in this app: `GET /admin/cms/transcripts/:id/sync` enqueues a paid Azure speech-to-text job that rewrites the transcript's lines, and `GET /users/sign_out` ends the session (`ReadOnlyGuard::SIDE_EFFECT_GET_PATHS`).
 
 The guard is a tripwire, not a barrier: it runs after the journey, so an offending request has already reached the environment by the time it fails the run. What keeps the run read-only is the journeys themselves. Two rules follow:
@@ -238,7 +238,7 @@ The guard is a tripwire, not a barrier: it runs after the journey, so an offendi
    bin/staging-smoke
    ```
 
-   Give the admin account to the runner for these page loads only. If a set is absent its journeys skip, and each signed-in journey first checks that the sign-in reached a signed-in page, skipping with a message naming the account, so wrong credentials read as a skipped run rather than as unrelated failures.
+   Give the admin account to the runner for these page loads only. If a set is absent its journeys skip. If a set is present but the sign-in does not reach a signed-in page, the journey **fails** and names the account: a wrong password, or a sign-in the deployment refuses, is a problem with the run and not something to report as green.
 
 4. Record in the ticket what the run proves and what it does not.
 

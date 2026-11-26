@@ -16,9 +16,9 @@ require_relative 'staging_helper'
 #   admin covers both.
 #
 # Without the relevant pair its journeys skip, so an ordinary staff account is
-# still enough for the rest of the run. Give the admin account to the runner for
-# these page loads only: that is all they do, and the read-only guard fails the run
-# on anything else.
+# still enough for the rest of the run. A pair that is supplied but does not sign
+# in fails the run instead: skipping there would report a broken sign-in, or a
+# stale password, as green.
 #
 # The guard allows exactly one write: the POST to /users/sign_in that establishes
 # the session. Everything after it reaches a known, read-only page by its path or by
@@ -70,8 +70,10 @@ RSpec.feature 'Signed-in staging journeys', :js, :staging do
     SignInPage.new.visit_and_submit(email: email, password: password)
     return if signed_in?
 
-    skip("Signing in as #{email} did not reach a signed-in page (#{page.current_url}); " \
-         'check the staging credentials')
+    # The skip for a missing pair already happened in the before hook, so the
+    # credentials were supplied and the deployment refused them. That is the
+    # deployment being broken, not the run being unconfigured: fail it.
+    raise "Signing in as #{email} did not reach a signed-in page (#{page.current_url})"
   end
 
   # The header renders the account menu's sign-out link only for a signed-in
