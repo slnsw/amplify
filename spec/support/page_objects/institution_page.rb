@@ -76,9 +76,12 @@ class InstitutionPage
   # the list to come from a new document keeps the next read from answering from the
   # document that is being replaced (which still shows the previous order), and
   # submitting the same filters reloads the same URL, so the URL cannot be the test.
+  #
+  # It does not wait for a row: a filter can legitimately match nothing, and
+  # `page.find(TRANSCRIPT_TITLES)` here turned that valid empty page into "the
+  # filtered page has not loaded".
   def apply_filters
     wait_for_new_document { page.click_button('Apply filters') }
-    page.find(TRANSCRIPT_TITLES, match: :first)
     self
   end
 

@@ -23,6 +23,23 @@ RSpec.feature 'Search' do
       expect(page).to have_text('Wombat crossing survey')
     end
 
+    # The search page takes an `institution` parameter, and nothing exercised it:
+    # with two published institutions, filtering to one has to exclude the other.
+    # rubocop:disable RSpec/ExampleLength
+    scenario 'scopes the results to the institution in the query', :aggregate_failures do
+      world = build_content_world
+      other = build_content_world
+
+      SearchPage.new.visit_path
+      expect(page).to have_text(world.transcript.title)
+      expect(page).to have_text(other.transcript.title)
+
+      SearchPage.new.visit_path(institution: world.institution.slug)
+      expect(page).to have_text(world.transcript.title)
+      expect(page).not_to have_text(other.transcript.title)
+    end
+    # rubocop:enable RSpec/ExampleLength
+
     # A lost term and a term with no matches both leave the results empty, so the
     # submitted query is asserted as well.
     scenario 'submits the typed term from the search form', :aggregate_failures do

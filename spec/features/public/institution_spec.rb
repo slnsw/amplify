@@ -56,6 +56,23 @@ RSpec.feature 'Public institution journeys' do
     end
     # rubocop:enable RSpec/ExampleLength
 
+    # A filter that matches nothing is a valid page, not a page that failed to
+    # load: `apply_filters` used to wait for a row and would fail here.
+    # rubocop:disable RSpec/ExampleLength
+    scenario 'shows an empty list when the selected collection has no items', :aggregate_failures do
+      world = build_content_world
+      empty = create(:collection, institution: world.institution, title: 'Empty collection',
+                                  project_uid: world.collection.project_uid)
+
+      institution_page = InstitutionPage.new.visit_path(world.institution.slug)
+      expect(institution_page.transcript_titles).to eq([world.transcript.title])
+
+      institution_page.filter_by_collection(empty.title).apply_filters
+      expect(institution_page.transcript_titles).to be_empty
+      expect(page).to have_no_css(InstitutionPage::TRANSCRIPT_TITLES, text: world.transcript.title)
+    end
+    # rubocop:enable RSpec/ExampleLength
+
     # The default order is `randomize_list` (`Transcript.apply_sorting_to_query`),
     # so an ignored selection would still put the expected title first about half
     # the time and the example would pass for the wrong reason. The submitted
