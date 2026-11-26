@@ -55,8 +55,21 @@ module JavascriptErrors
     recorded.concat(entries.map { |entry| "[#{entry.level}] #{entry.message}" })
   end
 
+  # Reading the log must not start a browser of its own. A skipped example never
+  # opened one, and `page.driver.browser` would launch Chrome - turning the skip
+  # into a failure whenever the browser cannot start, which is not what a skip
+  # means. A session that never started has no log, so there is nothing to report.
+  # The driver is built lazily and so is the browser; asking whether one exists is
+  # the only way to tell them apart without launching it.
+  def browser_started?(driver)
+    driver.respond_to?(:browser) && !driver.instance_variable_get(:@browser).nil?
+  end
+
   def javascript_console_entries
-    browser = page.driver.browser
+    driver = page.driver
+    return [] unless browser_started?(driver)
+
+    browser = driver.browser
     unless browser.respond_to?(:logs)
       JavascriptErrors.warn_log_unavailable(Capybara.current_driver, 'the driver has no logs API')
       return []
