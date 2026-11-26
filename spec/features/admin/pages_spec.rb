@@ -43,6 +43,16 @@ RSpec.feature 'CMS pages' do
       expect(pages.content).to include('Collecting stories records oral histories')
     end
 
+    # Summernote syncs the editor's HTML into the textarea, so a typed `&` and
+    # `<>` are stored escaped. This is the case a plain-text comparison of the
+    # two cannot see.
+    scenario 'keeps a body containing an ampersand and angle brackets' do
+      pages.create(page_type: 'collecting-stories', body: 'Songs & stories of <1900>')
+      pages.edit('Collecting-stories')
+
+      expect(pages.content).to include('Songs &amp; stories of &lt;1900&gt;')
+    end
+
     scenario 'deletes a page the list no longer shows after a reload', :aggregate_failures do
       create(:page, page_type: 'faq', content: 'Frequently asked questions')
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'cgi'
+
 # Shared by the admin page objects whose forms render a field through Summernote
 # (app/assets/javascripts/editor.js initialises every `[data-provider="summernote"]`).
 # Summernote replaces the textarea with a contenteditable and copies it back on
@@ -26,8 +28,15 @@ module AdminRichText
   # textarea the form submits can still be missing the end of the text.
   def wait_for_note_sync(value, editable)
     page.document.synchronize do
-      raise Capybara::ExpectationNotMet, SYNC_MISSING unless note_value(editable).include?(value)
+      raise Capybara::ExpectationNotMet, SYNC_MISSING unless stored_text(editable).include?(value)
     end
+  end
+
+  # AutoSync copies the editor's HTML, not its text, so a value containing `&`,
+  # `<` or `>` reaches the textarea escaped (`&amp;`, `&lt;`). Comparing the raw
+  # value would wait out the timeout on text that synced correctly.
+  def stored_text(editable)
+    CGI.unescapeHTML(note_value(editable))
   end
 
   def note_value(editable)
