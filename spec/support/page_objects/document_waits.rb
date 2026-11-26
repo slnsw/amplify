@@ -7,13 +7,13 @@
 # the navigation: the URL is unchanged and the values the form was filled with are
 # already in the DOM, so a read can answer from the page that is being replaced and
 # prove only that the fields were typed into. The marker set on the current
-# document is what tells the two apart; the script failing because its context was
-# destroyed is the navigation itself.
+# document is what tells the two apart. The script failing because its context was
+# destroyed says the navigation has begun, not that it has finished, so the new
+# document is also waited for.
 #
 # Including page objects only need the private `page` method they all define.
 module DocumentWaits
   MARKER = 'window.__documentMarker = true'
-  MARKER_PRESENT = 'typeof window.__documentMarker !== "undefined"'
 
   private
 
@@ -21,12 +21,21 @@ module DocumentWaits
     page.execute_script(MARKER)
     yield
     page.document.synchronize do
-      raise Capybara::ElementNotFound, 'the page did not reload' if marked_document?
+      raise Capybara::ElementNotFound, 'the page did not reload' unless reloaded?
     end
   end
 
-  def marked_document?
-    page.evaluate_script(MARKER_PRESENT)
+  # True once the marker is gone and the document that replaced it has a DOM.
+  #
+  # The marker lives in the old document, so reading it raises once the browser
+  # starts tearing that document down. That raise means the navigation has begun,
+  # not that it has finished: treating it as finished returned into a blank page
+  # the next read could see nothing in. Both conditions are checked in one script,
+  # and the raise is a "not yet". `interactive` is enough: the staging driver returns
+  # at DOMContentLoaded, so waiting for `complete` would hang on a page whose media
+  # never finishes loading.
+  def reloaded?
+    page.evaluate_script("typeof window.__documentMarker === 'undefined' && document.readyState !== 'loading'")
   rescue Selenium::WebDriver::Error::JavascriptError => e
     raise unless e.message.include?('Execution context was destroyed')
 
