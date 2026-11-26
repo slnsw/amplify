@@ -44,14 +44,26 @@ class InstitutionPage
 
   # The collection facet renders a hidden checkbox per collection, named
   # `collections[]` with the collection title as its value. It is not visible until
-  # the dropdown is opened, so it is ticked through the DOM; the change event is
+  # the dropdown opens, so it is ticked through the DOM; the change event is
   # dispatched so the facet's own label stays in step.
+  #
+  # The boxes are matched by value rather than by a selector built from the title:
+  # a title can hold a quote, a backslash or a CSS metacharacter, and interpolating
+  # it into `input[value='...']` breaks the selector or matches another box.
   def filter_by_collection(title)
-    page.execute_script(<<~JS, title)
-      var box = document.querySelector("#data_collection_id_ input[value='" + arguments[0] + "']");
-      box.checked = true;
-      box.dispatchEvent(new Event('change', { bubbles: true }));
+    found = page.execute_script(<<~JS, title)
+      var boxes = document.querySelectorAll("#data_collection_id_ input[type=checkbox]");
+      for (var i = 0; i < boxes.length; i++) {
+        if (boxes[i].value === arguments[0]) {
+          boxes[i].checked = true;
+          boxes[i].dispatchEvent(new Event('change', { bubbles: true }));
+          return true;
+        }
+      }
+      return false;
     JS
+    raise Capybara::ElementNotFound, "no collection facet checkbox for #{title.inspect}" unless found
+
     self
   end
 

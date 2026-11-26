@@ -114,7 +114,7 @@ RSpec.feature 'Public institution journeys' do
   # the way the content world builds one, so the record is publishable rather than
   # invisible for an unrelated reason.
   def second_collection_with_item(world)
-    collection = create(:collection, institution: world.institution, title: 'Field recordings',
+    collection = create(:collection, institution: world.institution, title: "Jack's field recordings",
                                      project_uid: world.collection.project_uid)
     transcript = create(:transcript, collection: collection, project_uid: collection.project_uid,
                                      title: 'Field interview', lines: 1, publish: 1,
