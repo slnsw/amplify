@@ -28,6 +28,13 @@ class AdminCmsCollectionsPage
 
   def titles = texts_for("#{ROWS} #{TITLE_CELL}")
 
+  # The list renders one card per institution, headed by its name, so this is where
+  # a grouping bug shows: every collection under one heading leaves the other
+  # institution's card empty.
+  def titles_under(institution_name)
+    texts_for("#{ROWS} #{TITLE_CELL}", within: page.find('.card', text: institution_name))
+  end
+
   def open_new
     page.click_button('Create a new collection')
     self

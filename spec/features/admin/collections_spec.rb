@@ -22,6 +22,16 @@ RSpec.feature 'CMS collections' do
       expect(page).to have_text(world.institution.name)
     end
 
+    # One institution cannot show the grouping: every collection under a single
+    # heading looks the same whether the grouping works or not.
+    scenario 'lists each collection under its own institution', :aggregate_failures do
+      other = build_content_world
+      collections.visit_index
+
+      expect(collections.titles_under(world.institution.name)).to eq([world.collection.title])
+      expect(collections.titles_under(other.institution.name)).to eq([other.collection.title])
+    end
+
     scenario 'creates a collection with an image the edit form shows after a reload', :aggregate_failures do
       create_collection(image: image)
       expect(collections.titles).to include('New collection')

@@ -8,8 +8,10 @@
 # goes away, so `synchronize` re-queries until the document stops changing
 # instead of returning rows from two different renders.
 module ListTexts
-  def texts_for(selector)
-    page.document.synchronize { page.all(selector).map(&:text) }
+  # `within` scopes the read to one part of the page, so a grouping bug cannot be
+  # hidden by rows that belong to another group.
+  def texts_for(selector, within: page.document)
+    within.synchronize { within.all(selector).map(&:text) }
   end
 end
 
