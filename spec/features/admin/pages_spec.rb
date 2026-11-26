@@ -53,6 +53,16 @@ RSpec.feature 'CMS pages' do
       expect(pages.content).to include('Songs &amp; stories of &lt;1900&gt;')
     end
 
+# Summernote stores a line break as `</p><p>` (or `<br>`), so a body typed over
+# two lines is not the plain text that was typed. The sync wait compares the
+# textarea's contents with the value, which has to see through both forms.
+scenario 'keeps a body typed over two lines' do
+  pages.create(page_type: 'collecting-stories', body: "First line\nSecond line")
+  pages.edit('Collecting-stories')
+
+  expect(pages.content).to include('First line', 'Second line')
+end
+
     scenario 'deletes a page the list no longer shows after a reload', :aggregate_failures do
       create(:page, page_type: 'faq', content: 'Frequently asked questions')
 

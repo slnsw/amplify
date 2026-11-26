@@ -28,15 +28,27 @@ module AdminRichText
   # textarea the form submits can still be missing the end of the text.
   def wait_for_note_sync(value, editable)
     page.document.synchronize do
-      raise Capybara::ExpectationNotMet, SYNC_MISSING unless stored_text(editable).include?(value)
+      raise Capybara::ExpectationNotMet, SYNC_MISSING unless stored_text(editable).include?(text_of(value))
     end
   end
 
-  # AutoSync copies the editor's HTML, not its text, so a value containing `&`,
-  # `<` or `>` reaches the textarea escaped (`&amp;`, `&lt;`). Comparing the raw
-  # value would wait out the timeout on text that synced correctly.
+  # AutoSync copies the editor's HTML, not its text, so the stored value differs
+  # from what was typed in two ways: `&`, `<` and `>` arrive escaped (`&amp;`,
+  # `&lt;`) and a line break arrives as `</p><p>` or `<br>`. Both sides are reduced
+  # to their text. Tags are stripped before entities are unescaped, so a typed
+  # `&lt;` is not mistaken for markup.
   def stored_text(editable)
-    CGI.unescapeHTML(note_value(editable))
+    text_of(note_value(editable))
+  end
+
+  def text_of(value)
+    value.to_s
+         .gsub(%r{<br\s*/>?}i, "\n")
+         .gsub(%r{</(?:p|div)>}i, "\n")
+         .gsub(/<[^>]+>/, '')
+         .then { |text| CGI.unescapeHTML(text) }
+         .gsub(/\s+/, ' ')
+         .strip
   end
 
   def note_value(editable)
