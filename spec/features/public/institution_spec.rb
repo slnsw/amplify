@@ -40,6 +40,22 @@ RSpec.feature 'Public institution journeys' do
     end
     # rubocop:enable RSpec/ExampleLength
 
+    # One collection per page cannot show the collection facet working: the page has
+    # to hold two, each with its own item, so selecting one can be seen to exclude
+    # the other.
+    # rubocop:disable RSpec/ExampleLength
+    scenario 'filters the list to the collection that is selected', :aggregate_failures do
+      world = build_content_world
+      other = second_collection_with_item(world)
+
+      institution_page = InstitutionPage.new.visit_path(world.institution.slug)
+      expect(institution_page.transcript_titles).to contain_exactly(world.transcript.title, other[:title])
+
+      institution_page.filter_by_collection(other[:collection].title).apply_filters
+      expect(institution_page.transcript_titles).to eq([other[:title]])
+    end
+    # rubocop:enable RSpec/ExampleLength
+
     # The default order is `randomize_list` (`Transcript.apply_sorting_to_query`),
     # so an ignored selection would still put the expected title first about half
     # the time and the example would pass for the wrong reason. The submitted
@@ -92,6 +108,18 @@ RSpec.feature 'Public institution journeys' do
       expect(page.status_code).to eq(404)
       expect(page).to have_css('.exception[data-status="404"]')
     end
+  end
+
+  # A second collection in the same institution with its own published item. Built
+  # the way the content world builds one, so the record is publishable rather than
+  # invisible for an unrelated reason.
+  def second_collection_with_item(world)
+    collection = create(:collection, institution: world.institution, title: 'Field recordings',
+                                     project_uid: world.collection.project_uid)
+    transcript = create(:transcript, collection: collection, project_uid: collection.project_uid,
+                                     title: 'Field interview', lines: 1, publish: 1,
+                                     published_at: Time.current)
+    { collection: collection, title: transcript.title }
   end
 
   # Titles and completion percentages are chosen so the two sort orders disagree:

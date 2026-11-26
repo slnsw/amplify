@@ -42,6 +42,19 @@ class InstitutionPage
     texts_for(TRANSCRIPT_TITLES)
   end
 
+  # The collection facet renders a hidden checkbox per collection, named
+  # `collections[]` with the collection title as its value. It is not visible until
+  # the dropdown is opened, so it is ticked through the DOM; the change event is
+  # dispatched so the facet's own label stays in step.
+  def filter_by_collection(title)
+    page.execute_script(<<~JS, title)
+      var box = document.querySelector("#data_collection_id_ input[value='" + arguments[0] + "']");
+      box.checked = true;
+      box.dispatchEvent(new Event('change', { bubbles: true }));
+    JS
+    self
+  end
+
   def sort_transcripts(option_title)
     page.select(option_title, from: SORT_FIELD)
     self
