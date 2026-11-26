@@ -202,12 +202,12 @@ Behaviour that is deliberate and not a defect: `GET /collections/:id` is JSON-on
 
 `bin/staging-smoke` drives a deployed environment with a real browser through read-only page objects and writes the evidence. After every journey a guard (`spec/staging/read_only_guard.rb`) reads Chrome's network log and **detects and fails the run on** any request that can change the deployment:
 
-- any non-GET except the documented sign-in POST, the browser's report-only CSP post and analytics beacons;
+- any non-GET except the documented sign-in POST, the browser's report-only CSP post, analytics beacons, and two POSTs that only read: `POST /authenticate.json` (the editor asks who is signed in as it boots) and `POST /collections/list` (the institution selector asks for that institution's collections). Both must go to the deployment itself; a same-named path on another host still fails the run (`ReadOnlyGuard::READ_ONLY_POST_PATHS`);
 - a GET with side effects. GET is *not* read-only in this app: `GET /admin/cms/transcripts/:id/sync` enqueues a paid Azure speech-to-text job that rewrites the transcript's lines, and `GET /users/sign_out` ends the session (`ReadOnlyGuard::SIDE_EFFECT_GET_PATHS`).
 
 The guard is a tripwire, not a barrier: it runs after the journey, so an offending request has already reached the environment by the time it fails the run. What keeps the run read-only is the journeys themselves. Two rules follow:
 
-- **Authenticated staging journeys must never walk links.** A signed-in staff page links to side-effecting GETs (sign-out, CMS sync); visit known pages by path, or click one named link, never `expect_links_to_resolve` while signed in. The anonymous link walk also skips side-effecting paths before visiting them.
+- **Authenticated staging journeys must never walk links.** A signed-in staff page links to side-effecting GETs (sign-out, CMS sync); visit known pages by path, or click one named link, never `expect_links_to_resolve` while signed in. The anonymous link walk also skips side-effecting paths before visiting them, and it reads both header layouts — `#primary-menu-container` in the older public/institution/cms layouts and `.main_header__links` (minus the `.menu_dropdown` account menu) in the current `application_v2` header — so the walk does not pass on footer links alone.
 - **The staging driver does not ignore certificate errors** (unlike the local driver, which needs to for its self-signed CDN stub): a certificate problem on the environment must fail the run.
 
 1. Run it against Dev:

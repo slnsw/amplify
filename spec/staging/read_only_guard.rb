@@ -25,12 +25,15 @@ module Staging
   #   `GET /users/sign_out` (Devise's `sign_out_via = :get`) ends the session.
   #   This is also why authenticated journeys must never walk links.
   #
-  # Three kinds of non-GET request are tolerated, because they cannot write to the
+  # Four kinds of non-GET request are tolerated, because they cannot write to the
   # environment or its bucket:
   #
   # * session establishment (`SESSION_PATHS`: the `/users/sign_in` POST) — the
   #   only way to reach the authenticated journeys, and the reason
   #   `authenticated_spec.rb` can use the real form rather than `sign_in_as`;
+  # * two same-origin POSTs that only read (`READ_ONLY_POST_PATHS`): the editor
+  #   asks who is signed in, and the institution selector asks for an
+  #   institution's collections. Rejecting them fails every healthy editor run;
   # * the report-only CSP endpoint (config/initializers/content_security_policy.rb
   #   sets `report_uri`), which the *browser* posts to when a page violates the
   #   policy. Failing on it would report a deployment's CSP bugs as writes;
@@ -48,6 +51,11 @@ module Staging
 
     SESSION_PATHS = %w[/users/sign_in /users/sign_out].freeze
     CSP_REPORT_PATH = '/csp-violation-report-endpoint'
+    # POSTs whose actions only read: `AuthenticationController#authenticate`
+    # (the editor calls it as it boots) and `CollectionsController#list`
+    # (app/assets/javascripts/collections.js). Matched against the path of a
+    # request to the deployment, so a third-party `/authenticate` is still a write.
+    READ_ONLY_POST_PATHS = [%r{\A/authenticate(\.json)?\z}, %r{\A/collections/list(\.json)?\z}].freeze
     ANALYTICS_HOSTS = %w[google-analytics.com googletagmanager.com].freeze
     # GETs that change the deployment or the session (see above), matched
     # against the path of a request to the deployment (to any host when no target
@@ -137,8 +145,13 @@ module Staging
       SIDE_EFFECT_GET_PATHS.any? { |pattern| pattern.match?(request.path) }
     end
 
+    # The only non-GETs a run may send: session establishment, analytics beacons, and the two
+    # read-only POSTs, which must also be to this deployment.
     def tolerated?(attempt, target)
-      session_request?(attempt, target) || analytics_request?(attempt)
+      return true if session_request?(attempt, target) || analytics_request?(attempt)
+      return false unless attempt.method == 'POST' && same_origin?(attempt, target)
+
+      READ_ONLY_POST_PATHS.any? { |pattern| pattern.match?(attempt.path) }
     end
 
     def session_request?(attempt, target)
@@ -164,7 +177,8 @@ module Staging
 
         #{listing}
 
-        Only GETs without side effects are allowed: the staging environment shares
+        Only GETs without side effects are allowed, plus the session, CSP-report and
+        read-only POSTs listed above: the staging environment shares
         its S3 bucket with production, so a write from this suite can corrupt live
         content, and some GETs (#{SIDE_EFFECT_GET_PATHS.map(&:inspect).join(', ')})
         enqueue paid jobs or end the session. Drive the environment through

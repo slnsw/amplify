@@ -91,9 +91,12 @@ RSpec.feature 'CMS transcripts' do
     end
 
     # The bulk action re-renders the list from the server's response, so a
-    # reload is what proves the publish was stored rather than echoed back.
+    # reload is what proves the publish was stored rather than echoed back. The
+    # PUT is asynchronous, so the re-render is awaited first: reloading while it
+    # is still in flight can cancel it and fail the example on a working publish.
     scenario 'keeps the selected items published after a reload' do
       transcripts.select_all_items.bulk_action('Publish')
+      transcripts.await_published('Second item')
 
       page.refresh
       expect(transcripts.published?('Second item')).to be(true)

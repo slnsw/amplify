@@ -64,6 +64,13 @@ class AdminCmsTranscriptsPage
 
   def unpublished?(title) = item_row(title).has_css?(UNPUBLISHED_ICON)
 
+  # The bulk action answers with JavaScript that re-renders the row, so waiting for
+  # the published icon is what proves the write finished before anything reloads.
+  def await_published(title)
+    item_row(title).find(PUBLISHED_ICON)
+    self
+  end
+
   def line_count = page.find(LINE_COUNT).text
 
   # editor.js rewrites the count from the JSON the process_transcript POST

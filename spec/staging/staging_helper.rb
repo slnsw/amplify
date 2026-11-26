@@ -66,9 +66,17 @@ module Staging
 
   # Helpers mixed into every `:staging` example.
   module Remote
-    # The menu and footer are the page's own navigation; the account menu is
-    # excluded because its provider buttons POST (SignInPage covers them).
-    NAV_AND_FOOTER_LINKS = '#primary-menu-container a[href], .main_footer a[href], .sub_footer a[href]'
+    # The page's own navigation in either layout: the older `#primary-menu-container`
+    # (public, institution and cms layouts) and the current `application_v2` header
+    # (`shared/_header.html.erb`). `.menu_dropdown` is the account menu — it carries
+    # `main_header__links` too — and is excluded because its provider buttons POST
+    # (SignInPage covers them).
+    NAV_AND_FOOTER_LINKS = [
+      '#primary-menu-container a[href]',
+      '.main_header__links:not(.menu_dropdown) a[href]',
+      '.main_footer a[href]',
+      '.sub_footer a[href]'
+    ].join(', ').freeze
     TRANSCRIPT_LINK = 'a.transcript_item[href]'
     TRANSCRIPT_PATH = %r{\A/transcripts/(?<institution>[^/]+)/(?<collection>[^/]+)/(?<uid>[^/]+)\z}
     # rails-ujs turns these into a non-GET verb, which a read-only run must not send.

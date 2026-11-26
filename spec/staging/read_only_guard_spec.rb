@@ -41,6 +41,32 @@ RSpec.describe Staging::ReadOnlyGuard do
       expect(described_class.assert_read_only!(logs_for('POST', "#{target}/users/sign_in"), target: target)).to be_nil
     end
 
+    it 'tolerates the editor asking who is signed in, which only reads' do
+      logs = logs_for('POST', "#{target}/authenticate.json")
+
+      expect(described_class.assert_read_only!(logs, target: target)).to be_nil
+    end
+
+    it 'tolerates the collections page listing an institution\'s collections, which only reads' do
+      logs = logs_for('POST', "#{target}/collections/list")
+
+      expect(described_class.assert_read_only!(logs, target: target)).to be_nil
+    end
+
+    it 'still raises for a POST that only looks like a read-only path' do
+      logs = logs_for('POST', "#{target}/authenticate/admin")
+
+      expect { described_class.assert_read_only!(logs, target: target) }
+        .to raise_error(Staging::ReadOnlyGuard::WriteAttempted, %r{POST https://staging.example.test/authenticate/admin})
+    end
+
+    it 'still raises for a read-only path on another host' do
+      logs = logs_for('POST', 'https://example.test/authenticate.json')
+
+      expect { described_class.assert_read_only!(logs, target: target) }
+        .to raise_error(Staging::ReadOnlyGuard::WriteAttempted, %r{POST https://example.test/authenticate.json})
+    end
+
     it 'tolerates the browser posting a report-only CSP violation' do
       logs = logs_for('POST', "#{target}/csp-violation-report-endpoint")
 

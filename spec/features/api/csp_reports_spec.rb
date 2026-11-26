@@ -5,8 +5,19 @@ require 'rails_helper'
 # Browsers POST `application/csp-report` documents to the URI configured in
 # config/initializers/content_security_policy.rb. Such a request carries no CSRF
 # token — a browser has none to send — so the endpoint has to answer it anyway;
-# a lost CSRF skip would surface here as a 422.
+# a lost CSRF skip would surface here as a 422. The test environment disables
+# forgery protection for the whole suite, so it is switched back on for this
+# example; without that the missing skip would still answer 200 and nothing
+# would be proven.
 RSpec.feature 'CSP violation reports' do
+  around do |example|
+    previous = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+    example.run
+  ensure
+    ActionController::Base.allow_forgery_protection = previous
+  end
+
   let(:report) do
     {
       'csp-report' => {

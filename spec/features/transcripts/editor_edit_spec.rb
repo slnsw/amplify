@@ -97,10 +97,14 @@ RSpec.feature 'Transcript editor editing' do
     let(:world) { build_content_world(line_overrides: { 0 => { status: 'reviewing' } }) }
     let(:submitted_texts) { ['First submitted transcription.', 'Second submitted transcription.'] }
 
+    # Attributed to users that do not exist: user ids come from a positive sequence,
+    # so a negative id can never belong to the admin signed in below. A fabricated
+    # positive id can, once the sequence reaches it in a long random run, and the
+    # editor would then show that edit as the admin's own.
     before do
       submitted_texts.each_with_index do |text, index|
         create(:transcript_edit, transcript: world.transcript, transcript_line: world.transcript_lines.first,
-                                 text: text, user_id: 100 + index)
+                                 text: text, user_id: -1 - index)
       end
     end
 
