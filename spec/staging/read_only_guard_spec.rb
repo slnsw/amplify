@@ -67,6 +67,20 @@ RSpec.describe Staging::ReadOnlyGuard do
         .to raise_error(Staging::ReadOnlyGuard::WriteAttempted, %r{POST https://example.test/authenticate.json})
     end
 
+    it 'does not accept a non-POST on the sign-in path' do
+      logs = logs_for('DELETE', "#{target}/users/sign_in")
+
+      expect { described_class.assert_read_only!(logs, target: target) }
+        .to raise_error(Staging::ReadOnlyGuard::WriteAttempted, %r{DELETE https://staging.example.test/users/sign_in})
+    end
+
+    it 'does not accept a sign-out by any verb' do
+      logs = logs_for('DELETE', "#{target}/users/sign_out")
+
+      expect { described_class.assert_read_only!(logs, target: target) }
+        .to raise_error(Staging::ReadOnlyGuard::WriteAttempted, %r{DELETE https://staging.example.test/users/sign_out})
+    end
+
     it 'tolerates the browser posting a report-only CSP violation' do
       logs = logs_for('POST', "#{target}/csp-violation-report-endpoint")
 
@@ -77,6 +91,20 @@ RSpec.describe Staging::ReadOnlyGuard do
       logs = logs_for('POST', 'https://region1.google-analytics.com/g/collect')
 
       expect(described_class.assert_read_only!(logs, target: target)).to be_nil
+    end
+
+    it 'flags a side-effecting GET with a format suffix' do
+      logs = logs_for('GET', "#{target}/admin/cms/transcripts/1/sync.json")
+
+      expect { described_class.assert_read_only!(logs, target: target) }
+        .to raise_error(Staging::ReadOnlyGuard::WriteAttempted, %r{GET https://staging.example.test/admin/cms/transcripts/1/sync.json})
+    end
+
+    it 'flags a side-effecting GET with a trailing slash' do
+      logs = logs_for('GET', "#{target}/users/sign_out/")
+
+      expect { described_class.assert_read_only!(logs, target: target) }
+        .to raise_error(Staging::ReadOnlyGuard::WriteAttempted, %r{GET https://staging.example.test/users/sign_out/})
     end
 
     it 'still raises for any other write to the deployment' do

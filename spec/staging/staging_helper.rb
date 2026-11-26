@@ -21,7 +21,11 @@ module Staging
   # * STAGING_URL (required to verify anything) — origin of the deployment, e.g.
   #   https://dev.amplify.gov.au; without it every staging example skips and the
   #   run exits 0.
-  # * STAGING_EMAIL / STAGING_PASSWORD — enable authenticated_spec.rb.
+  # * STAGING_EMAIL / STAGING_PASSWORD — a staff account; enables the dashboard and
+  #   /admin/summary journeys in authenticated_spec.rb.
+  # * STAGING_ADMIN_EMAIL / STAGING_ADMIN_PASSWORD — an admin account, for the
+  #   /admin/reports and /admin/cms journeys. Use a dedicated account; those
+  #   journeys only load pages and the read-only guard fails the run on anything else.
   TargetNotConfigured = Class.new(StandardError)
 
   # A dedicated driver: the local one maps the project CDN to a stub server, which
@@ -45,6 +49,16 @@ module Staging
     def password = ENV['STAGING_PASSWORD'].presence
 
     def credentials? = email.present? && password.present?
+
+    # `/admin/reports` declares `before_action :authenticate_admin!`, and `/admin/cms`
+    # authorises `Collection`, whose policy allows only an admin or a content editor.
+    # Those journeys take their own admin account and skip without it; the dashboard
+    # and `/admin/summary` only need staff, so the account above covers them.
+    def admin_email = ENV['STAGING_ADMIN_EMAIL'].presence
+
+    def admin_password = ENV['STAGING_ADMIN_PASSWORD'].presence
+
+    def admin_credentials? = admin_email.present? && admin_password.present?
   end
 
   # The transcript a staging journey reads, standing in for the ActiveRecord
@@ -303,6 +317,13 @@ RSpec.configure do |config|
 
     example.metadata[:staging_skipped] = true
     skip('STAGING_EMAIL/STAGING_PASSWORD not set')
+  end
+
+  config.before(:each, :requires_admin_credentials) do |example|
+    next if Staging::Target.admin_credentials?
+
+    example.metadata[:staging_skipped] = true
+    skip('STAGING_ADMIN_EMAIL/STAGING_ADMIN_PASSWORD not set')
   end
 
   config.after(:each, :staging) do |example|

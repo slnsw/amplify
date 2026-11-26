@@ -146,7 +146,7 @@ Read `docs/testing.md` before writing or changing specs. The short version:
 - `bin/staging-smoke` drives a deployment with a real browser, GET-only, and writes `tmp/staging_report/report.md` plus screenshots. Use it to produce evidence instead of eyeballing a page.
 - Staging and production **share one S3 bucket**; any upload is a production write.
 - `GET` is not automatically read-only: some admin GETs enqueue billable jobs. The staging guard fails on non-GET requests and on a deny-list of side-effecting GETs.
-- Never point the staging runner at an environment whose credentials you do not own, and never run it with credentials that can administer content.
+- Never point the staging runner at an environment whose credentials you do not own, and never run the authenticated journeys with a shared or personal account that can administer content. The admin journeys take their own dedicated account (`STAGING_ADMIN_EMAIL`), used only for page loads; the read-only guard fails the run on any write.
 
 ## Writing prose (docs, PR descriptions, commit bodies)
 

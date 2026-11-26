@@ -49,7 +49,11 @@ module Staging
     GET = 'GET'
     REQUEST_WILL_BE_SENT = 'Network.requestWillBeSent'
 
-    SESSION_PATHS = %w[/users/sign_in /users/sign_out].freeze
+    # The sign-in POST is the only session request a run may send, and the only way
+    # to reach the authenticated journeys. `/users/sign_out` is deliberately absent:
+    # by either verb it ends the session, so a GET fails through the list below and
+    # anything else raises.
+    SESSION_PATHS = %w[/users/sign_in].freeze
     CSP_REPORT_PATH = '/csp-violation-report-endpoint'
     # POSTs whose actions only read: `AuthenticationController#authenticate`
     # (the editor calls it as it boots) and `CollectionsController#list`
@@ -59,8 +63,10 @@ module Staging
     ANALYTICS_HOSTS = %w[google-analytics.com googletagmanager.com].freeze
     # GETs that change the deployment or the session (see above), matched
     # against the path of a request to the deployment (to any host when no target
-    # is given), so a third-party `/sync` endpoint is not mistaken for one.
-    SIDE_EFFECT_GET_PATHS = [%r{/sync\z}, %r{\A/users/sign_out\z}].freeze
+    # is given), so a third-party `/sync` endpoint is not mistaken for one. The
+    # optional format suffix and trailing slash are the variants Rails routes
+    # accept, and the link walker uses these same patterns to decide what is safe.
+    SIDE_EFFECT_GET_PATHS = [%r{/sync(?:\.\w+)?/?\z}, %r{\A/users/sign_out(?:\.\w+)?/?\z}].freeze
 
     # One request Chrome reported.
     class Attempt
@@ -148,14 +154,14 @@ module Staging
     # The only non-GETs a run may send: session establishment, analytics beacons, and the two
     # read-only POSTs, which must also be to this deployment.
     def tolerated?(attempt, target)
-      return true if session_request?(attempt, target) || analytics_request?(attempt)
+      return true if tolerated_post?(attempt, target) || analytics_request?(attempt)
       return false unless attempt.method == 'POST' && same_origin?(attempt, target)
 
       READ_ONLY_POST_PATHS.any? { |pattern| pattern.match?(attempt.path) }
     end
 
-    def session_request?(attempt, target)
-      return false unless same_origin?(attempt, target)
+    def tolerated_post?(attempt, target)
+      return false unless attempt.method == 'POST' && same_origin?(attempt, target)
 
       SESSION_PATHS.include?(attempt.path) || attempt.path == CSP_REPORT_PATH
     end

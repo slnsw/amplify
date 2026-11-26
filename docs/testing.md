@@ -33,7 +33,8 @@ The full suite is the gate, and CI runs it on every pull request. The smoke subs
 | `:smoke` | A representative example from a journey that must never be broken (home, editor read, sign-in, admin institutions). | `bundle exec rspec --tag smoke` — CI's fast first step, before the full suite. |
 | `:js` | The example needs a real browser, not rack_test. Uses headless Chrome through Selenium. | Slower; a JS console hook fails the example if Chrome logged any `SEVERE` entry (uncaught exception, `console.error`, failed fetch/XHR). |
 | `:staging` | The example drives the deployment named by `STAGING_URL` through the page objects, read-only (see the staging runbook for what the guard does and does not do). | Every example skips with a clear message when `STAGING_URL` is unset; `bin/staging-smoke` refuses a mixed local/remote run. |
-| `:requires_credentials` | A `:staging` example that needs `STAGING_EMAIL` and `STAGING_PASSWORD` (a staff account) to sign in. | Skips unless both are set. |
+| `:requires_credentials` | A `:staging` example that needs a signed-in account: `STAGING_EMAIL` and `STAGING_PASSWORD`. | Skips unless both are set. |
+| `:requires_admin_credentials` | A `:staging` example that needs an admin account, `STAGING_ADMIN_EMAIL` and `STAGING_ADMIN_PASSWORD`: `/admin/reports` declares `authenticate_admin!` and `/admin/cms` allows only an admin or content editor. | Skips unless both are set, so the other journeys still run on an ordinary staff account. |
 | `:mail` | The example asserts on delivered mail. | Runs the example with ActionMailer's `:test` delivery method and a `default_url_options[:host]`, restoring both afterwards. Needed because `config/initializers/mailer_initializer.rb` forces `:smtp` in every environment, overriding `config/environments/test.rb`. |
 | `sidekiq: true` | The example needs Sidekiq jobs to run inline (`Sidekiq::Testing.inline!`). | Wraps the example so `perform_async` executes immediately. On the command line this tag is spelled `--tag sidekiq`. |
 
@@ -220,15 +221,16 @@ The guard is a tripwire, not a barrier: it runs after the journey, so an offendi
 
 2. Attach `tmp/staging_report/report.md` and the screenshots to ticket **146251**.
 
-3. If staging credentials are provided later, re-run with them to include the authenticated journeys (`spec/staging/authenticated_spec.rb`: dashboard, `/admin/summary`, `/admin/reports/users`, `/admin/cms`):
+3. If staging credentials are provided later, re-run with them to include the authenticated journeys (`spec/staging/authenticated_spec.rb`). There are two sets, because they grant different things: `STAGING_EMAIL`/`STAGING_PASSWORD` are a staff account and cover the dashboard and `/admin/summary`; `STAGING_ADMIN_EMAIL`/`STAGING_ADMIN_PASSWORD` are an admin and cover `/admin/reports/users` and `/admin/cms`, which need more than staff (a `before_action :authenticate_admin!` and a policy that allows only an admin or content editor, respectively).
 
    ```bash
    STAGING_URL=https://dev.amplify.gov.au \
    STAGING_EMAIL='a-staff-account@example.com' STAGING_PASSWORD='…' \
+   STAGING_ADMIN_EMAIL='a-dedicated-admin@example.com' STAGING_ADMIN_PASSWORD='…' \
    bin/staging-smoke
    ```
 
-   `STAGING_EMAIL` must be a staff account; without both variables the credentialed examples skip. Each signed-in journey first checks that the sign-in reached a signed-in page and, if it did not, skips with a message naming the account, so wrong credentials read as a skipped run rather than as unrelated failures.
+   Give the admin account to the runner for these page loads only. If a set is absent its journeys skip, and each signed-in journey first checks that the sign-in reached a signed-in page, skipping with a message naming the account, so wrong credentials read as a skipped run rather than as unrelated failures.
 
 4. Record in the ticket what the run proves and what it does not.
 
