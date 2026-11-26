@@ -12,6 +12,8 @@ class AdminProfilePage
   REGISTERED_USER = 'user_role_transcribing_role_registered_user'
   ADMIN_USER = 'user_role_transcribing_role_admin'
   SAVE = 'Save Profile'
+  # `layouts/_flash_notice` renders this only when there is a notice to show.
+  FLASH = '.alert-primary'
 
   def visit_profile
     page.visit(PATH)
@@ -36,9 +38,13 @@ class AdminProfilePage
 
   private
 
+  # Saving redirects back to this same page and answers with a flash banner, so the
+  # banner is what proves the submission landed. Without waiting the next read can
+  # run against the page the browser is about to replace.
   def choose(role_id)
     page.choose(role_id)
     page.click_button(SAVE)
+    page.find(FLASH)
     self
   end
 

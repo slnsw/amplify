@@ -20,20 +20,29 @@ RSpec.feature 'Public institution journeys' do
       expect(institution_page.transcript_titles).to eq([world.transcript.title])
     end
 
-    scenario 're-orders the transcripts by title' do
+    # The default order is `randomize_list` (`Transcript.apply_sorting_to_query`),
+    # so an ignored selection would still put the expected title first about half
+    # the time and the example would pass for the wrong reason. The submitted
+    # query is what proves the selection was sent; the full order is what proves
+    # it was applied.
+    scenario 're-orders the transcripts by title', :aggregate_failures do
       world = world_with_two_transcripts
       institution_page = InstitutionPage.new.visit_path(world.institution.slug)
 
       institution_page.sort_transcripts('Title (A to Z)').apply_filters
-      expect(institution_page.transcript_titles.first).to eq('Alpha interview')
+
+      expect(page).to have_current_path(/sort_by=title_asc/, url: true)
+      expect(institution_page.transcript_titles).to eq(['Alpha interview', 'Zulu interview'])
     end
 
-    scenario 're-orders the transcripts by completeness' do
+    scenario 're-orders the transcripts by completeness', :aggregate_failures do
       world = world_with_two_transcripts
       institution_page = InstitutionPage.new.visit_path(world.institution.slug)
 
       institution_page.sort_transcripts('Completeness (most to least)').apply_filters
-      expect(institution_page.transcript_titles.first).to eq('Zulu interview')
+
+      expect(page).to have_current_path(/sort_by=percent_completed_desc/, url: true)
+      expect(institution_page.transcript_titles).to eq(['Zulu interview', 'Alpha interview'])
     end
 
     # Submitting the filters a second time reloads the URL the first submission

@@ -56,8 +56,13 @@ class AdminInstitutionPage
 
   def footer_link_titles = page.all(FOOTER_LINK_TITLES).map(&:value)
 
+  # Saving redirects to the list, which is the only page that renders this link.
+  # Waiting for it keeps the next read from running while the browser is still
+  # replacing the document, which is what surfaced as chromedriver answering
+  # "Node with given id does not belong to the document".
   def save
     page.click_button('Save')
+    page.find_link('New Institution')
     self
   end
 
