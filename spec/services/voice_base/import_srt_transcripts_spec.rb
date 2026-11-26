@@ -13,6 +13,17 @@ RSpec.describe VoiceBase::ImportSrtTranscripts, type: :service do
         description: 'Transcript has been downloaded'
       )
     end
+    # `transcripts.transcript_status_id` defaults to 1, so a transcript starts out as whichever
+    # status happens to hold id 1 — on a fresh database that is the status created above. Both
+    # transcripts below are given an explicit non-downloaded status so the change asserted here
+    # does not depend on which id the status rows receive.
+    let!(:processing_transcript_status) do
+      TranscriptStatus.create!(
+        name: 'transcript_processing',
+        progress: 10,
+        description: 'Transcript is being processed'
+      )
+    end
     let!(:initialized_transcript_line_status) do
       TranscriptLineStatus.create!(
         name: 'initialized',
@@ -42,7 +53,8 @@ RSpec.describe VoiceBase::ImportSrtTranscripts, type: :service do
         vendor: vendor,
         vendor_identifier: 'mloh103-tape0001-s001-m',
         batch_id: 'transcripts_seeds.csv',
-        project_uid: 'nsw-state-library-amplify'
+        project_uid: 'nsw-state-library-amplify',
+        transcript_status: processing_transcript_status
       )
     end
     let!(:transcript_ext) do
@@ -54,7 +66,8 @@ RSpec.describe VoiceBase::ImportSrtTranscripts, type: :service do
         vendor: vendor,
         vendor_identifier: 'text-external-aaa',
         project_uid: 'nsw-state-library-amplify',
-        script: File.open(Rails.root.join('spec', 'fixtures', 'transcript_external.srt'))
+        script: File.open(Rails.root.join('spec', 'fixtures', 'transcript_external.srt')),
+        transcript_status: processing_transcript_status
       )
     end
 
@@ -65,13 +78,19 @@ RSpec.describe VoiceBase::ImportSrtTranscripts, type: :service do
 
     it { is_expected.to change { transcript.reload.transcript_lines.count }.from(0).to(432) }
     it { is_expected.to change { transcript.reload.lines }.from(0).to(432) }
-    it { is_expected.to change { transcript.reload.transcript_status.try(:name) }.from(nil).to('transcript_downloaded') }
+    it 'marks the transcript as downloaded' do
+      described_class.call(project_id: 'nsw-state-library-amplify')
+      expect(transcript.reload.transcript_status.name).to eq('transcript_downloaded')
+    end
     it { is_expected.to change { transcript.reload.duration }.from(0).to(1883) }
     it { is_expected.to change { transcript.reload.transcript_retrieved_at }.from(nil).to(an_instance_of(ActiveSupport::TimeWithZone)) }
 
     it { is_expected.to change { transcript_ext.reload.transcript_lines.count }.from(0).to(3) }
     it { is_expected.to change { transcript_ext.reload.lines }.from(0).to(3) }
-    it { is_expected.to change { transcript_ext.reload.transcript_status.try(:name) }.from(nil).to('transcript_downloaded') }
+    it 'marks the external transcript as downloaded' do
+      described_class.call(project_id: 'nsw-state-library-amplify')
+      expect(transcript_ext.reload.transcript_status.name).to eq('transcript_downloaded')
+    end
     it { is_expected.to change { transcript_ext.reload.duration }.from(0).to(15) }
 
     it 'creates transcript lines holding the values for each line' do
