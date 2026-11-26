@@ -20,6 +20,26 @@ RSpec.feature 'Public institution journeys' do
       expect(institution_page.transcript_titles).to eq([world.transcript.title])
     end
 
+    # One world proves nothing about isolation: a second institution with its own
+    # published item is what shows the page is filtered to the institution in the
+    # path. The other item's absence below only means something because its own
+    # page lists it, so the record is visible rather than unpublished.
+    # rubocop:disable RSpec/ExampleLength
+    scenario 'lists only the items of the institution in the path', :aggregate_failures do
+      world = build_content_world
+      other = build_content_world
+
+      institution_page = InstitutionPage.new.visit_path(world.institution.slug)
+
+      expect(institution_page.collection_titles).to eq([world.collection.title])
+      expect(institution_page.transcript_titles).to eq([world.transcript.title])
+      expect(page).not_to have_text(other.transcript.title)
+
+      InstitutionPage.new.visit_path(other.institution.slug)
+      expect(page).to have_text(other.transcript.title)
+    end
+    # rubocop:enable RSpec/ExampleLength
+
     # The default order is `randomize_list` (`Transcript.apply_sorting_to_query`),
     # so an ignored selection would still put the expected title first about half
     # the time and the example would pass for the wrong reason. The submitted

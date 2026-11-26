@@ -83,10 +83,13 @@ Capybara.server = :puma, { Silent: true }
 Capybara.default_max_wait_time = 5
 
 RSpec.configure do |config|
-  config.before(:each, :js) do
+  config.before(:each, :js) do |example|
     # spec/staging drives a deployed host instead of this process's Rails app, so
-    # there is nothing local to visit and no Capybara.app to visit it with.
-    next if Capybara.app.nil?
+    # there is nothing local to visit. The tag is checked as well as the app: with
+    # STAGING_URL unset Capybara.app is still this process's app, and visiting it
+    # here would start a browser for a journey that is about to skip - a skip that
+    # fails if Chrome cannot start.
+    next if Capybara.app.nil? || example.metadata[:staging]
 
     visit '/'
   end

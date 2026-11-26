@@ -309,7 +309,8 @@ RSpec.configure do |config|
     Staging.assert_staging_only_run!
   end
 
-  # A skipped journey never opened a browser: it is flagged here so evidence
+  # A skipped journey opens no browser (spec/support/capybara.rb leaves the `:js`
+  # visit alone for a `:staging` example), and it is flagged here so evidence
   # capture stays away from it (an example's pending status is only settled after
   # these hooks have run).
   config.before(:each, :staging) do |example|
