@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Admin::Cms::TranscriptsController < AdminController
+  before_action :authenticate_staff!
+
   # Deals with publishing, unpublishing, and deleting multiple transcripts.
   include UpdateMultipleTranscriptsConcern
 

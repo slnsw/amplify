@@ -257,6 +257,21 @@ gulp          # watch mode
 gulp sass js  # run once
 ```
 
+### Testing
+
+```bash
+bundle exec rspec --tag smoke   # fast gate: the representative journeys
+bundle exec rspec               # full suite (needs Postgres and Redis)
+```
+
+CI runs the smoke subset first and then the full suite on every pull request, and the full suite on `develop`/`main` and nightly. The test layers, tag taxonomy, route-to-spec map, known gaps and the staging runbook are documented in [docs/testing.md](docs/testing.md).
+
+Further reading:
+
+- [docs/architecture.md](docs/architecture.md) — how the app fits together.
+- [docs/authorization.md](docs/authorization.md) — filters, Pundit and the checklist for adding an admin controller.
+- [SECURITY.md](SECURITY.md) — how to report a vulnerability privately. This repository is public; never report security problems in an issue or pull request.
+
 ---
 
 ## Third-Party Integrations

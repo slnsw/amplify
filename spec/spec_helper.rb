@@ -1,4 +1,11 @@
 # frozen_string_literal: true
+
+# Ruby 3.4.13 raises "should not compile with coverage" from
+# InstructionSequence.compile, which bootsnap hits while SimpleCov is active.
+# Keep the load-path cache (the main boot win) and skip the iseq, YAML and
+# JSON compile caches.
+ENV['DISABLE_BOOTSNAP_COMPILE_CACHE'] ||= '1'
+
 require 'simplecov'
 require 'pundit/matchers'
 require 'dotenv'

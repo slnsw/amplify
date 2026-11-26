@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#
+# One-command, read-only verification of a deployed environment.
+#
+# Drives the environment named by STAGING_URL (or by the first argument) through
+# headless Chrome, read-only, and writes the evidence that goes in the ticket:
+#
+#   tmp/staging_report/report.md              markdown table of journey -> result
+#                                             -> duration -> screenshot, plus
+#                                             failures, browser console entries and the
+#                                             external links that were not visited
+#   tmp/staging_report/screenshots/*.png      one screenshot per journey
+#
+# Every request the browser makes is checked after each journey by
+# spec/staging/read_only_guard.rb, which detects and fails the run on any non-GET
+# other than the sign-in POST, the report-only CSP endpoint and analytics beacons,
+# and on side-effecting GETs (the CMS transcript sync, sign-out). It reports a
+# write after the fact rather than preventing it: what keeps the run off the S3
+# bucket the staging environment shares with production is that the journeys only
+# drive read-only page objects.
+#
+# Exits 0 when the environment was verified green (or when there is nothing to
+# verify because no URL was given), non-zero on any failed journey.
+set -euo pipefail
+
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$root_dir"
+
+report_dir="tmp/staging_report"
+report_path="$report_dir/report.md"
+
+usage() {
+  cat <<'USAGE'
+staging-smoke: verify a deployed environment, read-only, and write evidence.
+
+Usage:
+  bin/staging-smoke <url>          e.g. bin/staging-smoke https://dev.amplify.gov.au
+
+Optional environment variables:
+  STAGING_EMAIL, STAGING_PASSWORD  enable the signed-in journeys
+                                   (spec/staging/authenticated_spec.rb skips without
+                                   both; STAGING_EMAIL must be a staff account)
+
+Writes tmp/staging_report/report.md and tmp/staging_report/screenshots/*.png.
+USAGE
+}
+
+if [ "$#" -gt 0 ]; then
+  export STAGING_URL="${1%/}"
+fi
+
+if [ -z "${STAGING_URL:-}" ]; then
+  usage
+  echo
+  echo "STAGING_URL is not set, so nothing was verified. Exiting 0."
+  exit 0
+fi
+
+# The report and its screenshots describe this run only: a stale screenshot must
+# never be linked to a journey that skipped it.
+rm -rf "$report_dir"
+mkdir -p "$report_dir/screenshots"
+
+echo "Verifying $STAGING_URL (read-only)..."
+
+status=0
+bundle exec rspec spec/staging \
+  --tag staging \
+  --require ./spec/staging/report_formatter \
+  --format progress \
+  --format Staging::ReportFormatter \
+  --out "$report_path" || status=$?
+
+echo
+echo "Report:      $report_path"
+echo "Screenshots: $report_dir/screenshots"
+
+exit "$status"
