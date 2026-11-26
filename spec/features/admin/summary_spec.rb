@@ -89,13 +89,18 @@ RSpec.feature 'Summary Page' do
         visit admin_summary_index_path
       end
 
+      # Asserted against #summary-stats and anchored, so a value cannot be satisfied by
+      # a longer number or by text elsewhere on the page. The boot request is drained
+      # before the filter is applied, which leaves the filtered request as the only one
+      # that can write the totals the assertions then require.
       it 'narrows the totals to the selected start date', :aggregate_failures do
-        expect(page).to have_text('Total number of items: 2')
+        expect(page).to have_css('#summary-stats h3', text: /\ATotal number of items: 2\z/)
+        wait_for_ajax_settle
 
         set_date_field('start_date', Date.current - 1.month)
 
-        expect(page).to have_text('Total number of items: 1')
-        expect(page).to have_text('Total duration of items: 00h 16m 40s')
+        expect(page).to have_css('#summary-stats h3', text: /\ATotal number of items: 1\z/)
+        expect(page).to have_css('#summary-stats p', text: /\ATotal duration of items: 00h 16m 40s\z/)
       end
     end
   end
