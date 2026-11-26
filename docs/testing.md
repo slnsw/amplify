@@ -210,6 +210,7 @@ The guard is a tripwire, not a barrier: it runs after the journey, so an offendi
 
 - **Authenticated staging journeys must never walk links.** A signed-in staff page links to side-effecting GETs (sign-out, CMS sync); visit known pages by path, or click one named link, never `expect_links_to_resolve` while signed in. The anonymous link walk also skips side-effecting paths before visiting them, and it reads both header layouts — `#primary-menu-container` in the older public/institution/cms layouts and `.main_header__links` (minus the `.menu_dropdown` account menu) in the current `application_v2` header — so the walk does not pass on footer links alone.
 - **The staging driver does not ignore certificate errors** (unlike the local driver, which needs to for its self-signed CDN stub): a certificate problem on the environment must fail the run.
+- **The staging driver returns control at DOMContentLoaded** (`page_load_strategy = :eager`). The deployment pulls media from a third-party CDN and there is no stub in front of it here, so a host that stops answering would otherwise hold each visit for Selenium's 300-second page-load default. Assertions still wait for the element they need, and the performance log the guard reads is populated by then. `spec/staging/staging_driver_spec.rb` pins the strategy.
 
 1. Run it against Dev:
 

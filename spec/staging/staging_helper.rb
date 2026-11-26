@@ -273,6 +273,13 @@ Capybara.register_driver Staging::STAGING_DRIVER do |app|
     args: ['headless', 'disable-gpu', 'no-sandbox', 'disable-dev-shm-usage', LocalChrome::WINDOW_SIZE],
     logging_prefs: { browser: 'ALL', performance: 'ALL' }
   )
+  # The deployment serves the project content's media from a third-party CDN, and
+  # unlike the local drivers there is no stub in the way here. A media request that
+  # host never answers holds the load event - and the visit - for Selenium's 300s
+  # default. Eager returns control at DOMContentLoaded; every assertion still waits
+  # for the element it needs, and the performance log the guard reads is already
+  # populated by then.
+  options.page_load_strategy = :eager
   Capybara::Selenium::Driver.new app,
                                  browser: :chrome,
                                  clear_session_storage: true,
