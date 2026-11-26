@@ -17,6 +17,7 @@ class AdminStatsPage
   SUM_VALUE = '.sum-value'
   INSTITUTION_SELECT = 'institution_id'
   INSTITUTION_SUMS = '#edits_for_institution'
+  PENDING_MARKER = '#stats-pending'
 
   def visit_dashboard
     page.visit(DASHBOARD_PATH)
@@ -28,10 +29,22 @@ class AdminStatsPage
     count_in(page.find('.card', text: ITEM_EDITS_CARD), label)
   end
 
-  # Picks the institution and waits for the `.js` response to fill the panel.
+  # Picks the institution and waits for the `.js` response that replaces the panel.
+  #
+  # Waiting for a `.sum` to exist is not enough: a previous selection's figures are
+  # already there, so a read straight after choosing a second institution could
+  # return the first one's numbers. The response re-renders the panel's contents, so
+  # a marker child placed in it is wiped by the answer and its disappearance is what
+  # proves the new figures arrived.
   def choose_institution(name)
+    mark_panel_pending
     page.select(name, from: INSTITUTION_SELECT)
-    page.all("#{INSTITUTION_SUMS} #{SUM}", minimum: 1)
+    page.document.synchronize do
+      next if page.has_no_css?(PENDING_MARKER, wait: 0)
+
+      raise Capybara::ElementNotFound, "the figures for #{name} did not load"
+    end
+    page.find("#{INSTITUTION_SUMS} #{SUM}", match: :first)
     self
   end
 
@@ -40,6 +53,14 @@ class AdminStatsPage
   end
 
   private
+
+  # A child the response wipes when it re-renders the panel.
+  def mark_panel_pending
+    page.execute_script(<<~JS)
+      var panel = document.querySelector('#{INSTITUTION_SUMS}');
+      if (panel) { panel.innerHTML = '<span id="stats-pending"></span>'; }
+    JS
+  end
 
   # The labels are upper-cased by CSS, so they are matched case-insensitively.
   def count_in(scope, label)

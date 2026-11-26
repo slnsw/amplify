@@ -44,6 +44,22 @@ RSpec.feature 'Admin statistics' do
       expect(stats.visit_dashboard.item_edit_count).to eq(2)
       expect(stats.choose_institution(world.institution.name).institution_edit_count).to eq(1)
     end
+
+    # Selecting a second institution without reloading is what shows the figures
+    # belong to the new selection: the previous set is already on the page, so a
+    # read that raced the response would answer with the first institution's counts.
+    scenario 'switches the figures when another institution is chosen', :aggregate_failures do
+      second = build_content_world
+      create(:transcript_edit, transcript: world.transcript, transcript_line: world.transcript_lines.first)
+      2.times do
+        create(:transcript_edit, transcript: second.transcript, transcript_line: second.transcript_lines.first)
+      end
+
+      stats.visit_dashboard
+      expect(stats.choose_institution(world.institution.name).institution_edit_count).to eq(1)
+      expect(stats.choose_institution(second.institution.name).institution_edit_count).to eq(2)
+      expect(stats.choose_institution(world.institution.name).institution_edit_count).to eq(1)
+    end
     # rubocop:enable RSpec/ExampleLength
   end
 end
