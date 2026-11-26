@@ -9,9 +9,9 @@ A Rails 8 monolith serving two front ends. Public and staff screens for browsing
 ## Request lifecycle
 
 1. `config/routes.rb` — note the catch-all at the bottom sending unknown paths to `institutions#index`, which is how institution slugs are routed.
-2. `ApplicationController < ActionController::Base` includes `Authentication` (Devise + OmniAuth) and `Pundit`. Authorisation is per controller and per record; see [authorization.md](authorization.md).
+2. `ApplicationController < ActionController::Base` includes `Authentication` (Devise + OmniAuth). Pundit is included by `AdminController` (and `Admin::ProfilesController`), so policies cover the admin screens; authorisation elsewhere is per controller, and per record on the admin screens. See [authorization.md](authorization.md).
 3. Views are ERB. Presentation logic belongs in `app/decorators/` (Draper), not in views or models.
-4. `Admin::ApplicationController < ActionController::Base` (not the app's `ApplicationController`) serves the CMS namespace with its own layout and filter.
+4. `Admin::ApplicationController < ActionController::Base` (not the app's `ApplicationController`) declares `authenticate_admin!` and the `cms` layout, but no controller inherits it today — the admin screens inherit `AdminController`. See [authorization.md](authorization.md) before choosing a base.
 
 ## The two front ends
 
