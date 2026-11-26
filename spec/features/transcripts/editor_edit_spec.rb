@@ -22,8 +22,10 @@ RSpec.feature 'Transcript editor editing' do
     let(:user) { create(:user) }
 
     # The visitor's stored edits for the first line, read from the payload the
-    # editor itself renders (`...show.json`) instead of from the database.
-    let(:stored_line_edits) do
+    # editor itself renders (`...show.json`) instead of from the database. A method
+    # rather than a `let`: `let` memoizes for the whole example, so the poll in
+    # `await_stored_line_edits` would keep reading the payload it fetched first.
+    def stored_line_edits
       editor.transcript_payload['user_edits']
             .select { |edit| edit['transcript_line_id'] == world.transcript_lines.first.id }
             .map { |edit| edit['text'] }

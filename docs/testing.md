@@ -146,6 +146,13 @@ Route → what it does → the spec that proves it. "Controller spec" means the 
 - **Sidekiq** (`spec/support/sidekiqs.rb`) runs jobs inline only for `sidekiq: true` examples; everything else stays in the test queue.
 - **Coverage**: SimpleCov writes `coverage/index.html`; the suite's status file is `spec/examples.txt` (used by `--only-failures`).
 
+## Intermittent failures seen so far
+
+Two have bitten CI; both are worth recognising rather than re-diagnosing.
+
+- **Feature specs failing inside chromedriver** with `Node with given id does not belong to the document` (seen on `themes_spec` and `site_alerts_spec`). A row was replaced between the `all` query and the `text` call. Every list read now goes through `ListTexts#texts_for`, which retries, and page objects wait for the page they navigate to.
+- **`editor_edit_spec` "updates the existing edit instead of recording a second one"** reporting the first text. The payload is fetched from the server, so this means the second save had not landed; the example now polls for up to `Capybara.default_max_wait_time` and names what the server reported. If it fails again, the save itself did not happen: the editor only submits an edit when a line loses focus, and a keystroke lost to a re-render leaves the line clean.
+
 ## The Chrome/Capybara reset workaround
 
 `spec/support/capybara_chrome_reset_workaround.rb` rewrites one Chrome DevTools Protocol call. Capybara 3.39.1 resets each browser session with `Storage.clearDataForOrigin, origin: '*'`; Chrome 158 rejects `'*'` as a URL, so `Capybara.reset_sessions!` raises `InvalidArgumentError` *after* a passing example and the failure is reported against it. The workaround replaces `'*'` with the session's real origin for that one call and changes nothing else.
