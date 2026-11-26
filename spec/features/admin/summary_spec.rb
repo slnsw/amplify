@@ -26,8 +26,7 @@ RSpec.feature 'Summary Page' do
       end
 
       it 'shows an empty stats page', :aggregate_failures do
-        expect(page).to have_text('Total number of items: 0')
-        expect(page).to have_text('Total duration of items: 00h 00m 00s')
+        assert_totals(items: 0, duration: '00h 00m 00s')
         expect(page).to have_text('0.00 %', count: 4)
         expect(page).to have_text('Disk usage')
         expect(page).to have_text('0 Bytes', count: 4)
@@ -47,33 +46,26 @@ RSpec.feature 'Summary Page' do
       end
 
       it 'shows the site-wide totals', :aggregate_failures do
-        expect(page).to have_text('Total number of items: 2')
-        expect(page).to have_text('Total duration of items: 01h 06m 28s')
+        assert_totals(items: 2, duration: '01h 06m 28s')
         expect(page).to have_text('Completed')
         expect(page).to have_text('0.00 %')
         expect(page).to have_text('Not yet started')
       end
 
-      it 'keeps every item when the start date precedes them', :aggregate_failures do
-        fill_in 'start_date', with: Date.new(2021, 11, 26)
+      it 'shows the totals of the selected institution' do
+        expect_settled_totals(items: 2, duration: '01h 06m 28s')
 
-        expect(page).to have_text('Total number of items: 2')
-        expect(page).to have_text('Total duration of items: 01h 06m 28s')
-      end
-
-      it 'shows the totals of the selected institution', :aggregate_failures do
         select institution.name, from: 'institution_id'
 
-        expect(page).to have_text('Total number of items: 1')
-        expect(page).to have_text('Total duration of items: 00h 33m 20s')
-        expect(page).to have_text('Not yet started')
+        expect_settled_totals(items: 1, duration: '00h 33m 20s')
       end
 
-      it 'shows the totals of the other institution', :aggregate_failures do
+      it 'shows the totals of the other institution' do
+        expect_settled_totals(items: 2, duration: '01h 06m 28s')
+
         select another_institution.name, from: 'institution_id'
 
-        expect(page).to have_text('Total number of items: 1')
-        expect(page).to have_text('Total duration of items: 00h 33m 08s')
+        expect_settled_totals(items: 1, duration: '00h 33m 08s')
       end
     end
 
@@ -89,31 +81,47 @@ RSpec.feature 'Summary Page' do
         visit admin_summary_index_path
       end
 
-      # Asserted against #summary-stats and anchored, so a value cannot be satisfied by
-      # a longer number or by text elsewhere on the page. The boot request is drained
-      # before the filter is applied, and the filtered request is drained after the
-      # assertions, which closes the ordering question at both ends: `loadSummary`
-      # replaces #summary-stats with whichever response arrives last and never
-      # compares requests, so a request still in flight could otherwise overwrite
-      # the totals the assertions had just seen.
-      # rubocop:disable RSpec/ExampleLength
-      it 'narrows the totals to the selected start date', :aggregate_failures do
-        expect(page).to have_css('#summary-stats h3', text: /\ATotal number of items: 2\z/)
-        wait_for_ajax_settle
+      it 'narrows the totals to the selected start date' do
+        expect_settled_totals(items: 2, duration: '00h 50m 00s')
 
         set_date_field('start_date', Date.current - 1.month)
 
-        expect(page).to have_css('#summary-stats h3', text: /\ATotal number of items: 1\z/)
-        expect(page).to have_css('#summary-stats p', text: /\ATotal duration of items: 00h 16m 40s\z/)
-
-        wait_for_ajax_settle
-        expect(page).to have_css('#summary-stats h3', text: /\ATotal number of items: 1\z/)
+        expect_settled_totals(items: 1, duration: '00h 16m 40s')
       end
-      # rubocop:enable RSpec/ExampleLength
+
+      # Two transitions rather than one: the totals have to move to one item and
+      # back to two, so a start date that never reached the server cannot pass.
+      it 'keeps the items an earlier start date restores' do
+        expect_settled_totals(items: 2, duration: '00h 50m 00s')
+
+        set_date_field('start_date', Date.current - 1.month)
+        expect_settled_totals(items: 1, duration: '00h 16m 40s')
+
+        set_date_field('start_date', Date.new(2021, 11, 26))
+        expect_settled_totals(items: 2, duration: '00h 50m 00s')
+      end
     end
   end
 
   private
+
+  # Anchor and scope the totals: an unanchored match would accept "1" inside
+  # "10", and an unscoped one could be satisfied by any text on the page.
+  def assert_totals(items:, duration:)
+    expect(page).to have_css('#summary-stats h3', text: /\ATotal number of items: #{items}\z/)
+    expect(page).to have_css('#summary-stats p', text: /\ATotal duration of items: #{duration}\z/)
+  end
+
+  # `loadSummary` replaces #summary-stats with whichever response arrives last
+  # and never compares requests, so a filter response can land after the totals
+  # were asserted and overwrite them — an example that asserts and stops passes
+  # on a page that is not showing what it claims. Drain the requests, then
+  # assert again.
+  def expect_settled_totals(items:, duration:)
+    assert_totals(items: items, duration: duration)
+    wait_for_ajax_settle
+    assert_totals(items: items, duration: duration)
+  end
 
   # `fill_in` types a date input character by character, and summary.js starts a
   # request on every change event. Those responses all replace `#summary-stats`
