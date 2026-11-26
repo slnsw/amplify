@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
+require_relative 'document_waits'
+
 # Selectors and navigation for the public institution landing page
 # (`/:institution_slug`). It deliberately has no assertions and no
 # Rails/factory/DB dependency, so the remote staging layer (spec/staging) can
 # drive the same object against a real host.
 class InstitutionPage
   include ListTexts
+
+  include DocumentWaits
 
   OG_TITLE = 'meta[property="og:title"]'
   HERO_TITLE = '.main_hero__title'
@@ -45,31 +49,15 @@ class InstitutionPage
 
   # The filter is a plain GET submit, so the click starts a navigation. Waiting for
   # the list to come from a new document keeps the next read from answering from the
-  # document that is being replaced (which still shows the previous order).
-  #
-  # A marker set on the current document is what distinguishes the two: submitting
-  # the same filters leaves the URL unchanged, so waiting for a different URL would
-  # hang on a page that reloaded correctly. The script failing because its context
-  # was destroyed is the navigation itself.
+  # document that is being replaced (which still shows the previous order), and
+  # submitting the same filters reloads the same URL, so the URL cannot be the test.
   def apply_filters
-    page.execute_script('window.__filterMarker = true')
-    page.click_button('Apply filters')
-    page.document.synchronize do
-      raise Capybara::ElementNotFound, 'the filtered page has not loaded' if previous_document?
-    end
+    wait_for_new_document { page.click_button('Apply filters') }
     page.find(TRANSCRIPT_TITLES, match: :first)
     self
   end
 
   private
-
-  def previous_document?
-    page.evaluate_script('typeof window.__filterMarker !== "undefined"')
-  rescue Selenium::WebDriver::Error::JavascriptError => e
-    raise unless e.message.include?('Execution context was destroyed')
-
-    false
-  end
 
   def page
     Capybara.current_session

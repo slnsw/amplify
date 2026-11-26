@@ -22,13 +22,23 @@ RSpec.feature 'Transcript editor flagging' do
   describe 'a completed line', :js do
     let(:world) { build_content_world(line_overrides: { 0 => { status: 'completed' } }) }
 
+    # The row the line survives a reload on is only a count, so the stored flag is
+    # read as well: it is what proves the modal submitted the option that was
+    # chosen rather than the first one, and that the comment was sent at all.
+    # rubocop:disable RSpec/ExampleLength
     scenario 'is shown as flagged after a visitor flags it', :aggregate_failures do
       expect(editor.line_flagged?(0)).to be(false)
       editor.flag_line(0, flag_type.label, comment: comment)
       expect(editor.flag_confirmation).to include('Thank you for flagging')
+
+      flag = Flag.order(:id).last
+      expect(flag.flag_type_id).to eq(flag_type.id)
+      expect(flag.text).to eq(comment)
+
       editor.reload
       expect(editor.line_flagged?(0)).to be(true)
     end
+    # rubocop:enable RSpec/ExampleLength
 
     scenario 'loses the flag when an admin resolves it', :aggregate_failures do
       sign_in admin
