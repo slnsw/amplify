@@ -7,14 +7,8 @@ require 'selenium/webdriver'
 # Selenium 4.6+ ships Selenium Manager, which locates/downloads the correct
 # chromedriver automatically. The deprecated `webdrivers` gem is no longer
 # required (and it pinned rubyzip to a vulnerable version).
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new app,
-                                 browser: :chrome,
-                                 clear_session_storage: true,
-                                 clear_local_storage: true,
-                                 options: Selenium::WebDriver::Chrome::Options.new
-end
+# Setting CHROME_DRIVER_PATH to an executable pins that driver instead; see
+# `LocalChrome.service`.
 
 # The headless Chrome every local `:js` example drives.
 module LocalChrome
@@ -32,6 +26,25 @@ module LocalChrome
 
   module_function
 
+  # Selenium Manager resolves the driver for the installed Chrome, but its cache lags a Chrome update
+  # and the first run afterwards can fail inside the old driver while a new one is fetched. Pointing
+  # CHROME_DRIVER_PATH at a matching binary pins it. A path that does not exist is ignored rather than
+  # failing every `:js` example, because the value in the tracked `.env.example` is only a suggestion.
+  def service
+    path = ENV['CHROME_DRIVER_PATH'].presence
+    return nil unless path && File.executable?(path)
+
+    Selenium::WebDriver::Chrome::Service.new(path: path)
+  end
+
+  # `service:` is only passed when a driver is pinned, so Selenium Manager remains the default.
+  def driver_arguments(options)
+    arguments = { browser: :chrome, clear_session_storage: true, clear_local_storage: true, options: options }
+    pinned = service
+    arguments[:service] = pinned if pinned
+    arguments
+  end
+
   # The project content loads its media from a CDN this environment cannot
   # reach, so the browser is pointed at the local stub instead
   # (spec/support/feature_cdn_stub.rb); the stub's self-signed certificate is
@@ -46,12 +59,12 @@ module LocalChrome
       ],
       logging_prefs: logging_prefs
     )
-    Capybara::Selenium::Driver.new app,
-                                   browser: :chrome,
-                                   clear_session_storage: true,
-                                   clear_local_storage: true,
-                                   options: options
+    Capybara::Selenium::Driver.new(app, **driver_arguments(options))
   end
+end
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new app, **LocalChrome.driver_arguments(Selenium::WebDriver::Chrome::Options.new)
 end
 
 Capybara.register_driver(:chrome_headless) { |app| LocalChrome.driver(app) }

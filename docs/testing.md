@@ -18,7 +18,7 @@ The full suite is the gate, and CI runs it on every pull request. The smoke subs
 - **Ruby 3.4.13** (`.ruby-version`; `asdf install` then `bundle install`).
 - **PostgreSQL** with an `amplify_test` database, reachable with the defaults in `config/database.yml` (`bin/rails db:test:prepare` creates it).
 - **Redis** (`redis://localhost:6379` unless `REDIS_URL` says otherwise) for the full suite. `spec/features/routing/fallback_spec.rb` exercises the `/sidekiq` mount, which reads Sidekiq's queues from Redis; without a Redis server those examples fail.
-- **Google Chrome**. Selenium Manager (bundled with Selenium 4) downloads/resolves the matching chromedriver automatically; `CHROME_DRIVER_PATH` is not read anywhere.
+- **Google Chrome**. Selenium Manager (bundled with Selenium 4) downloads/resolves the matching chromedriver automatically. Setting `CHROME_DRIVER_PATH` to an executable pins that driver instead; a path that does not exist is ignored. See "When Chrome updates" below.
 - **ImageMagick**. `ImageUploader#validate_dimensions` runs every attached image through MiniMagick, so any example that builds a transcript with an image needs the `magick` binary. Without it the factories fail with `MiniMagick::Invalid: You must have ImageMagick or GraphicsMagick installed`. CI installs it with `apt-get install imagemagick`; on macOS use `brew install imagemagick`.
 - **Local config files**, created from the tracked samples as in the README (`cp config/database.sample.yml config/database.yml`, and `cp config/application.sample.yml config/application.yml`). Neither is tracked, and `config/application.yml` is not optional: figaro loads it at boot, and CarrierWave/fog raises `Missing required arguments: aws_access_key_id, aws_secret_access_key` without its S3 entries. It also supplies `PROJECT_ID`; CI generates the same file and pins `PROJECT_ID` to `nsw-state-library-amplify` (the project the factories and the tracked `project/` content use).
 
@@ -150,6 +150,12 @@ Route → what it does → the spec that proves it. "Controller spec" means the 
 `spec/support/capybara_chrome_reset_workaround.rb` rewrites one Chrome DevTools Protocol call. Capybara 3.39.1 resets each browser session with `Storage.clearDataForOrigin, origin: '*'`; Chrome 158 rejects `'*'` as a URL, so `Capybara.reset_sessions!` raises `InvalidArgumentError` *after* a passing example and the failure is reported against it. The workaround replaces `'*'` with the session's real origin for that one call and changes nothing else.
 
 **When it can be removed:** when Capybara stops sending `Storage.clearDataForOrigin, origin: '*'` (a fixed release), or when Chrome accepts `'*'` again. Remove the file and its `require_relative` in `spec/support/capybara.rb`, then run the full suite; if no `InvalidArgumentError` appears on `:js` examples, the workaround is no longer needed. Do not replace it with a driver swap (e.g. Cuprite) as part of a test change: that rewrites working infrastructure for no coverage gain.
+
+## When Chrome updates
+
+Selenium Manager keeps one driver per Chrome major version, and its cache can lag the browser. The first `:js` run after a Chrome update may fail with a crash *inside* chromedriver (a native stack trace, not an assertion) while the matching driver is fetched. Re-run once. If it persists, either point `CHROME_DRIVER_PATH` at the driver Selenium Manager has already downloaded (under `~/.cache/selenium/chromedriver/`), or remove the stale version from that directory and let Selenium Manager resolve a current one.
+
+`LocalChrome.service` only pins `CHROME_DRIVER_PATH` when the file it names is executable, so a stale value in `.env` cannot break the suite: the tracked `.env.example` value is a suggestion, not a requirement.
 
 ## Ruby 3.4.13 and bootsnap
 
