@@ -25,6 +25,9 @@ RSpec.feature 'Transcript editor flagging' do
     # The row the line survives a reload on is only a count, so the stored flag is
     # read as well: it is what proves the modal submitted the option that was
     # chosen rather than the first one, and that the comment was sent at all.
+    # After the reload the modal's own entries are read too: those come from the
+    # browser's payload, so a flag the icon counts but the payload has lost would
+    # otherwise go unnoticed.
     # rubocop:disable RSpec/ExampleLength
     scenario 'is shown as flagged after a visitor flags it', :aggregate_failures do
       expect(editor.line_flagged?(0)).to be(false)
@@ -37,6 +40,7 @@ RSpec.feature 'Transcript editor flagging' do
 
       editor.reload
       expect(editor.line_flagged?(0)).to be(true)
+      expect(editor.flag_entries(0).first).to include(flag_type.label, comment)
     end
     # rubocop:enable RSpec/ExampleLength
 

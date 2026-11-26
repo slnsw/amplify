@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative '../features/editor_flagging'
 require_relative '../features/waits'
 require_relative 'editor_media_requests'
 require 'rbconfig'
@@ -17,6 +18,8 @@ require 'rbconfig'
 # host: the transcript it is handed only has to expose `uid`, `collection.uid`,
 # `collection.institution.slug` and the audio sources the editor loads.
 class TranscriptEditorPage
+  include EditorFlagging
+
   include ListTexts
 
   include Waits
@@ -48,18 +51,12 @@ class TranscriptEditorPage
   TEXT_INPUT = '.text-input.desktop-only'
   # Per-line controls; the flag control only renders on completed lines and the
   # resolve control on completed lines the visitor may resolve that carry flags.
-  FLAG_BUTTON = '.button.flag'
   RESOLVE_BUTTON = '.button.resolve'
   VERIFY_BUTTON = '.button.verify'
   SPEAKER = '.speaker'
   SPEAKER_OPTION = '.speaker-option'
   # The flag modal (gulp/js/views/transcripts/_flag.js); the modal wrapper gains
   # `active` on the `.modal` its template renders, not on the wrapper itself.
-  FLAG_MODAL = '#transcript-line-flag .modal.active'
-  FLAG_OPTION = "#{FLAG_MODAL} #flag-add .option".freeze
-  FLAG_COMMENT = "#{FLAG_MODAL} #flag-add .input-text".freeze
-  FLAG_SUBMIT = "#{FLAG_MODAL} .submit".freeze
-  FLAG_MESSAGE = "#{FLAG_MODAL} .message.active".freeze
   # The verify modal (gulp/js/views/transcripts/_verify.js) lists the submitted
   # edits of a line in review.
   VERIFY_MODAL = '#transcript-line-verify .modal.active'
@@ -183,23 +180,7 @@ class TranscriptEditorPage
   # `visible: :all` because the options are hidden until the speaker is hovered.
   def selected_speaker(index) = line(index).all("#{SPEAKER_OPTION}.selected", visible: :all).first&.text(:all)
 
-  def line_flagged?(index) = line(index).all(FLAG_BUTTON, visible: :all).any? { |b| b[:class].include?('active') }
-
   def line_resolvable?(index) = line(index).all(RESOLVE_BUTTON, visible: :all).any?
-
-  # Opens the line's flag modal, chooses `type_label` and submits it. Returns
-  # once the view's confirmation is on screen, which it only writes from the
-  # POST's success callback.
-  def flag_line(index, type_label, comment: nil)
-    click_line_button(index, FLAG_BUTTON)
-    page.find(FLAG_OPTION, text: type_label, exact_text: true).click
-    page.find(FLAG_COMMENT).click.send_keys(comment) if comment
-    page.find(FLAG_SUBMIT).click
-    flag_confirmation
-    self
-  end
-
-  def flag_confirmation = page.find(FLAG_MESSAGE).text
 
   def resolve_line(index) = click_line_button(index, RESOLVE_BUTTON)
 
