@@ -29,9 +29,7 @@ RSpec.feature 'JavaScript health', :js do
   # example to have failed with that error: it can only fail through the hook's
   # after-each check.
   scenario 'the console hook fails an example whose browser logged an error', :aggregate_failures do
-    probe = console_error_probe
-    run_without_switching_driver { probe.run(RSpec::Core::Reporter.new(RSpec::Core::Configuration.new)) }
-    result = probe.examples.first.execution_result
+    result = run_console_error_probe
 
     expect(result.status).to eq(:failed)
     expect(result.exception&.message.to_s).to include('JavaScript console reported', 'hook self-test')
@@ -39,14 +37,32 @@ RSpec.feature 'JavaScript health', :js do
 
   private
 
-  # Not registered with RSpec's world, so it only runs here, and reported to a
-  # private reporter so its expected failure is not counted against the suite.
-  def console_error_probe
+  # Runs a throwaway example whose own expectation passes and whose browser logs an
+  # error, so it can only fail through the hook's after-each check. It is reported to
+  # a private reporter, so its expected failure is not counted, and removed from the
+  # world afterwards: `describe` registers the group, and a synthetic group left there
+  # changes the example set for everything after this one - which is what
+  # `--only-failures` and the run's own totals read.
+  def run_console_error_probe
+    group = console_error_probe_group
+    run_without_switching_driver { group.run(RSpec::Core::Reporter.new(RSpec::Core::Configuration.new)) }
+    group.examples.first.execution_result
+  ensure
+    forget(group)
+  end
+
+  def console_error_probe_group
     RSpec::Core::ExampleGroup.describe('console hook probe', :js, type: :feature) do
       it('logs a console error') do
         expect { page.execute_script("console.error('hook self-test')") }.not_to raise_error
       end
     end
+  end
+
+  # The group has to leave the world with it, and the memoized count with it.
+  def forget(group)
+    RSpec.world.example_groups.delete(group)
+    RSpec.world.instance_variable_set(:@example_count, nil)
   end
 
   # Capybara's own after-each hook puts the probe back on the default driver,
