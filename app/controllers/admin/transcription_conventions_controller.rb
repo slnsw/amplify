@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class Admin::TranscriptionConventionsController < AdminController
+  before_action :authenticate_staff!
   before_action :set_institution
   before_action :set_transcription_convention, only: [:edit, :update, :destroy]
 

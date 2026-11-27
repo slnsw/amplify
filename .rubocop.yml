@@ -47,3 +47,8 @@ Metrics/MethodLength:
 
 Metrics/ClassLength:
   Max: 150
+
+# Initializer specs describe a file rather than a class.
+RSpec/DescribeClass:
+  Exclude:
+    - "spec/initializers/**/*"

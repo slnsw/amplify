@@ -98,3 +98,9 @@ app/files/uploads/*
 # Database,
 *.sql.gz
 .tool-versions
+
+# Local working artifacts. This repository is public: never commit internal notes,
+# plans, PR drafts, ticket text or agent workspaces.
+/pull_requests/
+/.superpowers/
+/coverage/

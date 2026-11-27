@@ -257,6 +257,21 @@ gulp          # watch mode
 gulp sass js  # run once
 ```
 
+### Testing
+
+```bash
+bundle exec rspec --tag smoke   # fast gate: the representative journeys
+bundle exec rspec               # full suite (needs Postgres and Redis)
+```
+
+CI runs the smoke subset first and then the full suite on every pull request, and the full suite on `develop`/`main` and nightly. The test layers, tag taxonomy, route-to-spec map, known gaps and the staging runbook are documented in [docs/testing.md](docs/testing.md).
+
+Further reading:
+
+- [docs/architecture.md](docs/architecture.md) — how the app fits together.
+- [docs/authorization.md](docs/authorization.md) — filters, Pundit and the checklist for adding an admin controller.
+- [SECURITY.md](SECURITY.md) — how to report a vulnerability privately. This repository is public; never report security problems in an issue or pull request.
+
 ---
 
 ## Third-Party Integrations
@@ -785,6 +800,30 @@ The application sits in the home directory of the `deploy` user.
 All credentials and tokens are stored in the
 `/home/deploy/nsw-state-library-amplify/shared/config/application.yml` file.
 The `database.yml` file is in the same directory.
+
+### Error reporting (Bugsnag)
+
+Bugsnag reads its settings from the environment; no API key is stored in this repository, and
+`config/initializers/bugsnag.rb` is deployed with the application rather than linked from `shared/`,
+so the key belongs in `config/application.yml` (or the container's task definition).
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `BUGSNAG_API_KEY` | yes | Ingest key from the project's settings in Bugsnag. `BUGSNUG_API_KEY` is still read as a fallback for hosts configured before the spelling was corrected. |
+| `BUGSNAG_RELEASE_STAGE` | recommended | `development`, `staging` or `production`. Without it the stage is `Rails.env`, so a host running `RAILS_ENV=production` reports as production. |
+
+The release stage also has to exist in the project's release-stage list in Bugsnag, otherwise the
+events will not appear in the project's default view.
+
+To check that a host is reporting, run this on the server:
+
+```bash
+bundle exec rails runner "puts Bugsnag.configuration.api_key ? 'key configured' : 'NO KEY'; puts Bugsnag.configuration.release_stage"
+bundle exec rails runner "Bugsnag.notify(StandardError.new('bugsnag smoke test'))"
+```
+
+A boot without a key logs `No valid API key has been set, notifications will not be sent` and
+discards every event without raising, so a silent project in Bugsnag means the key, not the code.
 
 Assuming you have already set up your `deploy` user and provisioned a database,
 you should be able to run the following to deploy your application to production:

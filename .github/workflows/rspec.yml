@@ -1,0 +1,122 @@
+name: RSpec
+
+on:
+  pull_request:
+  push:
+    branches: [develop, main]
+  schedule:
+    # 16:00 UTC — early morning in Sydney, after the working day has ended.
+    - cron: '0 16 * * *'
+  # Run the full suite by hand on any branch from the Actions tab.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push to the same ref cancels an older run of it. The nightly run has a
+# group of its own and is never cancelled, so a push cannot cancel the nightly run
+# and the nightly run cannot cancel a push's.
+concurrency:
+  group: rspec-${{ github.event_name == 'schedule' && 'nightly' || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: amplify_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      # spec/features/routing/fallback_spec.rb drives the /sidekiq mount, which
+      # reads its queues from Redis.
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PROJECT_ID: nsw-state-library-amplify
+      REDIS_URL: redis://localhost:6379
+      DISABLE_BOOTSNAP_COMPILE_CACHE: '1'
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      # Neither file is tracked: figaro needs config/application.yml at boot
+      # (CarrierWave/fog raises without S3 credentials), and ActiveRecord needs
+      # config/database.yml. Both samples are the documented starting point for a
+      # new checkout; PROJECT_ID is pinned to the project the factories use.
+      - name: Configure the environment
+        run: |
+          cp config/database.sample.yml config/database.yml
+          sed 's/^PROJECT_ID: .*/PROJECT_ID: nsw-state-library-amplify/' \
+            config/application.sample.yml > config/application.yml
+          # The sample ships GOOGLE_TAG_MANAGER_ID commented out. Drop it anyway: a
+          # set value makes the layouts render a container from a third-party host
+          # (gtm_id treats even an empty string as enabled), and CI must not depend
+          # on one.
+          sed -i '/^GOOGLE_TAG_MANAGER_ID:/d' config/application.yml
+
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4.13'
+          bundler-cache: true
+
+      # ImageUploader#validate_dimensions runs every attached image through
+      # MiniMagick, so the runner needs ImageMagick before any transcript factory
+      # attaches a fixture. Without it every example that builds a transcript fails
+      # with "You must have ImageMagick or GraphicsMagick installed".
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
+      - name: Prepare the test database
+        run: bin/rails db:test:prepare
+
+      # Every event runs the whole suite, pull requests included. The smoke subset
+      # (the representative journeys in docs/testing.md) runs first so a broken core
+      # journey fails within a minute instead of at the end; a smoke failure skips the
+      # full run.
+      - name: Smoke subset
+        run: bundle exec rspec --tag smoke
+
+      - name: Full suite
+        run: bundle exec rspec
+
+      # spec/support/features/failure_screenshots.rb saves the page a failed :js
+      # example left behind into tmp/capybara.
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rspec-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            tmp/capybara/
+            log/test.log
+            spec/examples.txt
+          if-no-files-found: ignore
+          retention-days: 14

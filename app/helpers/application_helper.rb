@@ -59,7 +59,9 @@ module ApplicationHelper
   #       if the title is empty -> 'Amplify'
   #       if the title is not empty -> '<title> | Amplify'
   def page_title
-    title = 'Amplify'
+    # `+'Amplify'` is a mutable copy: `frozen_string_literal` freezes the
+    # literal, and `prepend` on a frozen string raises FrozenError.
+    title = +'Amplify'
     title.prepend("#{@page_title} | ") if @page_title
     title
   end
