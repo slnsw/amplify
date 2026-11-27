@@ -3,16 +3,17 @@
 require 'rails_helper'
 
 RSpec.feature 'Home page', :js do
-  # The item image is a CSS background, so its element renders whether or not the
-  # file arrives. The browser's own resource log is what says the image loaded;
-  # the element alone passes on a 404.
+  # The item renders a fallback element when it has no image, so simply finding
+  # `.transcript_item__image` says nothing about a thumbnail. This requires the
+  # `<img>` to exist with a `src`, then requires the browser to have finished
+  # loading that exact URL: the element alone passes on a 404.
   scenario 'lists a published transcript with its title and image', :aggregate_failures, :smoke do
     world = build_content_world
     visit root_path
 
     expect(page).to have_text(world.transcript.title)
-    expect(page).to have_css('.transcript_item__image', minimum: 1)
-    expect(loaded_image_statuses).to include(200)
+    expect(page).to have_css('img.transcript_item__image[src]', minimum: 1)
+    expect(loaded_image_status(thumbnail_url)).to eq(200)
   end
 
   scenario 'shows the empty state when nothing is published' do
@@ -34,19 +35,26 @@ RSpec.feature 'Home page', :js do
 
   private
 
-  # Every image the browser fetched, with the status it was answered with, once at
-  # least one has finished. The item images carry `loading="lazy"`, so the request
-  # is made after the element renders and reading the log once races it.
-  def loaded_image_statuses
-    page.document.synchronize do
-      statuses = page.evaluate_script(<<~JS)
-        performance.getEntriesByType('resource')
-          .filter(function (entry) { return entry.name.indexOf('/images/') !== -1; })
-          .map(function (entry) { return entry.responseStatus; })
-      JS
-      raise Capybara::ElementNotFound, 'no image request finished' unless statuses.include?(200)
+  # The tag's `src` property, which the browser resolves to an absolute URL.
+  def thumbnail_url
+    page.evaluate_script("document.querySelector('img.transcript_item__image').src")
+  end
 
-      statuses
+  # Waits for the browser to finish the request for that exact URL. `loading="lazy"`
+  # starts it after the element renders, and the log holds every image the page
+  # fetched, so the entry is matched by URL rather than by a path fragment that any
+  # other image would satisfy.
+  def loaded_image_status(url)
+    page.document.synchronize do
+      status = page.evaluate_script(<<~JS, url)
+        (function (url) {
+          var entry = performance.getEntriesByType('resource').find(function (e) { return e.name === url; });
+          return entry ? entry.responseStatus : null;
+        })(arguments[0])
+      JS
+      raise Capybara::ElementNotFound, "the browser has not finished loading #{url}" if status.nil?
+
+      status
     end
   end
 end
