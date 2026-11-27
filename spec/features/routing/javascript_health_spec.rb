@@ -45,6 +45,9 @@ RSpec.feature 'JavaScript health', :js do
   # `--only-failures` and the run's own totals read.
   def run_console_error_probe
     group = console_error_probe_group
+    # The run's filters (`-e`, `--tag`) apply to this group too, and an excluded probe
+    # leaves its example unrun, which reads as "the hook never fired".
+    RSpec.world.filtered_examples[group] = group.examples
     run_without_switching_driver { group.run(RSpec::Core::Reporter.new(RSpec::Core::Configuration.new)) }
     group.examples.first.execution_result
   ensure
@@ -59,9 +62,12 @@ RSpec.feature 'JavaScript health', :js do
     end
   end
 
-  # The group has to leave the world with it, and the memoized count with it.
+  # The group has to leave the world with it, and so must the place it was told to
+  # run every example - that entry would otherwise keep the group alive - and the
+  # memoized count.
   def forget(group)
     RSpec.world.example_groups.delete(group)
+    RSpec.world.filtered_examples.delete(group)
     RSpec.world.instance_variable_set(:@example_count, nil)
   end
 
