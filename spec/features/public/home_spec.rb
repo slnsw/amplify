@@ -12,7 +12,7 @@ RSpec.feature 'Home page', :js do
 
     expect(page).to have_text(world.transcript.title)
     expect(page).to have_css('.transcript_item__image', minimum: 1)
-    expect(image_response_statuses).to include(200)
+    expect(loaded_image_statuses).to include(200)
   end
 
   scenario 'shows the empty state when nothing is published' do
@@ -34,12 +34,19 @@ RSpec.feature 'Home page', :js do
 
   private
 
-  # Every image the browser fetched, with the status it was answered with.
-  def image_response_statuses
-    page.evaluate_script(<<~JS)
-      performance.getEntriesByType('resource')
-        .filter(function (entry) { return entry.name.indexOf('/images/') !== -1; })
-        .map(function (entry) { return entry.responseStatus; })
-    JS
+  # Every image the browser fetched, with the status it was answered with, once at
+  # least one has finished. The item images carry `loading="lazy"`, so the request
+  # is made after the element renders and reading the log once races it.
+  def loaded_image_statuses
+    page.document.synchronize do
+      statuses = page.evaluate_script(<<~JS)
+        performance.getEntriesByType('resource')
+          .filter(function (entry) { return entry.name.indexOf('/images/') !== -1; })
+          .map(function (entry) { return entry.responseStatus; })
+      JS
+      raise Capybara::ElementNotFound, 'no image request finished' unless statuses.include?(200)
+
+      statuses
+    end
   end
 end
