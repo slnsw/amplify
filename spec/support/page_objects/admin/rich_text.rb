@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'cgi'
-
 # Shared by the admin page objects whose forms render a field through Summernote
 # (app/assets/javascripts/editor.js initialises every `[data-provider="summernote"]`).
 # Summernote replaces the textarea with a contenteditable and copies it back on
@@ -28,27 +26,28 @@ module AdminRichText
   # textarea the form submits can still be missing the end of the text.
   def wait_for_note_sync(value, editable)
     page.document.synchronize do
-      raise Capybara::ExpectationNotMet, SYNC_MISSING unless stored_text(editable).include?(text_of(value))
+      raise Capybara::ExpectationNotMet, SYNC_MISSING unless stored_text(editable).include?(plain_text(value))
     end
   end
 
   # AutoSync copies the editor's HTML, not its text, so the stored value differs
   # from what was typed in two ways: `&`, `<` and `>` arrive escaped (`&amp;`,
-  # `&lt;`) and a line break arrives as `</p><p>` or `<br>`. Both sides are reduced
-  # to their text. Tags are stripped before entities are unescaped, so a typed
-  # `&lt;` is not mistaken for markup.
+  # `&lt;`) and a line break arrives as `</p><p>` or `<br>`. The stored value is
+  # parsed rather than pattern-matched - a regex would leave markup behind and
+  # mangle a typed `&lt;p&gt;` - and its text nodes joined with a space, which is
+  # what a line break between blocks reads as. The typed value is only asked to
+  # lose its whitespace: it is text, not markup.
   def stored_text(editable)
-    text_of(note_value(editable))
+    Nokogiri::HTML.fragment(note_value(editable).to_s)
+                  .xpath('.//text()')
+                  .map(&:text)
+                  .join(' ')
+                  .gsub(/\s+/, ' ')
+                  .strip
   end
 
-  def text_of(value)
-    value.to_s
-         .gsub(%r{<br\s*/>?}i, "\n")
-         .gsub(%r{</(?:p|div)>}i, "\n")
-         .gsub(/<[^>]+>/, '')
-         .then { |text| CGI.unescapeHTML(text) }
-         .gsub(/\s+/, ' ')
-         .strip
+  def plain_text(value)
+    value.to_s.gsub(/\s+/, ' ').strip
   end
 
   def note_value(editable)
